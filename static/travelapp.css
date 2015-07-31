@@ -1,0 +1,47 @@
+body {
+	/*background-image: url("/static/img/vintage-map.jpg");*/
+	background-image: url("https://upload.wikimedia.org/wikipedia/commons/c/c2/Arrowsmith's_map_of_the_world_(1812).jpg");
+	background-size: 100%;
+}
+
+body * {
+	border-radius: 7px;
+}
+
+.navbar {
+	background-color: rgba(255,255,255, 0.9);
+	opacity: 0.8;
+
+	border-top: 1px solid #754719;
+	border-bottom: 1px solid #754719;
+}
+
+
+.container-fluid {
+	padding: 0px;
+}
+.row {
+	background-color: transparent;
+}
+
+.modal {
+	top: 15%;
+}
+
+#floater-box {
+	height: 200px;
+	border: solid 1px brown;
+	background-color: rgba(255,255,255,0.7);
+}
+
+#agenda {
+	height: 500px;
+	border: solid 1px brown;
+	background-color: rgba(255,255,255,0.7);
+}
+
+#nearby-events {
+	height: 700px;
+	border: solid 1px brown;
+	background-color: rgba(255,255,255,0.7);
+}

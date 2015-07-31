@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/static/travelapp.css">
+
+		<title>
+			TravelApp | 
+			{% block title %}TITLE GOES HERE{% endblock %}
+		</title>
+	</head>
+	<body>
+		<div class="container-fluid">
+
+			<!-- Modal Login Window -->
+			<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="modal-dialogue modal-sm" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h3 id="loginModalLabel">Login</h3>
+						</div>
+						<div class="modal-body">
+								<form action="/login" id="login-form">
+									<label class="form-group">
+										Email:
+										<input class="form-control" type="email" name="email" placeholder="email">
+									</label>
+
+									<label class="form-group">
+										Password:
+										<input class="form-control" type="password" name="password" placeholder="password">
+									</label>
+
+									<label class="form-group" id="login-submission">
+										<input class="form-control" type="submit" value="enter">
+									</label>
+								</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Navigation Bar -->
+			<nav class="navbar navbar-static-top">
+				<div class="container">
+					<div class="navbar-header">
+						<button type="button"
+								class="navbar-toggle collapsed"
+								data-toggle="collapse"
+								data-target="#navbar-collapse-1"
+								aria-expanded="false">
+					       <span class="sr-only">Toggle navigation</span>
+					       <span class="icon-bar"></span>
+					       <span class="icon-bar"></span>
+					       <span class="icon-bar"></span>
+					    </button>
+					    <a class="navbar-brand" href="/">Home</a>
+					</div>
+					<div class="collapse navbar-collapse" id="navbar-collapse-1">
+						<ul class="nav navbar-nav navbar-right">
+							<li><a href="#" type="button" class="btn" data-toggle="modal" data-target="#loginModal">Log In</a></li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+			{% block content %}
+
+			{% endblock %}
+		</div>
+
+		<script src="https://code.jquery.com/jquery.js"></script>
+		<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+		<script src="/static/travelapp.js"></script>
+	</body>
+</html>
