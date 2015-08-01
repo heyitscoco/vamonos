@@ -4,16 +4,11 @@ body {
 	background-size: 100%;
 }
 
-body * {
-	border-radius: 7px;
-}
-
 .navbar {
 	background-color: rgba(255,255,255, 0.9);
 	opacity: 0.8;
 
-	border-top: 1px solid #754719;
-	border-bottom: 1px solid #754719;
+	border: 1px solid #754719;
 }
 
 
@@ -44,4 +39,12 @@ body * {
 	height: 700px;
 	border: solid 1px brown;
 	background-color: rgba(255,255,255,0.7);
+}
+
+#welcome-box {
+	width: 500px;
+	border: 1px solid #754719;
+	background-color: rgba(255,255,255,0.7);
+	margin: 0 auto;
+	padding: 3em;
 }

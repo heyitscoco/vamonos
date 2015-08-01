@@ -3,5 +3,19 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-nothing here
+
+<div class="row">
+	<div class="col-xs-12">
+		<div id="welcome-box">
+			<!-- Progress bar -->
+
+			<!-- Main Content Div -->
+			{% block div_content %}
+				Welcome to this website. This is what it does. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+				<a href="/login" type="button" class="btn">ENTER</a>
+			{% endblock %}
+		</div>
+	</div>
+</div>
+
 {% endblock %}

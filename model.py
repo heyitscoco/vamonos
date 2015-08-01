@@ -3,9 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-
-
-
 ########################################################################
 # Model definitions
 
@@ -37,10 +34,10 @@ class User(db.Model):
 		"""
 
 		# check for email/password in DB
-		found_user = cls.query.filter_by(email=email, password=password).all()
+		found_users = cls.query.filter_by(email=email, password=password).all()
 
-		if found_user:
-			return found_user
+		if found_users:
+			return found_users[0]
 		else:
 			return None
 
@@ -50,11 +47,17 @@ class Trip(db.Model):
 	__tablename__ = "Trips"
 
 	trip_id = db.Column(db.Integer, primary_key=True)
-	admin_id = db.Column(db.Integer, nullable=False)
+	admin_id = db.Column(db.Integer,
+						 db.ForeignKey('Users.user_id'),
+						 nullable=False
+						 )
 	title = db.Column(db.String(100), nullable=True)
 	destination = db.Column(db.String(100), nullable=False) # This shouldn't be a string
 	start_date = db.Column(db.DateTime, nullable=False)
 	end_date = db.Column(db.DateTime, nullable=False)
+
+
+	# Do we want to set up backrefs between trips and users?
 
 	def __repr__(self):
 		return "< Trip ID: %d ADMIN: %s TITLE: %s >" % (self.trip_id, self.admin_id, self.title)
@@ -64,10 +67,26 @@ class Permission(db.Model):
 	__tablename__ = "Permissions"
 
 	perm_id = db.Column(db.Integer, primary_key=True)
-	trip_id = db.Column(db.Integer, nullable=False)
-	user_id = db.Column(db.Integer, nullable=False)
+	trip_id = db.Column(db.Integer,
+						db.ForeignKey('Trips.trip_id'),
+						nullable=False
+						)
+	user_id = db.Column(db.Integer,
+						db.ForeignKey('Users.user_id'),
+						nullable=False
+						)
 	can_view = db.Column(db.Boolean, nullable=False)
 	can_edit = db.Column(db.Boolean, nullable=False)
+
+	user = db.relationship(
+				'User',
+				backref=db.backref('permissions', order_by=trip_id)
+				)
+
+	trip = db.relationship(
+				'Trip',
+				backref=db.backref('permissions', order_by=trip_id)
+				)
 
 	def __repr__(self):
 		return "< Permission ID: %d TRIP: %d USER: %d Edit: %r >" % (self.perm_id, self.trip_id, self.user_id, self.can_edit)
@@ -83,9 +102,6 @@ def connect_to_db(app):
     db.app = app
     db.init_app(app)
 
-
-from server import app
-connect_to_db(app)
 
 if __name__ == "__main__":
     # As a convenience, if we run this module interactively, it will leave
