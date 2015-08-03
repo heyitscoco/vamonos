@@ -1,4 +1,4 @@
-from model import User, Trip, Permission, connect_to_db, db
+from model import User, Trip, Permission, Event, connect_to_db, db
 from server import app
 
 from datetime import datetime
@@ -7,16 +7,16 @@ from datetime import datetime
 def load_users():
 	"""Load carolyn & balloonicorn into database"""
 
-	carolyn = User(first_name="Carolyn",
-				   last_name="Lee",
+	carolyn = User(fname="Carolyn",
+				   lname="Lee",
 				   email="carolyn.lee@yale.edu",
 				   password="secret"
 				   )
 
-	balloonicorn = User(first_name="Balloon",
-				   last_name="iCorn",
+	balloonicorn = User(fname="Balloon",
+				   lname="iCorn",
 				   email="balloonicorn@unicorn.org",
-				   password="hackbright"
+				   password="secret"
 				   )
 
 	db.session.add(carolyn)
@@ -28,14 +28,16 @@ def load_users():
 def load_trips():
 	"""Load carolyn's vacation into database"""
 
-	start_date = datetime(2015, 12, 20)
-	end_date = datetime(2016, 1, 5)
+	start = datetime(2015, 12, 20)
+	end = datetime(2016, 1, 5)
 
 	trip = Trip(admin_id=1,
 				title="My Trip!",
-				destination="New Orleans",
-				start_date = start_date,
-				end_date = end_date
+				start = start,
+				end = end,
+				city = "New Orleans",
+				country_code = "US",
+				country_name = "United States of America"
 				)
 
 	db.session.add(trip)
@@ -64,6 +66,25 @@ def load_permissions():
 	db.session.commit()
 
 
+def load_events():
+	"""Load one event for Carolyn's trip"""
+
+	event = Event(trip_id=1,
+				  user_id=1,
+				  title="Balloonicorn's Bday Bash",
+				  start=datetime(2015, 12, 23),
+				  end=datetime(2015, 12, 26),
+				  city="New Orleans",
+				  country_code="US",
+				  country_name="United States of America"
+				)
+
+	db.session.add(event)
+
+	db.session.commit()
+
+#####################################################################
+# Main Block
 
 if __name__ == "__main__":
     connect_to_db(app)
@@ -71,4 +92,5 @@ if __name__ == "__main__":
     load_users()
     load_trips()
     load_permissions()
+    load_events()
     print "Database is populated."

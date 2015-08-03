@@ -10,7 +10,13 @@
 	<div class="col-xs-9">
 		<div>
 			<div class="row">
-				<div class="col-xs-6" id="floater-box">Permissions</div>
+				<div class="col-xs-6" id="floater-box">Permissions
+					<ul>
+						{% for perm in permissions %}
+							<li>{{ perm.user.first_name }}</li>
+						{% endfor %}
+					</ul>
+				</div>
 				<div class="col-xs-6" id="floater-box">Details</div>
 			</div>
 			<div class="row">

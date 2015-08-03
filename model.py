@@ -11,9 +11,9 @@ class User(db.Model):
 
 	__tablename__ = "Users"
 
-	user_id = db.Column(db.Integer, primary_key=True)
-	first_name = db.Column(db.String(30), nullable=False)
-	last_name = db.Column(db.String(30), nullable=False)
+	user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	fname = db.Column(db.String(30), nullable=False)
+	lname = db.Column(db.String(30), nullable=False)
 	email = db.Column(db.String(100), nullable=False, unique=True)
 	password = db.Column(db.String(30), nullable=False)
 	
@@ -46,18 +46,26 @@ class Trip(db.Model):
 
 	__tablename__ = "Trips"
 
-	trip_id = db.Column(db.Integer, primary_key=True)
+	trip_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	admin_id = db.Column(db.Integer,
 						 db.ForeignKey('Users.user_id'),
 						 nullable=False
 						 )
-	title = db.Column(db.String(100), nullable=True)
-	destination = db.Column(db.String(100), nullable=False) # This shouldn't be a string
-	start_date = db.Column(db.DateTime, nullable=False)
-	end_date = db.Column(db.DateTime, nullable=False)
+	title = db.Column(db.String(100))
+	start = db.Column(db.DateTime, nullable=False)
+	end = db.Column(db.DateTime, nullable=False)
 
-
-	# Do we want to set up backrefs between trips and users?
+	# Location details
+	place_name = db.Column(db.String(100))
+	latitude = db.Column(db.Float)
+	longitude = db.Column(db.Float)
+	address_1 = db.Column(db.String(200))
+	address_2 = db.Column(db.String(200))
+	city = db.Column(db.String(60), nullable=False)
+	region = db.Column(db.String(60))
+	postal_code = db.Column(db.String(20))
+	country_code = db.Column(db.String(5), nullable=False)
+	country_name = db.Column(db.String(60), nullable=False)
 
 	def __repr__(self):
 		return "< Trip ID: %d ADMIN: %s TITLE: %s >" % (self.trip_id, self.admin_id, self.title)
@@ -66,7 +74,7 @@ class Permission(db.Model):
 
 	__tablename__ = "Permissions"
 
-	perm_id = db.Column(db.Integer, primary_key=True)
+	perm_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	trip_id = db.Column(db.Integer,
 						db.ForeignKey('Trips.trip_id'),
 						nullable=False
@@ -91,6 +99,50 @@ class Permission(db.Model):
 	def __repr__(self):
 		return "< Permission ID: %d TRIP: %d USER: %d Edit: %r >" % (self.perm_id, self.trip_id, self.user_id, self.can_edit)
 
+
+class Event(db.Model):
+
+	__tablename__ = "Events"
+
+	event_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	trip_id = db.Column(db.Integer,
+						db.ForeignKey('Trips.trip_id'),
+						nullable=False
+						)
+	user_id = db.Column(db.Integer,
+						db.ForeignKey('Users.user_id'),
+						nullable=False
+						)
+	title = db.Column(db.String(100))
+	start = db.Column(db.DateTime, nullable=False)
+	end = db.Column(db.DateTime, nullable=False)
+	url = db.Column(db.String(300))
+
+	# Location details
+	place_name = db.Column(db.String(100))
+	latitude = db.Column(db.Float)
+	longitude = db.Column(db.Float)
+	address_1 = db.Column(db.String(200))
+	address_2 = db.Column(db.String(200))
+	city = db.Column(db.String(60), nullable=False)
+	region = db.Column(db.String(60))
+	postal_code = db.Column(db.String(20))
+	country_code = db.Column(db.String(10), nullable=False)
+	country_name = db.Column(db.String(60), nullable=False)
+
+	user = db.relationship(
+				'User',
+				backref=db.backref('events', order_by=trip_id) # user.events returns all of the events added by a given user
+				)
+
+	trip = db.relationship(
+				'Trip',
+				backref=db.backref('events', order_by=trip_id)
+				)
+
+	def __repr__():
+		return "<Event ID: %d TITLE: %s>"
+
 ########################################################################
 # Helper functions
 
@@ -99,6 +151,7 @@ def connect_to_db(app):
 
     # Configure to use our SQLite database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///travelapp.db'
+	# app.config['SQLALCHEMY_ECHO'] = True
     db.app = app
     db.init_app(app)
 
@@ -111,6 +164,6 @@ if __name__ == "__main__":
     connect_to_db(app)
     print "Connected to DB."
 
-    # db.create_all()
-    # print "DB tables built."
+    db.create_all()
+    print "DB tables built."
 

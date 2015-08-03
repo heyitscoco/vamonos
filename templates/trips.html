@@ -1,0 +1,13 @@
+{% extends 'home.html' %}
+
+{% block div_content %}
+	These are my trips:
+<ul>
+	{% for title, trip_id in trip_tuples %}
+		<li><a href='/user{{ user_id }}/trip{{ trip_id }}'>{{ title }}</a></li>
+	{% endfor %}
+</ul>
+<a href="#"><i>Create new trip!</i></a>
+
+
+{% endblock %}
