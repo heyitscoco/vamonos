@@ -132,15 +132,25 @@ def create_trip():
 	return render_template("trip_planner.html", trip_id=trip.trip_id)
 
 
+@app.route("/find_user", methods=["POST"])
+def find_user():
+	"""Searches for user by email."""
 
-@app.route("/friends")
-def view_friends():
+	print "*******HELLO*******\n\n"
+	email = request.form.get("email")
+	print email
+	found_user = User.query.filter_by(email=email).one()
 
-	user_id = session["user_id"]
-	friendships = Friendship.query.filter(Friendship.admin_id == user_id).all()
+	if found_user:
+		# TODO: Add friendship to DB
+		msg = "You have added %s to your friends list!" % (found_user.fname)
+		flash(msg)
+		return "It worked!"
 
-	return render_template("friends.html", friendships=friendships)
-
+	else:
+		msg = "%s could not be found in our database." % (email)
+		flash(msg)
+		return "Sorry, it didn't work."
 
 
 #############################################################

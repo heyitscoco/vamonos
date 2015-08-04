@@ -8,7 +8,6 @@
 	<h3>{{ user.fname }} {{ user.lname }}</h3>
 </div>
 <div>
-	
 	<ul><h5>Friends:</h5>
 		{% for friend_id, fname, img_url in friends %}
 		<li>
@@ -19,6 +18,15 @@
 		</li>
 		{% endfor %}
 	</ul>
+
+	<form><h5>Add a friend:</h5>
+		<label>
+			<input type="email" name="email" id="email" placeholder="email">
+		</label>
+		<label>
+			<input type="submit" value="+" id="find-friend">
+		</label>
+	</form>
 </div>
 
 
