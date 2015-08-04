@@ -32,14 +32,16 @@
 
 						
 						<ul class="nav navbar-nav navbar-right">
-							<li><a href="/friends">Friends</a></li>
+							{% if 'user_id' in session.keys() %}
+							<li><a href="/user{{ session['user_id']}}/profile">Profile</a></li>
 							<li>
-								{% if 'user_id' in session.keys() %}
-								<a href="/logout" type="button" class="btn">Log Out</a></li>
-								{% else %}
-								<a href="/login" type="button" class="btn">Log In</a>
-								{% endif %}
+								<a href="/logout" type="button" class="btn">Log Out</a>
 							</li>
+							{% else %}
+							<li>
+								<a href="/login" type="button" class="btn">Log In</a>
+							</li>
+							{% endif %}
 						</ul>
 						
 						<ul class="nav navbar-nav navbar-right">

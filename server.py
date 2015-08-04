@@ -36,9 +36,6 @@ def login():
 
 	if user:
 		session["user_id"] = user.user_id
-		#confirm that user is logged in
-		session_msg = "Session: %s" %(session)
-		flash(session_msg)
 		return redirect("/trips")
 
 	else:
@@ -140,7 +137,7 @@ def create_trip():
 def view_friends():
 
 	user_id = session["user_id"]
-	friendships = Friendship.query.filter(db.or_(Friendship.user_1 == user_id, Friendship.user_2 == user_id)).all()
+	friendships = Friendship.query.filter(Friendship.admin_id == user_id).all()
 
 	return render_template("friends.html", friendships=friendships)
 
