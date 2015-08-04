@@ -143,15 +143,55 @@ def trips():
 
 
 
-@app.route("/user<int:admin_id>/trip<int:trip_id>")
-def my_trip(admin_id, trip_id):
+@app.route("/user<int:viewer_id>/trip<int:trip_id>", methods=["GET"])
+def my_trip(viewer_id, trip_id):
 	"""Displays trip planning page"""
 
+	admin_id = Trip.query.get(trip_id).admin_id
 	permissions = Permission.query.filter(Permission.trip_id == trip_id, Permission.user_id != admin_id).all()
-	# TODO: Implement this bit!
-	other_friends = [] # Friends who don't have access to this 
+	friendships = Friendship.query.filter_by(admin_id = viewer_id).all()
+	friends = [(friendship.friend.fname, friendship.friend_id) for friendship in friendships]
 
-	return render_template("trip_planner.html", trip_id=trip_id, permissions=permissions, other_friends=other_friends)
+	return render_template("trip_planner.html", admin_id=admin_id, trip_id=trip_id, permissions=permissions, friends=friends)
+
+
+
+@app.route("/add_permission", methods=["POST"])
+def add_permission():
+	"""Adds a new permission to the DB"""
+
+	# Get info from form
+	trip_id = request.form.get("trip_id")
+	friend_id = request.form.get("friend_id")
+	can_edit = request.form.get("can_edit")
+
+	# Add permission to DB
+	perm = Permission(trip_id=trip_id,
+					  user_id=friend_id,
+					  can_view=True,
+					  can_edit=can_edit
+					  )
+	db.session.add(perm)
+	db.session.commit()
+
+	# Confirm submission
+	friend = User.query.get(friend_id)
+	if can_edit:
+		ability = "view & edit"
+	else:
+		ability = "view"
+
+	msg = "%s is now allowed to %s this trip!" % (friend.fname, ability)
+	flash(msg)
+
+	return redirect("/")
+
+
+@app.route("/rm_permission", methods=["POST"])
+def rm_permission():
+	"""Deletes a permission from the DB"""
+
+	return redirect("/")
 
 
 

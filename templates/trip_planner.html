@@ -11,21 +11,28 @@
 		<div>
 			<div class="row">
 				<div class="col-xs-6" id="floater-box">Permissions
-					Add:
-					<form method="POST">
+					{% if session['user_id'] == admin_id %}
+					<form action="/add_permission" method="POST">
+						Add:
 						<label>
-							<select>
-								{% for friend in friends %}
-									<option>Balloonicorn</option>
-									<option>Balloonicorn</option>
-									<option>Balloonicorn</option>
+							<select name="friend_id">
+								{% for name, friend_id in friends %}
+									<option value={{ friend_id }}>{{ name }}</option>
 								{% endfor %}
 							</select>
 						</label>
 						<label>
-							<input type="submit" value="+">
+							<input type="radio" name="can_edit" value=0 >View Only
+							<input type="radio" name="can_edit" value=1 >View & Edit
+						</label>
+						<label>
+							<input type="hidden" name="trip_id" value={{ trip_id }}>
+						</label>
+						<label>
+							<input type="submit" value="+" display="hidden">
 						</label>
 					</form>
+					{% endif %}
 					<ul>
 						{% for perm in permissions %}
 							<li><a href="/user{{ perm.user_id }}/profile">{{ perm.user.fname }}</a>
