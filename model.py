@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm.exc import NoResultFound
 
 db = SQLAlchemy()
 
@@ -34,14 +35,22 @@ class User(db.Model):
 			None
 		"""
 
-		# check for email/password in DB
-		found_users = cls.query.filter_by(email=email, password=password).all()
+		try:
+			return cls.query.filter_by(email=email, password=password).one()
 
-		if found_users:
-			return found_users[0]
-		else:
+		except NoResultFound:
 			return None
 
+	@classmethod
+	def get_by_email(cls, email):
+		"""Looks up user by email"""
+
+		try:
+			found_user = cls.query.filter_by(email=email).one()
+			return found_user
+
+		except NoResultFound:
+			return None
 
 class Trip(db.Model):
 

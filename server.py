@@ -60,7 +60,7 @@ def signup():
 	found_user = User.query.filter_by(email=email).all()
 
 	if found_user:
-		flash("We found your email in our database. Try logging in instead!")
+		msg = "We found your email in our database. Try logging in instead!"
 
 	else:
 		# Get user info from form
@@ -78,8 +78,8 @@ def signup():
 		db.session.commit()
 
 		msg = "Welcome, %s! You're now signed up. Log in to get started!" % (fname)
-		flash(msg)
-
+	
+	flash(msg)
 	return redirect("/login")
 
 
@@ -102,6 +102,32 @@ def profile(user_id):
 	friends = [(friendship.friend_id, friendship.friend.fname, friendship.friend.img_url) for friendship in user.friendships]
 	print friends
 	return render_template("profile.html", user=user, friends=friends)
+
+
+
+@app.route("/add_friend", methods=["POST"])
+def add_friend():
+	"""Adds a new friendship to the DB"""
+
+	email = request.form.get("email")
+	friend = User.get_by_email(email)
+
+	if friend:
+		# Add friendship to the DB
+		friendship = Friendship(admin_id=session['user_id'],
+								friend_id=friend.user_id
+								)
+		db.session.add(friendship)
+		db.session.commit()
+		msg = "You have successfully added %s to your friends!" % (friend.fname)
+
+	else:
+		msg = "We couldn't find anyone with that email in our system."
+
+	flash(msg)
+
+	url = "/user%d/profile" % (session['user_id'])
+	return redirect(url)
 
 
 
@@ -170,27 +196,6 @@ def create_trip():
 	flash("Your trip has been created!")
 
 	return render_template("trip_planner.html", trip_id=trip.trip_id)
-
-
-@app.route("/find_user", methods=["POST"])
-def find_user():
-	"""Searches for user by email."""
-
-	print "*******HELLO*******\n\n"
-	email = request.form.get("email")
-	print email
-	found_user = User.query.filter_by(email=email).one()
-
-	if found_user:
-		# TODO: Add friendship to DB
-		msg = "You have added %s to your friends list!" % (found_user.fname)
-		flash(msg)
-		return "It worked!"
-
-	else:
-		msg = "%s could not be found in our database." % (email)
-		flash(msg)
-		return "Sorry, it didn't work."
 
 
 #############################################################
