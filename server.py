@@ -143,11 +143,15 @@ def trips():
 
 
 
-@app.route("/user<int:user_id>/trip<int:trip_id>")
-def my_trip(user_id, trip_id):
+@app.route("/user<int:admin_id>/trip<int:trip_id>")
+def my_trip(admin_id, trip_id):
 	"""Displays trip planning page"""
 
-	return render_template("planner.html", user_id=user_id, trip_id=trip_id)
+	permissions = Permission.query.filter(Permission.trip_id == trip_id, Permission.user_id != admin_id).all()
+	# TODO: Implement this bit!
+	other_friends = [] # Friends who don't have access to this 
+
+	return render_template("trip_planner.html", trip_id=trip_id, permissions=permissions, other_friends=other_friends)
 
 
 
@@ -184,7 +188,7 @@ def create_trip():
 	db.session.add(trip)
 	db.session.commit() # Commit here so that you can retrieve the trip_id!
 
-	# Add permissions to DB
+	# Add admin permission to DB
 	perm = Permission(trip_id=trip.trip_id,
 					  user_id=session["user_id"],
 					  can_view=True,

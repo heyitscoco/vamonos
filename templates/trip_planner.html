@@ -1,9 +1,32 @@
 {% extends 'base.html' %}
 
-{% block title %}Trip Planner{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
-
-HERE'S MY TRIP PLANNER!
-
+<div class="row">
+	<div class="col-xs-3">
+		<div id="nearby-events">Nearby Events</div>
+	</div>
+	<div class="col-xs-9">
+		<div>
+			<div class="row">
+				<div class="col-xs-6" id="floater-box">Permissions
+					<ul>
+						{% for perm in permissions %}
+							<li><a href="/user{{ perm.user_id }}/profile">{{ perm.user.fname }}</a>
+							{% if perm.can_edit %}
+								(editor)
+							{% endif %}
+							</li>
+						{% endfor %}
+					</ul>
+				</div>
+				<div class="col-xs-6" id="floater-box">Details</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12" id="agenda">Agenda</div>
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock %}
