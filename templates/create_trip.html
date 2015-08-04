@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<form method="POST" id="create-trip">
+		<label class="form-group">
+			Trip Title:
+			<input class="form-control" type="text" name="title" placeholder="e.g. Balloonicorn's Party">
+		</label>
+
+		<label>
+			Where will you go?
+			<input class="form-control location" type="text" name="city" placeholder="e.g. Miami">
+		</label>
+
+		<label class="form-group">
+			When will you arrive? <!-- Local time -->
+			<input class="form-control" type="date" name="start">
+		</label>
+
+		<label class="form=group">
+			When will you return? <!-- Local time -->
+			<input class="form-control" type="date" name="end">
+		</label>
+
+		<label class="form-group" id="login-submission">
+			<input class="form-control" type="submit" value="CREATE">
+		</label>
+	</form>
+{% endblock %}

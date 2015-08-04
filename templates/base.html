@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
-		<!-- <link rel="stylesheet" href="/static/travelapp.css"> -->
+		<link rel="stylesheet" href="/static/travelapp.css">
 
 		<title>
 			TravelApp | 
@@ -11,35 +11,6 @@
 	</head>
 	<body>
 		<div class="container-fluid">
-
-			<!-- Modal Login Window -->
-			<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-				<div class="modal-dialogue modal-sm" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h3 id="loginModalLabel">Login</h3>
-						</div>
-						<div class="modal-body">
-								<form action="/login" id="login-form">
-									<label class="form-group">
-										Email:
-										<input class="form-control" type="email" name="email" placeholder="email">
-									</label>
-
-									<label class="form-group">
-										Password:
-										<input class="form-control" type="password" name="password" placeholder="password">
-									</label>
-
-									<label class="form-group" id="login-submission">
-										<input class="form-control" type="submit" value="enter">
-									</label>
-								</form>
-						</div>
-					</div>
-				</div>
-			</div>
 
 			<!-- Navigation Bar -->
 			<nav class="navbar navbar-static-top">
@@ -59,11 +30,19 @@
 					</div>
 					<div class="collapse navbar-collapse" id="navbar-collapse-1">
 						<ul class="nav navbar-nav navbar-right">
-							<li><a href="#" type="button" class="btn" data-toggle="modal" data-target="#loginModal">Log In</a></li>
+							<li><a href="/login" type="button" class="btn">Log In</a></li>
 						</ul>
 					</div>
 				</div>
 			</nav>
+			  <!-- Show flashed messages -->
+			{% with messages = get_flashed_messages() %}
+			    {% for message in messages %}
+			        <div class="alert alert-warning">{{ message }}</div>
+		        {% endfor %}
+			{% endwith %}
+			
+			<!-- Main Content -->
 			{% block content %}
 
 			{% endblock %}

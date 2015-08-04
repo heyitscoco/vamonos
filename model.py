@@ -64,8 +64,8 @@ class Trip(db.Model):
 	city = db.Column(db.String(60), nullable=False)
 	region = db.Column(db.String(60))
 	postal_code = db.Column(db.String(20))
-	country_code = db.Column(db.String(5), nullable=False)
-	country_name = db.Column(db.String(60), nullable=False)
+	country_code = db.Column(db.String(5))
+	country_name = db.Column(db.String(60))
 
 	def __repr__(self):
 		return "< Trip ID: %d ADMIN: %s TITLE: %s >" % (self.trip_id, self.admin_id, self.title)
@@ -127,8 +127,8 @@ class Event(db.Model):
 	city = db.Column(db.String(60), nullable=False)
 	region = db.Column(db.String(60))
 	postal_code = db.Column(db.String(20))
-	country_code = db.Column(db.String(10), nullable=False)
-	country_name = db.Column(db.String(60), nullable=False)
+	country_code = db.Column(db.String(10))
+	country_name = db.Column(db.String(60))
 
 	user = db.relationship(
 				'User',
@@ -164,6 +164,6 @@ if __name__ == "__main__":
     connect_to_db(app)
     print "Connected to DB."
 
-    db.create_all()
-    print "DB tables built."
+    # db.create_all()
+    # print "DB tables built."
 
