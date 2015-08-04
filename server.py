@@ -1,5 +1,5 @@
 from flask import Flask, redirect, render_template, flash, session, request
-from model import User, Trip, Permission, db, connect_to_db
+from model import User, Trip, Permission, Friendship, db, connect_to_db
 from datetime import datetime
 
 
@@ -54,6 +54,17 @@ def logout():
 	session.clear()
 	flash("You have been successfully logged out.")
 	return redirect("/")
+
+
+
+@app.route("/user<int:user_id>/profile")
+def profile(user_id):
+	"""Displays a user's profile"""
+
+	user = User.query.get(user_id)
+	friends = [(friendship.friend_id, friendship.friend.fname, friendship.friend.img_url) for friendship in user.friendships]
+	print friends
+	return render_template("profile.html", user=user, friends=friends)
 
 
 
@@ -122,6 +133,18 @@ def create_trip():
 	flash("Your trip has been created!")
 
 	return render_template("trip_planner.html", trip_id=trip.trip_id)
+
+
+
+@app.route("/friends")
+def view_friends():
+
+	user_id = session["user_id"]
+	friendships = Friendship.query.filter(db.or_(Friendship.user_1 == user_id, Friendship.user_2 == user_id)).all()
+
+	return render_template("friends.html", friendships=friendships)
+
+
 
 #############################################################
 

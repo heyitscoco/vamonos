@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Trip Planner{% endblock %}
+
+{% block content %}
+
+<div>
+	<h3>{{ user.fname }} {{ user.lname }}</h3>
+</div>
+<div>
+	
+	<ul><h5>Friends:</h5>
+		{% for friend_id, fname, img_url in friends %}
+		<li>
+			<a href="/user{{ friend_id }}/profile">
+				<img src="{{ img_url }}" style="width: 60px">
+				{{ fname }}
+			</a>
+		</li>
+		{% endfor %}
+	</ul>
+</div>
+
+
+
+{% endblock %}

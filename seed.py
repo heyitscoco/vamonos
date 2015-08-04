@@ -1,4 +1,4 @@
-from model import User, Trip, Permission, Event, connect_to_db, db
+from model import User, Trip, Permission, Event, Friendship, connect_to_db, db
 from server import app
 
 from datetime import datetime
@@ -10,7 +10,8 @@ def load_users():
 	carolyn = User(fname="Carolyn",
 				   lname="Lee",
 				   email="carolyn.lee@yale.edu",
-				   password="secret"
+				   password="secret",
+				   img_url="/static/img/carolyn.jpg"
 				   )
 
 	balloonicorn = User(fname="Balloon",
@@ -21,8 +22,6 @@ def load_users():
 
 	db.session.add(carolyn)
 	db.session.add(balloonicorn)
-
-	db.session.commit()
 
 
 def load_trips():
@@ -41,8 +40,6 @@ def load_trips():
 				)
 
 	db.session.add(trip)
-
-	db.session.commit()
 
 
 def load_permissions():
@@ -63,8 +60,6 @@ def load_permissions():
 	db.session.add(perm_carolyn)
 	db.session.add(perm_balloon)
 
-	db.session.commit()
-
 
 def load_events():
 	"""Load one event for Carolyn's trip"""
@@ -81,14 +76,20 @@ def load_events():
 
 	db.session.add(event)
 
-	db.session.commit()
 
 def load_friendships():
-	"""Load the friendship between Balloonicorn & Carolyn"""
+	"""Load the friendships between Balloonicorn & Carolyn"""
 
-	friendship = Friendship(
+	friendship = Friendship(admin_id=1,
+							friend_id=2
 							)
+	db.session.add(friendship)
 
+	friendship = Friendship(admin_id=2,
+							friend_id=1
+							)
+	db.session.add(friendship)
+	
 
 #####################################################################
 # Main Block
@@ -100,6 +101,5 @@ if __name__ == "__main__":
     load_trips()
     load_permissions()
     load_events()
-    load_friendships()
-
+    load_friendships(); db.session.commit()
     print "Database is populated."

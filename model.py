@@ -16,11 +16,10 @@ class User(db.Model):
 	lname = db.Column(db.String(30), nullable=False)
 	email = db.Column(db.String(100), nullable=False, unique=True)
 	password = db.Column(db.String(30), nullable=False)
+	img_url = db.Column(db.String(300))
 	
-	friendships = db.relationship('Friendship')
-
 	def __repr__(self):
-		return "< User ID: %d, NAME: %s >" %(self.user_id, self.first_name)
+		return "< User ID: %d, NAME: %s >" %(self.user_id, self.fname)
 
 	@classmethod
 	def authenticate(cls, email, password):
@@ -152,17 +151,24 @@ class Friendship(db.Model):
 	__tablename__ = "Friendships"
 
 	friendship_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	user_1 = db.Column(db.Integer,
+	admin_id = db.Column(db.Integer,
 						db.ForeignKey('Users.user_id'),
 						nullable=False
 						)
-	user_2 = db.Column(db.Integer,
+	friend_id = db.Column(db.Integer,
 						db.ForeignKey('Users.user_id'),
 						nullable=False
 						)
 
+	admin = db.relationship('User',
+							   primaryjoin="User.user_id == Friendship.admin_id",
+							   backref=db.backref("friendships")
+							   )
+
+	friend = db.relationship('User', primaryjoin="User.user_id == Friendship.friend_id")
+
 	def __repr__(self):
-		return "< Friendship ID: %d User1: %d User2: %d >" % (self.friendship_id, self.user_1, self.user_2)
+		return "< Friendship ID: %d AdminID: %d FriendID: %d >" % (self.friendship_id, self.admin_id, self.friend_id)
 
 ########################################################################
 # Helper functions
@@ -185,6 +191,6 @@ if __name__ == "__main__":
     connect_to_db(app)
     print "Connected to DB."
 
-    # db.create_all()
-    # print "DB tables built."
+    db.create_all()
+    print "DB tables built."
 
