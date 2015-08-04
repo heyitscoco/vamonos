@@ -29,9 +29,25 @@
 					    <a class="navbar-brand" href="/">Home</a>
 					</div>
 					<div class="collapse navbar-collapse" id="navbar-collapse-1">
+
+						
 						<ul class="nav navbar-nav navbar-right">
-							<li><a href="/login" type="button" class="btn">Log In</a></li>
+							<li>
+								{% if 'user_id' in session.keys() %}
+								<a href="/logout" type="button" class="btn">Log Out</a></li>
+								{% else %}
+								<a href="/login" type="button" class="btn">Log In</a>
+								{% endif %}
+							</li>
 						</ul>
+						
+						<ul class="nav navbar-nav navbar-right">
+							
+						</ul>
+						
+
+
+
 					</div>
 				</div>
 			</nav>

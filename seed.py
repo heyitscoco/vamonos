@@ -83,6 +83,13 @@ def load_events():
 
 	db.session.commit()
 
+def load_friendships():
+	"""Load the friendship between Balloonicorn & Carolyn"""
+
+	friendship = Friendship(
+							)
+
+
 #####################################################################
 # Main Block
 
@@ -93,4 +100,6 @@ if __name__ == "__main__":
     load_trips()
     load_permissions()
     load_events()
+    load_friendships()
+
     print "Database is populated."

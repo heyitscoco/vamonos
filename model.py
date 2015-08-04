@@ -17,6 +17,8 @@ class User(db.Model):
 	email = db.Column(db.String(100), nullable=False, unique=True)
 	password = db.Column(db.String(30), nullable=False)
 	
+	friendships = db.relationship('Friendship')
+
 	def __repr__(self):
 		return "< User ID: %d, NAME: %s >" %(self.user_id, self.first_name)
 
@@ -141,7 +143,26 @@ class Event(db.Model):
 				)
 
 	def __repr__():
-		return "<Event ID: %d TITLE: %s>"
+		return "<Event ID: %d TITLE: %s>" % (self.event_id, self.title)
+
+
+
+class Friendship(db.Model):
+
+	__tablename__ = "Friendships"
+
+	friendship_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	user_1 = db.Column(db.Integer,
+						db.ForeignKey('Users.user_id'),
+						nullable=False
+						)
+	user_2 = db.Column(db.Integer,
+						db.ForeignKey('Users.user_id'),
+						nullable=False
+						)
+
+	def __repr__(self):
+		return "< Friendship ID: %d User1: %d User2: %d >" % (self.friendship_id, self.user_1, self.user_2)
 
 ########################################################################
 # Helper functions

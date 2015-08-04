@@ -6,16 +6,23 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = "most_secret_key_EVER!!!!!!!"
 
+#############################################################
+# Routes
+
 @app.route("/")
 def home():
+	"""Displays homepage"""
 	
 	return render_template('home.html')
 
 
+
 @app.route("/login", methods=['GET'])
 def login_page():
+	"""Displays login page"""
 
 	return render_template("login.html")
+
 
 
 @app.route("/login", methods=['POST'])
@@ -24,29 +31,42 @@ def login():
 
 	email = request.form.get("email")
 	password = request.form.get("password")
-
+	
 	user = User.authenticate(email, password)
 
 	if user:
 		session["user_id"] = user.user_id
-		url = "/user%d/trips" % (user.user_id)
+		#confirm that user is logged in
 		session_msg = "Session: %s" %(session)
 		flash(session_msg)
-		return redirect(url)
+		return redirect("/trips")
+
 	else:
-		flash("Your information could not be found in the system.")
-		return redirect("/")
+		flash("Your information could not be found in the system. Try again or sign up!")
+		return redirect("/login")
 
 
-@app.route("/user<int:user_id>/trips")
-def trips(user_id):
+
+@app.route("/logout")
+def logout():
+	"""Logs the user out, clearing the session"""
+
+	session.clear()
+	flash("You have been successfully logged out.")
+	return redirect("/")
+
+
+
+@app.route("/trips")
+def trips():
 	"""Displays all of a user's trips"""
 
+	user_id = session["user_id"]
 	permissions = Permission.query.filter_by(user_id=user_id).all()
-
 	trip_tuples = [(perm.trip.title, perm.trip.trip_id) for perm in permissions]
 
 	return render_template("trips.html", user_id=user_id, trip_tuples=trip_tuples)
+
 
 
 @app.route("/user<int:user_id>/trip<int:trip_id>")
@@ -55,19 +75,22 @@ def my_trip(user_id, trip_id):
 
 	return render_template("planner.html", user_id=user_id, trip_id=trip_id)
 
+
+
 @app.route("/create_trip")
 def new_trip():
 	"""Displays a form for creating a new trip"""
 
-	#TODO: Get user_id from SESSION
 	user_id = session["user_id"]
 	return render_template("create_trip.html", user_id=user_id)
+
 
 
 @app.route("/create_trip", methods=["POST"])
 def create_trip():
 	"""Adds a trip to the database"""
 
+	# Get trip details from form
 	title = request.form.get("title")
 	city = request.form.get("city")
 
@@ -100,6 +123,7 @@ def create_trip():
 
 	return render_template("trip_planner.html", trip_id=trip.trip_id)
 
+#############################################################
 
 if __name__ == "__main__":
 	connect_to_db(app)
