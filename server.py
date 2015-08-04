@@ -44,6 +44,46 @@ def login():
 
 
 
+@app.route("/signup", methods=['GET'])
+def signup_page():
+	"""Displays signup page"""
+
+	return render_template("signup.html")
+
+
+
+@app.route("/signup", methods=['POST'])
+def signup():
+	"""Adds new user to the DB."""
+
+	email = request.form.get("email")
+	found_user = User.query.filter_by(email=email).all()
+
+	if found_user:
+		flash("We found your email in our database. Try logging in instead!")
+
+	else:
+		# Get user info from form
+		fname = request.form.get("fname")
+		lname = request.form.get("lname")
+		password = request.form.get("password")
+
+		# Add user to DB
+		user = User(fname=fname,
+				   lname=lname,
+				   email=email,
+				   password=password,
+				   )
+		db.session.add(user)
+		db.session.commit()
+
+		msg = "Welcome, %s! You're now signed up. Log in to get started!" % (fname)
+		flash(msg)
+
+	return redirect("/login")
+
+
+
 @app.route("/logout")
 def logout():
 	"""Logs the user out, clearing the session"""
