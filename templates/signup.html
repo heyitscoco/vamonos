@@ -1,0 +1,29 @@
+{% extends 'home.html' %}
+
+{% block div_content %}
+	<form action="/login" method="POST" id="login-form">
+		<label class="form-group">
+			Email:
+			<input class="form-control" type="email" name="email" placeholder="email">
+		</label>
+
+		<label class="form-group">
+			Password:
+			<input class="form-control" type="password" name="password" placeholder="password">
+		</label>
+
+		<label>
+			First Name:
+			<input class="form-control" type="text" name="fname">
+		</label>
+
+		<label>
+			Last Name:
+			<input class="form-control" type="text" name="lname">
+		</label>
+
+		<label class="form-group" id="login-submission">
+			<input class="form-control" type="submit" value="enter">
+		</label>
+	</form>
+{% endblock %}
