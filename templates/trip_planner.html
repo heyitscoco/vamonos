@@ -11,6 +11,21 @@
 		<div>
 			<div class="row">
 				<div class="col-xs-6" id="floater-box">Permissions
+					Add:
+					<form method="POST">
+						<label>
+							<select>
+								{% for friend in friends %}
+									<option>Balloonicorn</option>
+									<option>Balloonicorn</option>
+									<option>Balloonicorn</option>
+								{% endfor %}
+							</select>
+						</label>
+						<label>
+							<input type="submit" value="+">
+						</label>
+					</form>
 					<ul>
 						{% for perm in permissions %}
 							<li><a href="/user{{ perm.user_id }}/profile">{{ perm.user.fname }}</a>

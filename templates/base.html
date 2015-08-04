@@ -32,6 +32,7 @@
 
 						<ul class="nav navbar-nav navbar-right">
 							{% if 'user_id' in session.keys() %}
+							<li><a href="/trips">My Trips</a></li>
 							<li><a href="/user{{ session['user_id']}}/profile">Profile</a></li>
 							<li>
 								<a href="/logout" type="button" class="btn">Log Out</a>
