@@ -110,13 +110,33 @@ class Permission(db.Model):
 		return "< Permission ID: %d TRIP: %d USER: %d Edit: %r >" % (self.perm_id, self.trip_id, self.user_id, self.can_edit)
 
 
+class Day(db.Model):
+
+	__tablename__ = "Days"
+
+	day_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	trip_id = db.Column(db.Integer,
+						db.ForeignKey('Trips.trip_id'),
+						nullable=False
+						)
+	day_num = db.Column(db.Integer, autoincrement=False, nullable=False)
+	
+	trip = db.relationship(
+				'Trip',
+				backref=db.backref('days', order_by=day_num)
+				)
+
+	def __repr__(self):
+		return "< Day ID: %d TRIP: %d DAY_NUM: %d >" % (self.day_id, self.trip_id, self.day_num)
+
+
 class Event(db.Model):
 
 	__tablename__ = "Events"
 
 	event_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	trip_id = db.Column(db.Integer,
-						db.ForeignKey('Trips.trip_id'),
+	day_id = db.Column(db.Integer,
+						db.ForeignKey('Days.day_id'),
 						nullable=False
 						)
 	user_id = db.Column(db.Integer,
@@ -142,15 +162,14 @@ class Event(db.Model):
 
 	user = db.relationship(
 				'User',
-				backref=db.backref('events', order_by=trip_id) # user.events returns all of the events added by a given user
+				backref=db.backref('events', order_by=start) # user.events returns all of the events added by a given user
+				)
+	day = db.relationship(
+				'Day',
+				backref=db.backref('events', order_by=day_id)
 				)
 
-	trip = db.relationship(
-				'Trip',
-				backref=db.backref('events', order_by=trip_id)
-				)
-
-	def __repr__():
+	def __repr__(self):
 		return "<Event ID: %d TITLE: %s>" % (self.event_id, self.title)
 
 

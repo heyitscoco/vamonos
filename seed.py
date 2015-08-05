@@ -1,4 +1,4 @@
-from model import User, Trip, Permission, Event, Friendship, connect_to_db, db
+from model import User, Trip, Permission, Event, Friendship, Day, connect_to_db, db
 from server import app
 
 from datetime import datetime
@@ -28,7 +28,7 @@ def load_trips():
 	"""Load carolyn's vacation into database"""
 
 	start = datetime(2015, 12, 20)
-	end = datetime(2016, 1, 5)
+	end = datetime(2015, 12, 25)
 
 	trip = Trip(admin_id=1,
 				title="My Trip!",
@@ -61,10 +61,21 @@ def load_permissions():
 	db.session.add(perm_balloon)
 
 
+def load_days():
+	"""Load all days for 'My Trip!' into the DB"""
+
+	for i in range(1,7):
+		day = Day(trip_id=1, day_num=i)
+		db.session.add(day)
+
+	db.session.commit()
+
+
+
 def load_events():
 	"""Load one event for Carolyn's trip"""
 
-	event = Event(trip_id=1,
+	event = Event(day_id=1,
 				  user_id=1,
 				  title="Balloonicorn's Bday Bash",
 				  start=datetime(2015, 12, 23),
@@ -101,5 +112,7 @@ if __name__ == "__main__":
     load_trips()
     load_permissions()
     load_events()
-    load_friendships(); db.session.commit()
+    load_friendships()
+    load_days()
+    db.session.commit()
     print "Database is populated."

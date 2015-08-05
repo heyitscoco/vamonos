@@ -5,11 +5,13 @@
 {% block content %}
 <div class="row">
 	<div class="col-xs-3">
+<!-- Nearby Events -->
 		<div id="nearby-events">Nearby Events</div>
 	</div>
 	<div class="col-xs-9">
 		<div>
 			<div class="row">
+<!-- Permissions -->
 				<div class="col-xs-6" id="floater-box">Permissions
 					{% if session['user_id'] == admin_id %}
 					<form action="/add_permission" method="POST">
@@ -45,8 +47,22 @@
 				</div>
 				<div class="col-xs-6" id="floater-box">Details</div>
 			</div>
-			<div class="row">
-				<div class="col-xs-12" id="agenda">Agenda</div>
+			<div class="row">	
+<!-- Agenda -->
+				<div class="col-xs-12" id="agenda">Agenda
+					<div>
+						{% for day in days %} <!-- this doesn't exist yet -->
+							<div style="border: solid 1px black; display: inline-block; width: 100px; height: 200px;">Day {{ day.day_num }}
+								<ul>
+									{% for event in day.events %}
+										<li>{{ event.title }}</li>
+									{% endfor %}
+								</ul>
+							</div>
+
+						{% endfor %}
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

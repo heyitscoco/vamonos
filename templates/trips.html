@@ -4,7 +4,7 @@
 	These are my trips:
 <ul>
 	{% for title, trip_id in trip_tuples %}
-		<li><a href='/user{{ user_id }}/trip{{ trip_id }}'>{{ title }}</a></li>
+		<li><a href='/trip{{ trip_id }}'>{{ title }}</a></li>
 	{% endfor %}
 </ul>
 <a href="/create_trip"><i>Create new trip!</i></a>

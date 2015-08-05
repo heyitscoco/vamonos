@@ -143,16 +143,26 @@ def trips():
 
 
 
-@app.route("/user<int:viewer_id>/trip<int:trip_id>", methods=["GET"])
-def my_trip(viewer_id, trip_id):
+@app.route("/trip<int:trip_id>")
+def my_trip(trip_id):
 	"""Displays trip planning page"""
 
+	viewer_id = session['user_id']
 	admin_id = Trip.query.get(trip_id).admin_id
 	permissions = Permission.query.filter(Permission.trip_id == trip_id, Permission.user_id != admin_id).all()
 	friendships = Friendship.query.filter_by(admin_id = viewer_id).all()
 	friends = [(friendship.friend.fname, friendship.friend_id) for friendship in friendships]
+	trip = Trip.query.get(trip_id)
+	days = trip.days
+	print "\n\nDAYS: %s\n\n" % (days)
 
-	return render_template("trip_planner.html", admin_id=admin_id, trip_id=trip_id, permissions=permissions, friends=friends)
+	return render_template("trip_planner.html",
+							admin_id=admin_id,
+							trip_id=trip_id,
+							permissions=permissions,
+							friends=friends,
+							days=days
+							)
 
 
 
@@ -239,7 +249,8 @@ def create_trip():
 
 	flash("Your trip has been created!")
 
-	return render_template("trip_planner.html", trip_id=trip.trip_id)
+	url = "/trip%d" % (trip.trip_id)
+	return redirect(url)
 
 
 #############################################################
