@@ -1,5 +1,5 @@
 from flask import Flask, redirect, render_template, flash, session, request
-from model import User, Trip, Permission, Friendship, db, connect_to_db
+from model import User, Trip, Permission, Friendship, Day, Event, db, connect_to_db
 from datetime import datetime
 
 
@@ -158,7 +158,7 @@ def my_trip(trip_id):
 
 	return render_template("trip_planner.html",
 							admin_id=admin_id,
-							trip_id=trip_id,
+							trip=trip,
 							permissions=permissions,
 							friends=friends,
 							days=days
@@ -252,6 +252,47 @@ def create_trip():
 	url = "/trip%d" % (trip.trip_id)
 	return redirect(url)
 
+
+
+@app.route("/create_event", methods=["POST"])
+def create_event():
+	"""Adds a new event to the DB"""
+
+	# Get info from form
+	title = request.form.get("title")
+	city = request.form.get("city")
+
+	start_raw = request.form.get("start")
+	start = datetime.strptime(start_raw, "%Y-%m-%dT%H:%M")
+
+	end_raw = request.form.get("end")
+	end = datetime.strptime(end_raw, "%Y-%m-%dT%H:%M")
+
+	# Determine correct day
+	day = Day.query.filter(Day.start <= start, Day.end >= start).all()
+
+	# Add event to DB
+	if day:
+		day = day[0]
+		event = Event(day_id=day.day_id,
+					  user_id=session['user_id'],
+					  title=title,
+					  start=start,
+					  end=end,
+					  city=city
+					  )
+		db.session.add(event)
+		db.session.commit()
+		msg = "Your event has been added to your agenda!"
+
+	else: # if the event is outside the trip dates
+		msg = "Event creation failed: These dates are outside the dates of your trip!"
+	
+	flash(msg)
+	
+	trip = Trip.query.get(day.trip_id)
+	url = "/trip%d" % (trip.trip_id)
+	return redirect(url)
 
 #############################################################
 

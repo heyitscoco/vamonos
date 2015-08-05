@@ -64,8 +64,21 @@ def load_permissions():
 def load_days():
 	"""Load all days for 'My Trip!' into the DB"""
 
-	for i in range(1,7):
-		day = Day(trip_id=1, day_num=i)
+	times = [(datetime(2015, 12, 20, 00, 00, 00), datetime(2015, 12, 20, 23, 59, 59)),
+			 (datetime(2015, 12, 21, 00, 00, 00), datetime(2015, 12, 21, 23, 59, 59)),
+			 (datetime(2015, 12, 22, 00, 00, 00), datetime(2015, 12, 22, 23, 59, 59)),
+			 (datetime(2015, 12, 23, 00, 00, 00), datetime(2015, 12, 23, 23, 59, 59)),
+			 (datetime(2015, 12, 24, 00, 00, 00), datetime(2015, 12, 24, 23, 59, 59)),
+			 (datetime(2015, 12, 25, 00, 00, 00), datetime(2015, 12, 25, 23, 59, 59))
+			 ]
+
+	for i in range(6):
+		day = Day(trip_id=1,
+				  day_num=i+1,
+				  start=times[i][0],
+				  end=times[i][1]
+				  )
+
 		db.session.add(day)
 
 	db.session.commit()

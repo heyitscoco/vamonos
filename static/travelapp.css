@@ -5,10 +5,10 @@
 	border: 1px solid #754719;
 }
 
-
 .container-fluid {
 	padding: 0px;
 }
+
 .row {
 	background-color: transparent;
 }
@@ -41,4 +41,11 @@
 	background-color: rgba(255,255,255,0.7);
 	margin: 0 auto;
 	padding: 3em;
+}
+
+.day {
+	border: solid 1px brown;
+	display: inline-block;
+	padding: 1em;
+	height: 400px;
 }

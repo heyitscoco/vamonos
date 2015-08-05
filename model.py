@@ -120,6 +120,8 @@ class Day(db.Model):
 						nullable=False
 						)
 	day_num = db.Column(db.Integer, autoincrement=False, nullable=False)
+	start = db.Column(db.DateTime, nullable=False)
+	end = db.Column(db.DateTime, nullable=False)
 	
 	trip = db.relationship(
 				'Trip',
