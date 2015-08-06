@@ -163,17 +163,24 @@ def my_trip(trip_id):
 	friendships = Friendship.query.filter_by(admin_id = viewer_id).all()
 	friends = [(friendship.friend.fname, friendship.friend_id) for friendship in friendships]
 	trip = Trip.query.get(trip_id)
-	days = trip.days
-	print "\n\nDAYS: %s\n\n" % (days)
 
 	return render_template("trip_planner.html",
 							admin_id=admin_id,
 							trip=trip,
 							permissions=permissions,
 							friends=friends,
-							days=days
+							latitude=trip.latitude,
+							longitude=trip.longitude
 							)
 
+
+@app.route("/trip_location?")
+def get_location():
+	"Returns the location of the current trip in JSON"
+
+
+
+	return 
 
 
 @app.route("/add_permission", methods=["POST"])

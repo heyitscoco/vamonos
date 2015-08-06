@@ -6,7 +6,11 @@
 <div class="row">
 	<div class="col-xs-3">
 <!-- Nearby Events -->
-		<div id="nearby-events">Nearby Events</div>
+		<div id="nearby-events" data-latitude={{ latitude }} data-longitude={{ longitude }}>
+			Nearby Events
+			<ul id="events-list">
+			</ul>
+		</div>
 	</div>
 	<div class="col-xs-9">
 		<div>
@@ -51,7 +55,7 @@
 <!-- Agenda -->
 				<div class="col-xs-12" id="agenda">Agenda
 					<div>
-						{% for day in days %}
+						{% for day in trip.days %}
 							<div class="day">Day {{ day.day_num }}
 								<ul>
 									{% for event in day.events %}
@@ -112,4 +116,44 @@
 		</div>
 	</div>
 </div>
+{% endblock %}
+
+
+
+{% block scripts %}
+<script>
+function getEvents() {
+
+	var latitude = $("#nearby-events").data("latitude")
+	var longitude = $("#nearby-events").data("longitude")
+	var token = "6OLY723AIVYNJBX63FFX"
+	var data = {token: token,
+				sort_by: "best",
+				price: "free",
+				popular: 1,
+				"location.latitude": latitude,
+				"location.longitude": longitude,
+				"location.within": "30mi"
+	}
+	url = "https://www.eventbriteapi.com/v3/events/search/"
+
+	// request events
+	$.get(url, data, function(result) {
+		var topEvents = result.events.slice(0,10);
+	
+
+	// add event names to the dom
+	topEvents.forEach(function(event) {
+				var nameLink = $('<a>')
+					.attr('href', event.url)
+					.attr('style', "display:block; margin:1em")
+					.text(event.name.text)
+
+				$("#events-list").append(nameLink)
+			})
+	});
+}
+
+$(document).on("ready", getEvents)
+</script>
 {% endblock %}
