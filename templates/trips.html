@@ -1,13 +1,17 @@
-{% extends 'home.html' %}
+{% extends 'base.html' %}
 
-{% block div_content %}
+{% block content %}
+{% if trip_tuples %}
 	These are my trips:
 <ul>
 	{% for title, trip_id in trip_tuples %}
 		<li><a href='/trip{{ trip_id }}'>{{ title }}</a></li>
 	{% endfor %}
 </ul>
-<a href="/create_trip"><i>Create new trip!</i></a>
+{% else %}
+You haven't created any trips yet.
+{% endif %}
+<a href="/create_trip"><i>Create a new trip!</i></a>
 
 
 {% endblock %}

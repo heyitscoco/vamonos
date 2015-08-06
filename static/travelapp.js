@@ -34,6 +34,5 @@ function getEvents() {
 $(document).on('ready', getEvents);
 
 
-// - Get list of cities from Python/HTML?
+// - Get list of cities from Python/HTML? <-- JSON!!
 // - Speed it up? Limit number of results?
-// - When exactly is this triggered?
