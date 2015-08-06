@@ -1,23 +1,39 @@
-// https://www.eventbriteapi.com/v3/events/search/?token=CW5KKNUFU6LD7C7JKBRA&venue.city=san+francisco
+
+var cities = ['Boston', 'London', 'Paris'];
+
+// var cities = $("#event-streams").data("cities");
+// console.log(cities)
 
 function getEvents() {
 
-	var data = { "venue.city": "san+francisco",
-				 "token": "CW5KKNUFU6LD7C7JKBRA"
-				};
+	// iterate thru cities
+	cities.forEach(function (city) {
+		var data = { "venue.city": city,
+					 "token": "6OLY723AIVYNJBX63FFX",
+					 "sort_by": "best",
+					 "popular": 1,
+					 "price": "free"
+					};
+		url = "https://www.eventbriteapi.com/v3/events/search/"
 
-	url = "https://www.eventbriteapi.com/v3/events/search/"
+		// request events for that city
+		$.get(url, data, function(result) {
+			var topEvents = result.events.slice(0,7);
 
-	$.get(url, data, function(result) {
-		topEvents = result.events.slice(10,30);
-
-		topEvents.forEach(function(event) {
-			var nameLink = $('<li><a>')
-				.attr('href', event.resource_uri)
-				.text(event.name.text)
-			$("#boston-events").append(nameLink)
+			// add event name to the dom
+			topEvents.forEach(function(event) {
+				var nameLink = $('<li>')
+					.attr('href', event.resource_uri)
+					.text(event.name.text)
+				$("#" + city).append(nameLink)
+			})
 		})
-	})
+	});
 }
 
-$(document).on("ready", getEvents);
+$(document).on('ready', getEvents);
+
+
+// - Get list of cities from Python/HTML?
+// - Speed it up? Limit number of results?
+// - When exactly is this triggered?

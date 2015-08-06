@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
+from datetime import datetime, timedelta
 
 db = SQLAlchemy()
 
@@ -24,16 +25,7 @@ class User(db.Model):
 
 	@classmethod
 	def authenticate(cls, email, password):
-		"""Looks up user by email and password.
-
-		If user is found, returns user.
-			>>> User.authenticate("balloonicorn@unicorn.org", "hackbright")
-			[< User ID: 2, NAME: Balloon >]
-
-		If no such user is found, returns None.
-			>>> print User.authenticate("none@email.com", "none")
-			None
-		"""
+		"""Looks up user by email and password."""
 
 		try:
 			return cls.query.filter_by(email=email, password=password).one()
@@ -56,7 +48,10 @@ class Trip(db.Model):
 
 	__tablename__ = "Trips"
 
-	trip_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	trip_id = db.Column(db.Integer,
+						primary_key=True,
+						autoincrement=True
+						)
 	admin_id = db.Column(db.Integer,
 						 db.ForeignKey('Users.user_id'),
 						 nullable=False
@@ -67,18 +62,49 @@ class Trip(db.Model):
 
 	# Location details
 	place_name = db.Column(db.String(100))
-	latitude = db.Column(db.Float)
-	longitude = db.Column(db.Float)
+	latitude = db.Column(db.String(20), nullable=False)
+	longitude = db.Column(db.String(20), nullable=False)
 	address_1 = db.Column(db.String(200))
 	address_2 = db.Column(db.String(200))
-	city = db.Column(db.String(60), nullable=False)
+	city = db.Column(db.String(60))
 	region = db.Column(db.String(60))
 	postal_code = db.Column(db.String(20))
 	country_code = db.Column(db.String(5))
 	country_name = db.Column(db.String(60))
 
+
 	def __repr__(self):
 		return "< Trip ID: %d ADMIN: %s TITLE: %s >" % (self.trip_id, self.admin_id, self.title)
+
+
+	def create_days(self):
+		"""Creates the appropriate number of days for this trip"""
+
+		trip_start = self.start
+		trip_end = self.end
+
+		day_start = trip_start
+		day_end = day_start + timedelta(hours=23, minutes=59)
+		day_num = 1
+
+		while day_end <= trip_end:
+			day = Day(trip_id = self.trip_id,
+					  day_num = day_num,
+					  start=day_start,
+					  end=day_end
+					  )
+			db.session.add(day)
+			print "Day %d added!\n" %(day_num)
+
+			day_num += 1
+			day_start += timedelta(days=1)
+			day_end += timedelta(days=1)
+
+		db.session.commit()
+
+
+
+
 
 class Permission(db.Model):
 
@@ -128,8 +154,8 @@ class Day(db.Model):
 				backref=db.backref('days', order_by=day_num)
 				)
 
-	def __repr__(self):
-		return "< Day ID: %d TRIP: %d DAY_NUM: %d >" % (self.day_id, self.trip_id, self.day_num)
+	# def __repr__(self):
+	# 	return "< Day ID: %d TRIP: %d DAY_NUM: %d >" % (self.day_id, self.trip_id, self.day_num)
 
 
 class Event(db.Model):
@@ -202,6 +228,18 @@ class Friendship(db.Model):
 
 ########################################################################
 # Helper functions
+def find_next_day(date):
+	"""Given a datetime object, returns the following day as a datetime object
+	
+	>>> date = datetime(2015, 12, 23) 
+	>>> find_next_day(date)
+	datetime.datetime(2015, 12, 24, 0, 0)
+	"""
+
+	day = timedelta(days=1)
+	date += day
+	return date
+
 
 def connect_to_db(app):
     """Connect the database to our Flask app."""

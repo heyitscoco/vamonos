@@ -1,4 +1,4 @@
-from model import User, Trip, Permission, Event, Friendship, Day, connect_to_db, db
+from model import *
 from server import app
 
 from datetime import datetime
@@ -17,11 +17,20 @@ def load_users():
 	balloonicorn = User(fname="Balloon",
 				   lname="iCorn",
 				   email="balloonicorn@unicorn.org",
-				   password="secret"
+				   password="secret",
+				   img_url="/static/img/balloonicorn.png"
+				   )
+
+	monty = User(fname="Monty",
+				   lname="Python",
+				   email="monty@python.com",
+				   password="secret",
+				   img_url="/static/img/python.gif"
 				   )
 
 	db.session.add(carolyn)
 	db.session.add(balloonicorn)
+	db.session.add(monty)
 
 
 def load_trips():
@@ -32,13 +41,11 @@ def load_trips():
 
 	trip = Trip(admin_id=1,
 				title="My Trip!",
-				start = start,
-				end = end,
-				city = "New Orleans",
-				country_code = "US",
-				country_name = "United States of America"
+				start=start,
+				end=end,
+				latitude='29.951066',
+				longitude='-90.071532'
 				)
-
 	db.session.add(trip)
 
 
@@ -88,32 +95,39 @@ def load_days():
 def load_events():
 	"""Load one event for Carolyn's trip"""
 
-	event = Event(day_id=1,
-				  user_id=1,
-				  title="Balloonicorn's Bday Bash",
-				  start=datetime(2015, 12, 23),
-				  end=datetime(2015, 12, 26),
-				  city="New Orleans",
-				  country_code="US",
-				  country_name="United States of America"
-				)
+	file = open('static/data/events.txt')
 
-	db.session.add(event)
+	for line in file:
+		print line
+		day_id, user_id, title, start, end, city = line.rstrip().split("|")
+
+		start = datetime.strptime(start, "datetime(%Y, %m, %d)")
+		end = datetime.strptime(end, "datetime(%Y, %m, %d)")
+		
+		event = Event(day_id=day_id,
+					  user_id=user_id,
+					  title=title,
+					  start=start,
+					  end=end,
+					  city=city,
+					)
+
+		db.session.add(event)
 
 
 def load_friendships():
 	"""Load the friendships between Balloonicorn & Carolyn"""
 
-	friendship = Friendship(admin_id=1,
-							friend_id=2
-							)
-	db.session.add(friendship)
+	file = open('static/data/friendships.txt')
 
-	friendship = Friendship(admin_id=2,
-							friend_id=1
-							)
-	db.session.add(friendship)
-	
+	for line in file:
+		admin_id, friend_id = line.rstrip().split(",")
+
+		friendship = Friendship(admin_id=admin_id,
+								friend_id=friend_id
+								)
+
+		db.session.add(friendship)
 
 #####################################################################
 # Main Block
@@ -126,6 +140,6 @@ if __name__ == "__main__":
     load_permissions()
     load_events()
     load_friendships()
-    load_days()
+    # load_days()
     db.session.commit()
     print "Database is populated."

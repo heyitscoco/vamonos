@@ -1,6 +1,8 @@
-from flask import Flask, redirect, render_template, flash, session, request
-from model import User, Trip, Permission, Friendship, Day, Event, db, connect_to_db
-from datetime import datetime
+from flask import Flask, redirect, render_template, flash, session, request, jsonify
+from model import *
+from datetime import datetime, timedelta
+import geocoder
+
 
 
 app = Flask(__name__)
@@ -12,8 +14,16 @@ app.secret_key = "most_secret_key_EVER!!!!!!!"
 @app.route("/")
 def home():
 	"""Displays homepage"""
-	
-	return render_template('home.html')
+	cities = ['Boston', 'London', 'Paris']
+	return render_template('home.html', cities=cities)
+
+
+
+@app.route("/cities.json")
+def city_list():
+	"""Create JSON Object with cities"""
+	cities = {0:'Boston', 1:'London', 3:'Paris'}
+	return jsonify(cities)
 
 
 
@@ -173,7 +183,7 @@ def add_permission():
 	# Get info from form
 	trip_id = request.form.get("trip_id")
 	friend_id = request.form.get("friend_id")
-	can_edit = request.form.get("can_edit")
+	can_edit = int(request.form.get("can_edit"))
 
 	# Add permission to DB
 	perm = Permission(trip_id=trip_id,
@@ -195,6 +205,7 @@ def add_permission():
 	flash(msg)
 
 	return redirect("/")
+
 
 
 @app.route("/rm_permission", methods=["POST"])
@@ -220,20 +231,27 @@ def create_trip():
 
 	# Get trip details from form
 	title = request.form.get("title")
-	city = request.form.get("city")
+	destination = request.form.get("destination")
+
+	latlng = geocoder.timezone(destination).location
+	lat, lng = latlng.split(",")
+	lat = lat.strip()
+	lng = lng.strip()
 
 	start_raw = request.form.get("start")
 	start = datetime.strptime(start_raw, "%Y-%m-%d")
 
 	end_raw = request.form.get("end")
 	end = datetime.strptime(end_raw, "%Y-%m-%d")
+	end = find_next_day(end)
 
 	# Add trip to DB
 	trip = Trip(admin_id=session["user_id"],
 				title=title,
 				start=start,
 				end=end,
-				city=city
+				latitude=lat,
+				longitude=lng
 				)
 	db.session.add(trip)
 	db.session.commit() # Commit here so that you can retrieve the trip_id!
@@ -245,8 +263,12 @@ def create_trip():
 					  can_edit=True
 					  )
 	db.session.add(perm)
-	db.session.commit()
 
+	# Add days to DB
+	trip.create_days()
+
+	db.session.commit()
+	
 	flash("Your trip has been created!")
 
 	url = "/trip%d" % (trip.trip_id)

@@ -14,12 +14,13 @@
 				Welcome to this website. This is what it does. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 			{% endblock %}
 		</div>
-		<div id="event-streams">
-			<div id="boston">
-				<h3>Boston</h3>
-				<ul id="boston-events">
-				</ul>
+		<div id="event-streams" data-cities={{ cities }}>
+			{% for city in cities %}
+			<div id="{{ city }}" style="display:inline-block; padding: 1em">
+				<h3 class="city">{{ city }}</h3>
+				<ul class="events"></ul>
 			</div>
+			{% endfor %}
 		</div>
 	</div>
 </div>
