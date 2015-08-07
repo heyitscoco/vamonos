@@ -3,8 +3,7 @@ from model import *
 from datetime import datetime, timedelta
 import geocoder
 import os
-
-print os.environ.keys()
+import requests
 
 token = os.environ['PERSONAL_OAUTH']
 
@@ -14,19 +13,81 @@ app.secret_key = "most_secret_key_EVER!!!!!!!"
 #############################################################
 # Routes
 
+@app.route("/add_event/<string:event_id>/<string:trip_id>")
+def add_event(event_id, trip_id):
+	"""Given an eventbrite event resource_uri, adds the event to the agenda"""
+
+	event_uri = "https://www.eventbriteapi.com/v3/events/%s/?token=%s" % (event_id, token)
+	event = requests.get(event_uri).json()
+
+	venue_id = event['venue_id']
+	venue_uri = "https://www.eventbriteapi.com/v3/venues/%s/?token=%s" % (venue_id, token)
+	venue = requests.get(venue_uri).json()
+
+	title = event['name']['text']
+	start = event['start']['utc']
+	start = datetime.strptime(start, "%Y-%m-%dT%H:%M:%SZ")
+	print "start:", start, type(start)
+
+	end = event['end']['utc']
+	end = datetime.strptime(end, "%Y-%m-%dT%H:%M:%SZ")
+	print "end:",end
+
+	place_name = venue.get('address',{}).get('name')
+	address_1 = venue['address'].get('address_1')
+	address_2 = venue['address'].get('address_2')
+	city = venue['address'].get('city')
+	region = venue['address'].get('region')
+	postal_code = venue['address'].get('postal_code')
+	country_code = venue['address'].get('country')
+	lat = venue['latitude']
+	lng = venue['longitude']
+
+	# create the event
+	trip_start = Trip.query.get(trip_id).start
+	trip_end = Trip.query.get(trip_id).end
+	print "trip_start:",trip_start
+	print "trip_end:",trip_end
+
+	# Determine correct day
+	day = Day.query.filter(Day.trip_id == int(trip_id), Day.start <= start, Day.end >= end).all()
+
+	# Add event to DB
+	if day:
+		day = day[0]
+		event = Event(day_id=day.day_id,
+					  user_id=session['user_id'],
+					  title=title,
+					  start=start,
+					  end=end,
+					  place_name=place_name,
+					  address_1=address_1,
+					  address_2=address_2,
+					  city=city,
+					  region=region,
+					  postal_code=postal_code,
+					  country_code=country_code,
+					  latitude=lat,
+					  longitude=lng
+					  )
+		db.session.add(event)
+		db.session.commit()
+
+		msg = "Your event has been added!"
+	else:
+		msg = "Oops! Something went wrong."
+	
+	flash(msg)
+	return redirect("#")
+
+
 @app.route("/")
 def home():
 	"""Displays homepage"""
-	cities = ['Boston', 'London', 'Paris']
-	return render_template('home.html', cities=cities)
 
+	popular_cities = ['Boston', 'London', 'Paris']
+	return render_template('home.html', cities=popular_cities)
 
-
-@app.route("/cities.json")
-def city_list():
-	"""Create JSON Object with cities"""
-	cities = {0:'Boston', 1:'London', 3:'Paris'}
-	return jsonify(cities)
 
 
 @app.route("/token")
@@ -34,7 +95,6 @@ def return_token():
 	"""Returns a jsonified version of my token"""
 
 	token_dict = {'token': token}
-
 	return json.dumps(token_dict)
 
 
@@ -174,25 +234,25 @@ def my_trip(trip_id):
 	permissions = Permission.query.filter(Permission.trip_id == trip_id, Permission.user_id != admin_id).all()
 	friendships = Friendship.query.filter_by(admin_id = viewer_id).all()
 	friends = [(friendship.friend.fname, friendship.friend_id) for friendship in friendships]
+	# loop thru; only add friendships that don't already have permissions associated.
+
+
+
 	trip = Trip.query.get(trip_id)
+	trip_start_str = datetime.strftime(trip.start, "%Y-%m-%dT%H:%M:%SZ")
+	trip_end_str = datetime.strftime(trip.end, "%Y-%m-%dT%H:%M:%SZ")
 
 	return render_template("trip_planner.html",
 							admin_id=admin_id,
 							trip=trip,
+							trip_start_str=trip_start_str,
+							trip_end_str=trip_end_str,
 							permissions=permissions,
 							friends=friends,
 							latitude=trip.latitude,
 							longitude=trip.longitude
 							)
 
-
-@app.route("/trip_location?")
-def get_location():
-	"Returns the location of the current trip in JSON"
-
-
-
-	return 
 
 
 @app.route("/add_permission", methods=["POST"])
@@ -294,6 +354,8 @@ def create_trip():
 	return redirect(url)
 
 
+# create a URL to add to the agenda
+# pass parameters into "/create_event" route
 
 @app.route("/create_event", methods=["POST"])
 def create_event():
@@ -311,6 +373,7 @@ def create_event():
 
 	# Determine correct day
 	day = Day.query.filter(Day.start <= start, Day.end >= start).all()
+	# YOU NEED THIS: Day.trip_id == trip_id
 
 	# Add event to DB
 	if day:

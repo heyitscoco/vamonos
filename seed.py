@@ -14,8 +14,8 @@ def load_users():
 				   img_url="/static/img/carolyn.jpg"
 				   )
 
-	balloonicorn = User(fname="Balloon",
-				   lname="iCorn",
+	balloonicorn = User(fname="Balloonicorn",
+				   lname="daUnicorn",
 				   email="balloonicorn@unicorn.org",
 				   password="secret",
 				   img_url="/static/img/balloonicorn.png"
@@ -46,7 +46,10 @@ def load_trips():
 				latitude='29.951066',
 				longitude='-90.071532'
 				)
+	
 	db.session.add(trip)
+	db.session.commit()
+	trip.create_days()
 
 
 def load_permissions():
@@ -140,6 +143,5 @@ if __name__ == "__main__":
     load_permissions()
     load_events()
     load_friendships()
-    # load_days()
     db.session.commit()
     print "Database is populated."

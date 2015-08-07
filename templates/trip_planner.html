@@ -53,7 +53,7 @@
 			</div>
 			<div class="row">	
 <!-- Agenda -->
-				<div class="col-xs-12" id="agenda">Agenda
+				<div class="col-xs-12" id="agenda" data-trip={{ trip.trip_id }} data-start={{ trip_start_str }} data-end={{ trip_end_str }}>Agenda
 					<div>
 						{% for day in trip.days %}
 							<div class="day">Day {{ day.day_num }}
@@ -122,29 +122,28 @@
 {% block scripts %}
 <script>
 
-
-
-
+// loads events into the "nearby events" div.
 function getEvents() {
 
 	$.get("/token", function (result) {
-			var parsedJSON = JSON.parse(result);
-			token = parsedJSON.token
-			console.log(token)
+		var parsedJSON = JSON.parse(result);
+		var token = parsedJSON.token
 
-		var latitude = $("#nearby-events").data("latitude")
-		var longitude = $("#nearby-events").data("longitude")
-		var token = token
+		var tripId = $("#agenda").data("trip");
+		var latitude = $("#nearby-events").data("latitude");
+		var longitude = $("#nearby-events").data("longitude");
+
+		var trip_start = $("#agenda").data("start");
+		var trip_end = $("#agenda").data("end");
 
 		var data = {token: token,
-					sort_by: "best",
-					price: "free",
-					popular: 1,
 					"location.latitude": latitude,
 					"location.longitude": longitude,
-					"location.within": "30mi"
-					}
-		url = "https://www.eventbriteapi.com/v3/events/search/"
+					"location.within": "10mi",
+					"start_date.range_start": trip_start,
+					"start_date.range_end": trip_end
+					},
+			url = "https://www.eventbriteapi.com/v3/events/search/"
 
 			// request events
 			$.get(url, data, function(result) {
@@ -155,27 +154,22 @@ function getEvents() {
 				topEvents.forEach(function(event) {
 							var nameLink = $('<a>')
 								.attr('href', event.url)
-								.attr('style', "display:block; margin:1em")
+								.attr('target', "_blank")
 								.text(event.name.text)
-
 							var addButton = $('<a>')
-								.attr('href', '/add_event' + event.id)
+								.attr('href', "/add_event/" + event.id + "/" + tripId)
 								.text('+')
+							alert(tripId)
 
-							$("#events-list").append(nameLink).append(addButton)
-						});
+							$("#events-list").append(addButton)
+											 .append(nameLink)
+											 .append('<br><br>')
 				});
-	})
-}
-
-// 			})
-// 	});
-// })
+			});
+	});
+};
 
 $(document).on("ready", getEvents);
-
-
-
 
 </script>
 {% endblock %}

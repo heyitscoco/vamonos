@@ -104,8 +104,6 @@ class Trip(db.Model):
 
 
 
-
-
 class Permission(db.Model):
 
 	__tablename__ = "Permissions"
@@ -133,7 +131,7 @@ class Permission(db.Model):
 				)
 
 	def __repr__(self):
-		return "< Permission ID: %d TRIP: %d USER: %d Edit: %r >" % (self.perm_id, self.trip_id, self.user_id, self.can_edit)
+		return "< Permission ID: %s TRIP: %s USER: %s Edit: %r >" % (self.perm_id, self.trip_id, self.user_id, self.can_edit)
 
 
 class Day(db.Model):
