@@ -1,9 +1,12 @@
-from flask import Flask, redirect, render_template, flash, session, request, jsonify
+from flask import Flask, redirect, render_template, flash, session, request, json
 from model import *
 from datetime import datetime, timedelta
 import geocoder
+import os
 
+print os.environ.keys()
 
+token = os.environ['PERSONAL_OAUTH']
 
 app = Flask(__name__)
 app.secret_key = "most_secret_key_EVER!!!!!!!"
@@ -24,6 +27,15 @@ def city_list():
 	"""Create JSON Object with cities"""
 	cities = {0:'Boston', 1:'London', 3:'Paris'}
 	return jsonify(cities)
+
+
+@app.route("/token")
+def return_token():
+	"""Returns a jsonified version of my token"""
+
+	token_dict = {'token': token}
+
+	return json.dumps(token_dict)
 
 
 

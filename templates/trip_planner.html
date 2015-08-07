@@ -99,8 +99,8 @@
 					        	<label>
 					        		<input type="submit" value="Submit">
 					        	</label>
-					        	
 					        </form>
+					        
 					      </div>
 					      <div class="modal-footer">
 					        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -109,7 +109,6 @@
 
 					  </div>
 					</div>
-
 
 				</div>
 			</div>
@@ -122,38 +121,61 @@
 
 {% block scripts %}
 <script>
+
+
+
+
 function getEvents() {
 
-	var latitude = $("#nearby-events").data("latitude")
-	var longitude = $("#nearby-events").data("longitude")
-	var token = "6OLY723AIVYNJBX63FFX"
-	var data = {token: token,
-				sort_by: "best",
-				price: "free",
-				popular: 1,
-				"location.latitude": latitude,
-				"location.longitude": longitude,
-				"location.within": "30mi"
-	}
-	url = "https://www.eventbriteapi.com/v3/events/search/"
+	$.get("/token", function (result) {
+			var parsedJSON = JSON.parse(result);
+			token = parsedJSON.token
+			console.log(token)
 
-	// request events
-	$.get(url, data, function(result) {
-		var topEvents = result.events.slice(0,10);
-	
+		var latitude = $("#nearby-events").data("latitude")
+		var longitude = $("#nearby-events").data("longitude")
+		var token = token
 
-	// add event names to the dom
-	topEvents.forEach(function(event) {
-				var nameLink = $('<a>')
-					.attr('href', event.url)
-					.attr('style', "display:block; margin:1em")
-					.text(event.name.text)
+		var data = {token: token,
+					sort_by: "best",
+					price: "free",
+					popular: 1,
+					"location.latitude": latitude,
+					"location.longitude": longitude,
+					"location.within": "30mi"
+					}
+		url = "https://www.eventbriteapi.com/v3/events/search/"
 
-				$("#events-list").append(nameLink)
-			})
-	});
+			// request events
+			$.get(url, data, function(result) {
+				var topEvents = result.events.slice(0,10);
+			
+
+				// add event names to the dom
+				topEvents.forEach(function(event) {
+							var nameLink = $('<a>')
+								.attr('href', event.url)
+								.attr('style', "display:block; margin:1em")
+								.text(event.name.text)
+
+							var addButton = $('<a>')
+								.attr('href', '/add_event' + event.id)
+								.text('+')
+
+							$("#events-list").append(nameLink).append(addButton)
+						});
+				});
+	})
 }
 
-$(document).on("ready", getEvents)
+// 			})
+// 	});
+// })
+
+$(document).on("ready", getEvents);
+
+
+
+
 </script>
 {% endblock %}
