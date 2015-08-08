@@ -6,10 +6,8 @@
 
 <div class="row">
 	<div class="col-xs-12">
-		<div id="welcome-box">
-			<!-- Progress bar -->
-
-			<!-- Main Content Div -->
+		<div id="welcome-box" class="main">
+		<!-- Main Content Div -->
 			{% block div_content %}
 				Welcome to this website. This is what it does. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 			{% endblock %}
@@ -30,44 +28,39 @@
 
 {% block scripts %}
 <script>
-// var cities = ['Boston', 'London', 'Paris'];
 
-// var cities = $("#event-streams").data("cities");
-// console.log(cities)
+function getEvents() {
 
-// function getEvents() {
+	// iterate thru cities
+	var cities = $("#event-streams").data("cities");
+	cities.forEach(function (city) {
+		var data = { "venue.city": city,
+					 "token": "6OLY723AIVYNJBX63FFX",
+					 "sort_by": "best",
+					 "popular": 1,
+					 "price": "free"
+					};
+		url = "https://www.eventbriteapi.com/v3/events/search/"
 
-// 	// iterate thru cities
-// 	cities.forEach(function (city) {
-// 		var data = { "venue.city": city,
-// 					 "token": "6OLY723AIVYNJBX63FFX",
-// 					 "sort_by": "best",
-// 					 "popular": 1,
-// 					 "price": "free"
-// 					};
-// 		url = "https://www.eventbriteapi.com/v3/events/search/"
+		// request events for that city
+		$.get(url, data, function(result) {
+			var cityName = $('<h3>').text(city)
+			$("#" + city).prepend(cityName)
 
-// 		// request events for that city
-// 		$.get(url, data, function(result) {
-// 			var cityName = $('<h3>').text(city)
-// 			$("#" + city).prepend(cityName)
+			var topEvents = result.events.slice(0,7);
 
-// 			var topEvents = result.events.slice(0,7);
+			// add event name to the dom
+			topEvents.forEach(function(event) {
+				var nameLink = $('<li>')
+					.attr('href', event.resource_uri)
+					.text(event.name.text)
+				$("#" + city + "-events").append(nameLink)
+			})
+		})
+	});
+}
 
-// 			// add event name to the dom
-// 			topEvents.forEach(function(event) {
-// 				var nameLink = $('<li>')
-// 					.attr('href', event.resource_uri)
-// 					.text(event.name.text)
-// 				$("#" + city + "-events").append(nameLink)
-// 			})
-// 		})
-// 	});
-// }
+$(document).on('ready', getEvents);
 
-// $(document).on('ready', getEvents);
-
-
-// - Get list of cities from Python/HTML?
 </script>
 {% endblock %}

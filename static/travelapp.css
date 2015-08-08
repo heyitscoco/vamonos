@@ -1,50 +1,43 @@
+body {
+	background-color: rgba(100,200,255, 1);
+}
+
+.main {
+	background-color: rgba(255,255,255, 0.7);
+	border: solid 1px white;
+}
+
 .navbar {
-	background-color: rgba(255,255,255, 0.9);
+	background-color: rgba(255,255,255, 0.7);
 	opacity: 0.8;
 
-	border: 1px solid #754719;
+	border: 1px solid white;
 }
 
 .container-fluid {
 	padding: 0px;
 }
 
-.row {
-	background-color: transparent;
-}
-
-.modal {
-	top: 15%;
-}
-
-#floater-box {
+.floater-box {
 	height: 200px;
-	border: solid 1px brown;
-	background-color: rgba(255,255,255,0.7);
 }
 
 #agenda {
 	height: 500px;
-	border: solid 1px brown;
-	background-color: rgba(255,255,255,0.7);
 }
 
 #nearby-events {
 	height: 700px;
-	border: solid 1px brown;
-	background-color: rgba(255,255,255,0.7);
 }
 
 #welcome-box {
 	width: 500px;
-	border: 1px solid #754719;
-	background-color: rgba(255,255,255,0.7);
 	margin: 0 auto;
 	padding: 3em;
 }
 
 .day {
-	border: solid 1px brown;
+	border-right: solid 1px white;
 	display: inline-block;
 	padding: 1em;
 	height: 400px;

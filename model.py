@@ -94,7 +94,6 @@ class Trip(db.Model):
 					  end=day_end
 					  )
 			db.session.add(day)
-			print "Day %d added!\n" %(day_num)
 
 			day_num += 1
 			day_start += timedelta(days=1)

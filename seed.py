@@ -32,8 +32,6 @@ def load_trips():
 		admin_id, title, start, end, destination = line.rstrip().split("|")
 
 		admin_id = int(admin_id)
-		print "start:", type(start)
-		print "end:", type(end)
 		start = datetime.strptime(start, "%Y, %m, %d")
 		end = datetime.strptime(end, "%Y, %m, %d")
 
@@ -50,6 +48,16 @@ def load_trips():
 					longitude=lng
 					)
 		db.session.add(trip)
+		db.session.commit()
+
+		perm = Permission(trip_id=trip.trip_id,
+				  user_id=admin_id,
+				  can_view=True,
+				  can_edit=True
+				  )
+		db.session.add(perm)
+		trip.create_days()
+
 
 
 

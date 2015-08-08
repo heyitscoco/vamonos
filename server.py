@@ -17,6 +17,7 @@ app.secret_key = "most_secret_key_EVER!!!!!!!"
 def add_event(event_id, trip_id):
 	"""Given an eventbrite event resource_uri, adds the event to the agenda"""
 
+	# get event info from Eventbrite API
 	event_uri = "https://www.eventbriteapi.com/v3/events/%s/?token=%s" % (event_id, token)
 	event = requests.get(event_uri).json()
 
@@ -43,7 +44,7 @@ def add_event(event_id, trip_id):
 	lat = venue['latitude']
 	lng = venue['longitude']
 
-	# create the event
+	# create the event for the DB
 	trip_start = Trip.query.get(trip_id).start
 	trip_end = Trip.query.get(trip_id).end
 	print "trip_start:",trip_start
@@ -81,11 +82,15 @@ def add_event(event_id, trip_id):
 	return redirect("#")
 
 
+
+
+
 @app.route("/")
 def home():
 	"""Displays homepage"""
 
 	popular_cities = ['Boston', 'London', 'Paris']
+	
 	return render_template('home.html', cities=popular_cities)
 
 

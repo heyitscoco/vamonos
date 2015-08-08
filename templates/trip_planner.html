@@ -4,10 +4,10 @@
 
 {% block content %}
 <div class="row">
-	<div class="col-xs-3">
 <!-- Nearby Events -->
-		<div id="nearby-events" data-latitude={{ latitude }} data-longitude={{ longitude }}>
-			Nearby Events
+	<div class="col-xs-3">
+		<div id="nearby-events" class="main" data-latitude={{ latitude }} data-longitude={{ longitude }}>
+			<h4>Nearby Events</h4>
 			<ul id="events-list">
 			</ul>
 		</div>
@@ -16,100 +16,119 @@
 		<div>
 			<div class="row">
 <!-- Permissions -->
-				<div class="col-xs-6" id="floater-box">Permissions
-					{% if session['user_id'] == admin_id %}
-					<form action="/add_permission" method="POST">
-						Add:
-						<label>
-							<select name="friend_id">
-								{% for name, friend_id in friends %}
-									<option value={{ friend_id }}>{{ name }}</option>
-								{% endfor %}
-							</select>
-						</label>
-						<label>
-							<input type="radio" name="can_edit" value=0 >View Only
-							<input type="radio" name="can_edit" value=1 >View & Edit
-						</label>
-						<label>
-							<input type="hidden" name="trip_id" value={{ trip_id }}>
-						</label>
-						<label>
-							<input type="submit" value="+" display="hidden">
-						</label>
-					</form>
-					{% endif %}
-					<ul>
-						{% for perm in permissions %}
-							<li><a href="/user{{ perm.user_id }}/profile">{{ perm.user.fname }}</a>
-							{% if perm.can_edit %}
-								(editor)
-							{% endif %}
-							</li>
-						{% endfor %}
-					</ul>
+				<div class="col-xs-12 col-sm-6">
+					<div class="main floater-box">
+						<h4>Permissions</h4>
+						{% if session['user_id'] == admin_id %}
+						<form action="/add_permission" method="POST" >
+							
+							<div "form-group">
+								Add:
+								<label>
+									<select name="friend_id">
+										{% for name, friend_id in friends %}
+											<option value={{ friend_id }}>{{ name }}</option>
+										{% endfor %}
+									</select>
+								</label>
+							
+								<label>
+									<input type="radio" name="can_edit" value=0 >View Only
+								</label>
+
+								<label>
+									<input type="radio" name="can_edit" value=1 >View & Edit
+								</label>
+								
+								<label>
+									<input type="hidden" name="trip_id" value={{ trip_id }}>
+								</label>
+
+								<label>
+									<input type="submit" value="+" class="btn btn-info btn-xs">
+								</label>
+							</div>
+						</form>
+						{% endif %}
+						<ul>
+							{% for perm in permissions %}
+								<li><a href="/user{{ perm.user_id }}/profile">{{ perm.user.fname }}</a>
+								{% if perm.can_edit %}
+									(editor)
+								{% endif %}
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
 				</div>
-				<div class="col-xs-6" id="floater-box">Details</div>
+<!-- Details -->
+				<div class="col-xs-12 col-sm-6">
+					<div class="main floater-box">
+						<h4>Details</h4>
+					</div>
+				</div>
 			</div>
 			<div class="row">	
 <!-- Agenda -->
-				<div class="col-xs-12" id="agenda" data-trip={{ trip.trip_id }} data-start={{ trip_start_str }} data-end={{ trip_end_str }}>Agenda
-					<div>
-						{% for day in trip.days %}
-							<div class="day">Day {{ day.day_num }}
-								<ul>
-									{% for event in day.events %}
-										<li>{{ event.title }}</li>
-									{% endfor %}
-								</ul>
-							</div>
+				<div class="col-xs-12" data-trip={{ trip.trip_id }} data-start={{ trip_start_str }} data-end={{ trip_end_str }}>
+					<div class="main" id="agenda">
+						<h4>Agenda</h4>
+						<div>
+							{% for day in trip.days %}
+								<div class="day">Day {{ day.day_num }}
+									<ul>
+										{% for event in day.events %}
+											<li>{{ event.title }}</li>
+										{% endfor %}
+									</ul>
+								</div>
 
-						{% endfor %}
+							{% endfor %}
+						</div>
+
+
+						<!-- Modal Button -->
+						<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Create Event</button>
+
+						<!-- Modal Window-->
+						<div id="myModal" class="modal fade" role="dialog">
+						  <div class="modal-dialog">
+
+						    <!-- Modal content-->
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <button type="button" class="close" data-dismiss="modal">&times;</button>
+						        <h4 class="modal-title">Create Event</h4>
+						      </div>
+						      <div class="modal-body">
+	<!-- Create Event Form -->
+						        <form action="/create_event" method="POST">
+						        	<label>Title:
+						        		<input name="title" type="text" placeholder="Balloonicorn's Fiesta">
+						        	</label>
+						        	<label>Start:
+						        		<input name="start" type="datetime-local">
+						        	</label>
+						        	<label>End:
+						        		<input name="end" type="datetime-local">
+						        	</label>
+						        	<label>
+						        		<input name="city" type="hidden" value={{ trip.city }}>
+						        	</label>
+						        	<label>
+						        		<input type="submit" value="Submit">
+						        	</label>
+						        </form>
+						        
+						      </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						      </div>
+						    </div>
+
+						  </div>
+						</div>
 					</div>
-
-
-					<!-- Modal Button -->
-					<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Create Event</button>
-
-					<!-- Modal Window-->
-					<div id="myModal" class="modal fade" role="dialog">
-					  <div class="modal-dialog">
-
-					    <!-- Modal content-->
-					    <div class="modal-content">
-					      <div class="modal-header">
-					        <button type="button" class="close" data-dismiss="modal">&times;</button>
-					        <h4 class="modal-title">Create Event</h4>
-					      </div>
-					      <div class="modal-body">
-<!-- Create Event Form -->
-					        <form action="/create_event" method="POST">
-					        	<label>Title:
-					        		<input name="title" type="text" placeholder="Balloonicorn's Fiesta">
-					        	</label>
-					        	<label>Start:
-					        		<input name="start" type="datetime-local">
-					        	</label>
-					        	<label>End:
-					        		<input name="end" type="datetime-local">
-					        	</label>
-					        	<label>
-					        		<input name="city" type="hidden" value={{ trip.city }}>
-					        	</label>
-					        	<label>
-					        		<input type="submit" value="Submit">
-					        	</label>
-					        </form>
-					        
-					      </div>
-					      <div class="modal-footer">
-					        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					      </div>
-					    </div>
-
-					  </div>
-					</div>
-
 				</div>
 			</div>
 		</div>
