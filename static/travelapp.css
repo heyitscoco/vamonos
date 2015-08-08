@@ -27,6 +27,7 @@ body {
 }
 
 .centered {
+	display: block;
 	text-align: center;
 }
 
@@ -49,4 +50,9 @@ body {
 	display: inline-block;
 	padding: 1em;
 	height: 400px;
+}
+
+.alert-warning {
+	color: #618dae;
+	background-color: #edfcd9;
 }

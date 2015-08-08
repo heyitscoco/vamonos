@@ -1,29 +1,37 @@
-{% extends 'home.html' %}
+{% extends 'base.html' %}
 
-{% block div_content %}
-	<form method="POST" id="signup-form">
-		<label class="form-group">
-			Email:
-			<input class="form-control" type="email" name="email" placeholder="email">
-		</label>
+{% block content %}
+<div class="col-xs-0 col-sm-3"></div>
+<div class="col-xs-12 col-sm-6">
+	<div class="content main centered">
 
-		<label class="form-group">
-			Password:
-			<input class="form-control" type="password" name="password" placeholder="password">
-		</label>
+		<form method="POST" id="signup-form">
+			<label class="form-group">
+				Email:
+				<input class="form-control" type="email" name="email" placeholder="email">
+			</label>
 
-		<label>
-			First Name:
-			<input class="form-control" type="text" name="fname">
-		</label>
+			<label class="form-group">
+				Password:
+				<input class="form-control" type="password" name="password" placeholder="password">
+			</label>
 
-		<label>
-			Last Name:
-			<input class="form-control" type="text" name="lname">
-		</label>
+			<label class="form-group">
+				First Name:
+				<input class="form-control" type="text" name="fname">
+			</label>
 
-		<label class="form-group" id="login-submission">
-			<input class="form-control" type="submit" value="enter">
-		</label>
-	</form>
+			<label class="form-group">
+				Last Name:
+				<input class="form-control" type="text" name="lname">
+			</label>
+			<br>
+			<label class="form-group" id="login-submission">
+				<input class="form-control" type="submit" value="enter">
+			</label>
+		</form>
+
+	</div>
+</div>
+<div class="col-xs-0 col-sm-3"></div>
 {% endblock %}
