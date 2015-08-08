@@ -1,99 +1,75 @@
 from model import *
 from server import app
-
+import geocoder
 from datetime import datetime
+from json import loads
 
 
 def load_users():
 	"""Load carolyn & balloonicorn into database"""
 
-	carolyn = User(fname="Carolyn",
-				   lname="Lee",
-				   email="carolyn.lee@yale.edu",
-				   password="secret",
-				   img_url="/static/img/carolyn.jpg"
-				   )
+	file = open('static/data/users.txt')
 
-	balloonicorn = User(fname="Balloonicorn",
-				   lname="daUnicorn",
-				   email="balloonicorn@unicorn.org",
-				   password="secret",
-				   img_url="/static/img/balloonicorn.png"
-				   )
+	for line in file:
+		fname, lname, email, password, img_url = line.rstrip().split(",")
 
-	monty = User(fname="Monty",
-				   lname="Python",
-				   email="monty@python.com",
-				   password="secret",
-				   img_url="/static/img/python.gif"
+		user = User(fname=fname,
+				   lname=lname,
+				   email=email,
+				   password=password,
+				   img_url = img_url
 				   )
+		db.session.add(user)
 
-	db.session.add(carolyn)
-	db.session.add(balloonicorn)
-	db.session.add(monty)
 
 
 def load_trips():
 	"""Load carolyn's vacation into database"""
 
-	start = datetime(2015, 12, 20)
-	end = datetime(2015, 12, 25)
+	file = open('static/data/trips.txt')
 
-	trip = Trip(admin_id=1,
-				title="My Trip!",
-				start=start,
-				end=end,
-				latitude='29.951066',
-				longitude='-90.071532'
-				)
-	
-	db.session.add(trip)
-	db.session.commit()
-	trip.create_days()
+	for line in file:
+		admin_id, title, start, end, destination = line.rstrip().split("|")
+
+		admin_id = int(admin_id)
+		print "start:", type(start)
+		print "end:", type(end)
+		start = datetime.strptime(start, "%Y, %m, %d")
+		end = datetime.strptime(end, "%Y, %m, %d")
+
+		latlng = geocoder.timezone(destination).location
+		lat, lng = latlng.split(",")
+		lat = lat.strip()
+		lng = lng.strip()
+
+		trip = Trip(admin_id=admin_id,
+					title=title,
+					start=start,
+					end=end,
+					latitude=lat,
+					longitude=lng
+					)
+		db.session.add(trip)
+
 
 
 def load_permissions():
 	"""Load permissions for Carolyn & Balloonicorn on carolyn's vacation"""
 
-	perm_carolyn = Permission(trip_id=1,
-					   user_id=1,
-					   can_view=True,
-					   can_edit=True
-					   )
+	file = open("static/data/permissions.txt")
 
-	perm_balloon = Permission(trip_id=1,
-					   user_id=2,
-					   can_view=True,
-					   can_edit=False
-					   )
+	for line in file:
+		trip_id, user_id, can_view, can_edit = line.rstrip().split(",")
 
-	db.session.add(perm_carolyn)
-	db.session.add(perm_balloon)
+		can_view = loads(can_view.lower())
+		can_edit = loads(can_edit.lower())
 
-
-def load_days():
-	"""Load all days for 'My Trip!' into the DB"""
-
-	times = [(datetime(2015, 12, 20, 00, 00, 00), datetime(2015, 12, 20, 23, 59, 59)),
-			 (datetime(2015, 12, 21, 00, 00, 00), datetime(2015, 12, 21, 23, 59, 59)),
-			 (datetime(2015, 12, 22, 00, 00, 00), datetime(2015, 12, 22, 23, 59, 59)),
-			 (datetime(2015, 12, 23, 00, 00, 00), datetime(2015, 12, 23, 23, 59, 59)),
-			 (datetime(2015, 12, 24, 00, 00, 00), datetime(2015, 12, 24, 23, 59, 59)),
-			 (datetime(2015, 12, 25, 00, 00, 00), datetime(2015, 12, 25, 23, 59, 59))
-			 ]
-
-	for i in range(6):
-		day = Day(trip_id=1,
-				  day_num=i+1,
-				  start=times[i][0],
-				  end=times[i][1]
-				  )
-
-		db.session.add(day)
-
-	db.session.commit()
-
-
+		perm = Permission(trip_id=trip_id,
+					  user_id=user_id,
+					  can_view=can_view,
+					  can_edit=can_edit
+					  )
+		db.session.add(perm)
 
 def load_events():
 	"""Load one event for Carolyn's trip"""
@@ -101,7 +77,6 @@ def load_events():
 	file = open('static/data/events.txt')
 
 	for line in file:
-		print line
 		day_id, user_id, title, start, end, city = line.rstrip().split("|")
 
 		start = datetime.strptime(start, "datetime(%Y, %m, %d)")
