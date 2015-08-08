@@ -16,9 +16,8 @@
 		</div>
 		<div id="event-streams" data-cities={{ cities }}>
 			{% for city in cities %}
-			<div id="{{ city }}" style="display:inline-block; padding: 1em">
-				<h3 class="city">{{ city }}</h3>
-				<ul class="events"></ul>
+			<div id={{ city }} style="display:inline-block; padding: 1em">
+				<ul class="events" id="{{ city }}-events"></ul>
 			</div>
 			{% endfor %}
 		</div>
@@ -31,10 +30,10 @@
 
 {% block scripts %}
 <script>
-// var cities = ['Boston', 'London', 'Paris'];
+var cities = ['Boston', 'London', 'Paris'];
 
-// // var cities = $("#event-streams").data("cities");
-// // console.log(cities)
+// var cities = $("#event-streams").data("cities");
+// console.log(cities)
 
 // function getEvents() {
 
@@ -50,6 +49,9 @@
 
 // 		// request events for that city
 // 		$.get(url, data, function(result) {
+// 			var cityName = $('<h3>').text(city)
+// 			$("#" + city).prepend(cityName)
+
 // 			var topEvents = result.events.slice(0,7);
 
 // 			// add event name to the dom
@@ -57,7 +59,7 @@
 // 				var nameLink = $('<li>')
 // 					.attr('href', event.resource_uri)
 // 					.text(event.name.text)
-// 				$("#" + city).append(nameLink)
+// 				$("#" + city + "-events").append(nameLink)
 // 			})
 // 		})
 // 	});
@@ -66,6 +68,6 @@
 // $(document).on('ready', getEvents);
 
 
-// // - Get list of cities from Python/HTML?
+// - Get list of cities from Python/HTML?
 </script>
 {% endblock %}
