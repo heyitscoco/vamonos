@@ -4,31 +4,30 @@
 
 {% block content %}
 
-<div>
-	<h3>{{ user.fname }} {{ user.lname }}</h3>
-</div>
-<div>
-	<ul><h5>Friends:</h5>
+<div class="col-xs-0 col-sm-3"></div>
+<div class="col-xs-12 col-sm-6">
+	<div class="content main centered">
+		<h3>{{ user.fname }} {{ user.lname }}</h3>
+
+		<h5>Friends:</h5>
 		{% for friend_id, fname, img_url in friends %}
-		<li>
 			<a href="/user{{ friend_id }}/profile">
 				<img src="{{ img_url }}" style="width: 60px">
 				{{ fname }}
-			</a>
-		</li>
+			</a> <br>
 		{% endfor %}
-	</ul>
 
-	<form action="/add_friend" method="POST"><h5>Add a friend:</h5>
-		<label>
-			<input type="email" name="email" id="email" placeholder="email">
-		</label>
-		<label>
-			<input type="submit" value="+">
-		</label>
-	</form>
+		<form action="/add_friend" method="POST"><h5>Add a friend:</h5>
+			<label>
+				<input type="email" name="email" id="email" placeholder="email">
+			</label>
+			<label>
+				<input type="submit" value="+">
+			</label>
+		</form>
+	</div>
 </div>
-
+<div class="col-xs-0 col-sm-3"></div>
 
 
 {% endblock %}

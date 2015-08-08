@@ -6,7 +6,7 @@
 <div class="row">
 <!-- Nearby Events -->
 	<div class="col-xs-3">
-		<div id="nearby-events" class="main" data-latitude={{ latitude }} data-longitude={{ longitude }}>
+		<div id="nearby-events" class="content" data-latitude={{ latitude }} data-longitude={{ longitude }}>
 			<h4>Nearby Events</h4>
 			<ul id="events-list">
 			</ul>
@@ -17,7 +17,7 @@
 			<div class="row">
 <!-- Permissions -->
 				<div class="col-xs-12 col-sm-6">
-					<div class="main floater-box">
+					<div class="content floater-box">
 						<h4>Permissions</h4>
 						{% if session['user_id'] == admin_id %}
 						<form action="/add_permission" method="POST" >
@@ -63,7 +63,7 @@
 				</div>
 <!-- Details -->
 				<div class="col-xs-12 col-sm-6">
-					<div class="main floater-box">
+					<div class="content floater-box">
 						<h4>Details</h4>
 					</div>
 				</div>
@@ -71,7 +71,7 @@
 			<div class="row">	
 <!-- Agenda -->
 				<div class="col-xs-12" data-trip={{ trip.trip_id }} data-start={{ trip_start_str }} data-end={{ trip_end_str }}>
-					<div class="main" id="agenda">
+					<div class="content" id="agenda">
 						<h4>Agenda</h4>
 						<div>
 							{% for day in trip.days %}
