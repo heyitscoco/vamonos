@@ -39,10 +39,12 @@ body {
 
 #agenda {
 	height: 500px;
+	overflow: auto;
 }
 
 #nearby-events {
 	height: 700px;
+	overflow: auto;
 }
 
 #welcome-box {

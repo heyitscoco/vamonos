@@ -78,7 +78,7 @@
 							<table>
 								<thead>
 									{% for day in trip.days %}
-									<th>
+									<th style="text-align: center">
 										<h5>Day {{ day.day_num }}</h5>
 									</th>
 									{% endfor %}
@@ -86,7 +86,7 @@
 								<tbody>
 									<tr>
 									{% for day in trip.days %}
-										<td>
+										<td style="padding: 1em; width: 200px;">
 											<ul>
 												{% for event in day.events %}
 													<li class="event">
