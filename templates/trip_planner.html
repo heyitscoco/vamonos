@@ -75,21 +75,33 @@
 					<div class="content" id="agenda">
 						<h4>Agenda</h4>
 						<div>
-							{% for day in trip.days %}
-								<div class="day">
-									<h5>Day {{ day.day_num }}</h5>
-									<ul>
-										{% for event in day.events %}
-											<li class="event">
-												{{ event.title }}
-												<!-- TODO: Figure out what to add to this info. -->
-											</li>
-										{% endfor %}
-									</ul>
-								</div>
-
-							{% endfor %}
+							<table>
+								<thead>
+									{% for day in trip.days %}
+									<th>
+										<h5>Day {{ day.day_num }}</h5>
+									</th>
+									{% endfor %}
+								</thead>
+								<tbody>
+									<tr>
+									{% for day in trip.days %}
+										<td>
+											<ul>
+												{% for event in day.events %}
+													<li class="event">
+														{{ event.title }}
+													</li>
+												{% endfor %}
+											</ul>
+										</td>
+									{% endfor %}
+									</tr>
+								</tbody>
+							</table>
 						</div>
+
+
 
 
 						<!-- Modal Button -->
@@ -199,7 +211,7 @@ function getEvents() {
 	});
 };
 
-$(document).on("ready", getEvents);
+// $(document).on("ready", getEvents);
 
 </script>
 {% endblock %}
