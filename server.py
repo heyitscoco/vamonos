@@ -188,13 +188,19 @@ def trip_planner(trip_id):
 		trip_start_str = datetime.strftime(trip.start, "%Y-%m-%dT%H:%M:%SZ")
 		trip_end_str = datetime.strftime(trip.end, "%Y-%m-%dT%H:%M:%SZ")
 
-		# Pass 'can_edit' boolean into the template
+		# Pass 'can_edit' boolean into template
 		user_perm = Permission.query.filter(Permission.trip_id == trip_id, Permission.user_id == viewer_id).one()
 
 		if user_perm.can_edit:
 			can_edit = True
 		else:
 			can_edit = False
+
+		# Pass 'admin' boolean into template
+		if viewer_id == admin_id:
+			admin = True
+		else:
+			admin = False
 
 		return render_template("trip_planner.html",
 								admin_id=admin_id,
@@ -203,9 +209,8 @@ def trip_planner(trip_id):
 								trip_end_str=trip_end_str,
 								permissions=permissions,
 								friends=friends,
-								latitude=trip.latitude,
-								longitude=trip.longitude,
-								can_edit=can_edit
+								can_edit=can_edit,
+								admin=admin
 								)
 
 	else:
@@ -245,11 +250,10 @@ def add_permission():
 		ability = "view"
 
 	friend = User.query.get(friend_id)
-
 	msg = "%s is now allowed to %s this trip!" % (friend.fname, ability)
 	flash(msg)
 
-	return redirect("/")
+	return redirect("/") # FIXME Don't redirect here!
 
 
 
@@ -257,7 +261,22 @@ def add_permission():
 def rm_permission():
 	"""Deletes a permission from the DB"""
 
-	return redirect("/")
+	# Get info from form
+	friend_id = request.form.get("friend_id")
+	trip_id = request.form.get("trip_id")
+
+	# Remove permission based on info
+
+	perm = Permission.query.filter(Permission.user_id == friend_id, Permission.trip_id == trip_id).one()
+
+	db.session.delete(perm)
+	db.session.commit()
+
+	friend = User.query.get(friend_id)
+	msg = "%s is no longer allowed to view this trip." % (friend.fname)
+	flash(msg)
+
+	return redirect("/") # FIXME Don't redirect here!
 
 
 
