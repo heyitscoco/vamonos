@@ -65,7 +65,7 @@
 										<input type="hidden" name="trip_id" value={{ trip.trip_id }}>
 									</label>
 									<label>
-										<input type="submit" value="x" class="btn btn-default btn-xs">
+										<input type="submit" value="x" class="edit-perms btn btn-default btn-xs">
 									</label>
 								</form>
 							{% endif %}
@@ -327,8 +327,8 @@ function getEvents() {
 							// 				 .append(nameLink)
 
 							var adderBtn = $('<a>')
-								.attr('href', "/add_event/" + event.id + "/" + tripId)
-								.attr('class', "btn btn-default btn-xs")
+								.attr('href', '/add_event/' + event.id + '/' + tripId)
+								.attr('class', 'btn btn-default btn-xs')
 								.text(event.name.text)
 								
 							$("#events-list").append(adderBtn)
@@ -338,6 +338,20 @@ function getEvents() {
 };
 
 // $(document).on("ready", getEvents);
+
+
+function editPerms(evt) {
+	evt.preventDefault();
+
+	// var formInputs = { type: $("#type").val(), amount: $("#amount").val() };
+
+ //  $.post("/new-order", formInputs, function (result) {
+ //      alert(result);
+ //    }
+ //  );
+}
+
+$('.edit-perms').on('click', editPerms);
 
 </script>
 {% endblock %}
