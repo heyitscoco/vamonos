@@ -20,7 +20,7 @@ body {
 }
 
 .scrollable {
-	overflow: auto;
+	overflow: scroll;
 }
 
 .navbar {

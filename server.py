@@ -159,6 +159,7 @@ def trips():
 	if 'user_id' in session:
 		user_id = session["user_id"]
 		permissions = Permission.query.filter_by(user_id=user_id).all()
+
 		trip_tuples = [(perm.trip.title, perm.trip.trip_id) for perm in permissions]
 
 		return render_template("trips.html", user_id=user_id, trip_tuples=trip_tuples)
@@ -169,7 +170,7 @@ def trips():
 
 
 @app.route("/trip<int:trip_id>")
-def my_trip(trip_id):
+def trip_planner(trip_id):
 	"""Displays trip planning page"""
 
 	if 'user_id' in session:
@@ -178,9 +179,17 @@ def my_trip(trip_id):
 		permissions = Permission.query.filter(Permission.trip_id == trip_id, Permission.user_id != admin_id).all()
 		friendships = Friendship.query.filter_by(admin_id = viewer_id).all()
 		friends = [(friendship.friend.fname, friendship.friend_id) for friendship in friendships]
-		# loop thru; only add friendships that don't already have permissions associated.
+		# FIXME loop thru; only add friendships that don't already have permissions associated.
 
 
+		# FIXME optionally add can_edit to session
+		user_perm = Permission.query.filter(Permission.trip_id == trip_id, Permission.user_id == viewer_id).one()
+		print "\n\n User %r can_edit: %r\n\n" % (viewer_id, user_perm.can_edit)
+
+		if user_perm.can_edit:
+			can_edit = True
+		else:
+			can_edit = False
 
 		trip = Trip.query.get(trip_id)
 		trip_start_str = datetime.strftime(trip.start, "%Y-%m-%dT%H:%M:%SZ")
@@ -194,7 +203,8 @@ def my_trip(trip_id):
 								permissions=permissions,
 								friends=friends,
 								latitude=trip.latitude,
-								longitude=trip.longitude
+								longitude=trip.longitude,
+								can_edit=can_edit
 								)
 
 	else:
@@ -242,7 +252,7 @@ def rm_permission():
 
 
 @app.route("/create_trip")
-def new_trip():
+def create_trip():
 	"""Displays a form for creating a new trip"""
 
 	if 'user_id' in session:
@@ -254,8 +264,9 @@ def new_trip():
 		return redirect("/login")
 
 
+
 @app.route("/create_trip", methods=["POST"])
-def create_trip():
+def new_trip():
 	"""Adds a trip to the database"""
 
 	# Get trip details from form
@@ -309,6 +320,69 @@ def create_trip():
 
 	url = "/trip%d" % (trip.trip_id)
 	return redirect(url)
+
+
+
+@app.route("/edit_destination", methods=["POST"])
+def edit_destination():
+	"""Modifies the trip destination"""
+
+	# Get info from form
+	trip_id = request.form.get("trip_id")
+	destination = request.form.get("destination")
+	destination = geocoder.google(destination)
+
+	# Update DB
+	trip = Trip.query.get(trip_id)
+
+	trip.address = destination.address
+	trip.latitude = destination.lat
+	trip.longitude = destination.lng
+	trip.city = destination.city
+	trip.country_code = destination.country
+
+	db.session.commit()
+
+
+	return "Did it!" # FIXME Dont return this!
+
+
+
+@app.route("/edit_start", methods=["POST"])
+def edit_start():
+	"""Changes the trip start"""
+
+	# Get info from form
+	trip_id = request.form.get("trip_id")
+	start_raw = request.form.get("start")
+	start = datetime.strptime(start_raw, "%Y-%m-%d")
+
+	# Update DB
+	trip = Trip.query.get(trip_id)
+
+	trip.start = start
+	db.session.commit()
+
+	return "Nice!" # FIXME Dont return this!
+
+
+
+@app.route("/edit_end", methods=["POST"])
+def edit_end():
+	"""Changes the trip end"""
+
+	# Get info from form
+	trip_id = request.form.get("trip_id")
+	end_raw = request.form.get("end")
+	end = datetime.strptime(end_raw, "%Y-%m-%d")
+
+	# Update DB
+	trip = Trip.query.get(trip_id)
+	
+	trip.end = end
+	db.session.commit()
+
+	return "Sweet!" # FIXME Dont return this!
 
 
 
