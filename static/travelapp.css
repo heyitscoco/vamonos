@@ -2,19 +2,24 @@ body {
 	background-color: rgba(100,200,255, 1);
 }
 
-.main {
-	width: 100%;
-	border-radius: 3px;
-}
-
 .content {
 	background-color: rgba(255,255,255, 0.7);
 	border: solid 1px white;
+	padding: 1em;
+}
+
+.main {
+	width: 100%;
+	border-radius: 3px;
+	padding: 3em;
 }
 
 .centered {
 	display: block;
 	text-align: center;
+}
+
+.event {
 }
 
 .navbar {
@@ -43,7 +48,6 @@ body {
 #welcome-box {
 	width: 100%;
 	margin: 0 auto;
-	padding: 3em;
 }
 
 .day {

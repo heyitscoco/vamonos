@@ -19,7 +19,7 @@
 
 <div class="row">
 	<div class="col-xs-12">
-		<div id="event-streams" data-cities={{ cities }}>
+		<div id="event-streams" data-cities={{ citiesJSON }}>
 			{% for city in cities %}
 			<div id={{ city }} style="display:inline-block; padding: 1em">
 				<ul class="events" id="{{ city }}-events"></ul>
@@ -39,7 +39,10 @@
 function getEvents() {
 
 	// iterate thru cities
-	var cities = $("#event-streams").data("cities");
+	var citiesJSON = $("#event-streams").data("cities");
+	var cities = JSON.parse(citiesJSON);
+
+	console.log(cities);
 	cities.forEach(function (city) {
 		var data = { "venue.city": city,
 					 "token": "6OLY723AIVYNJBX63FFX",
