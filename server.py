@@ -260,12 +260,6 @@ def create_trip():
 
 	# Get trip details from form
 	title = request.form.get("title")
-	destination = request.form.get("destination")
-
-	latlng = geocoder.timezone(destination).location
-	lat, lng = latlng.split(",")
-	lat = lat.strip()
-	lng = lng.strip()
 
 	start_raw = request.form.get("start")
 	start = datetime.strptime(start_raw, "%Y-%m-%d")
@@ -274,13 +268,26 @@ def create_trip():
 	end = datetime.strptime(end_raw, "%Y-%m-%d")
 	end = find_next_day(end)
 
+	destination = request.form.get("destination")
+
+	# Get more details from geocoder
+	destination = geocoder.google(destination)
+	address = destination.address
+	lat = destination.lat
+	lng = destination.lng
+	city = destination.city
+	country_code = destination.country
+
 	# Add trip to DB
 	trip = Trip(admin_id=session["user_id"],
 				title=title,
 				start=start,
 				end=end,
 				latitude=lat,
-				longitude=lng
+				longitude=lng,
+				address=address,
+				city=city,
+				country_code=country_code
 				)
 	db.session.add(trip)
 	db.session.commit() # Commit here so that you can retrieve the trip_id!

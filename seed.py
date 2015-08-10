@@ -35,17 +35,22 @@ def load_trips():
 		start = datetime.strptime(start, "%Y, %m, %d")
 		end = datetime.strptime(end, "%Y, %m, %d")
 
-		latlng = geocoder.timezone(destination).location
-		lat, lng = latlng.split(",")
-		lat = lat.strip()
-		lng = lng.strip()
+		destination = geocoder.google(destination)
+		address = destination.address
+		lat = destination.lat
+		lng = destination.lng
+		city = destination.city
+		country_code = destination.country
 
 		trip = Trip(admin_id=admin_id,
 					title=title,
 					start=start,
 					end=end,
 					latitude=lat,
-					longitude=lng
+					longitude=lng,
+					address=address,
+					city=city,
+					country_code=country_code
 					)
 		db.session.add(trip)
 		db.session.commit()

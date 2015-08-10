@@ -1,29 +1,36 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	<form method="POST" id="create-trip">
-		<label class="form-group">
-			Trip Title:
-			<input class="form-control" type="text" name="title" placeholder="e.g. Balloonicorn's Party">
-		</label>
-
-		<label>
-			Where will you go?
-			<input class="form-control location" type="text" name="destination" placeholder="e.g. Miami">
-		</label>
-
-		<label class="form-group">
-			When will you arrive? <!-- Local time -->
-			<input class="form-control" type="date" name="start">
-		</label>
-
-		<label class="form=group">
-			When will you return? <!-- Local time -->
-			<input class="form-control" type="date" name="end">
-		</label>
-
-		<label class="form-group" id="login-submission">
-			<input class="form-control" type="submit" value="CREATE">
-		</label>
-	</form>
+<div class="col-xs-0 col-sm-3"></div>
+<div class="col-xs-12 col-sm-6">
+	<div class="content main centered">
+		<h4>Create Event</h4>
+		<form method="POST" id="create-trip">
+			<label class="form-group">
+				Trip Title:
+				<input class="form-control" type="text" name="title" placeholder="e.g. Balloonicorn's Party">
+			</label>
+			<br>
+			<label>
+				Where will you go?
+				<input class="form-control location" type="text" name="destination" placeholder="e.g. Miami">
+			</label>
+			<br>
+			<label class="form-group">
+				When will you arrive? <!-- Local time -->
+				<input class="form-control" type="date" name="start">
+			</label>
+			<br>
+			<label class="form=group">
+				When will you return? <!-- Local time -->
+				<input class="form-control" type="date" name="end">
+			</label>
+			<br>
+			<label class="form-group" id="login-submission">
+				<input class="btn btn-info form-control" type="submit" value="CREATE">
+			</label>
+		</form>
+	</div>
+</div>
+<div class="col-xs-0 col-sm-3"></div>	
 {% endblock %}

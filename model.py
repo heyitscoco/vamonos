@@ -62,10 +62,9 @@ class Trip(db.Model):
 
 	# Location details
 	place_name = db.Column(db.String(100))
-	latitude = db.Column(db.String(20), nullable=False)
-	longitude = db.Column(db.String(20), nullable=False)
-	address_1 = db.Column(db.String(200))
-	address_2 = db.Column(db.String(200))
+	latitude = db.Column(db.Float, nullable=False)
+	longitude = db.Column(db.Float, nullable=False)
+	address = db.Column(db.String(200))
 	city = db.Column(db.String(60))
 	region = db.Column(db.String(60))
 	postal_code = db.Column(db.String(20))

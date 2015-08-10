@@ -19,7 +19,8 @@ body {
 	text-align: center;
 }
 
-.event {
+.scrollable {
+	overflow: auto;
 }
 
 .navbar {
@@ -37,14 +38,18 @@ body {
 	height: 200px;
 }
 
+.my-modal {
+	background-color: rgba(255,255,255, .9);
+	border: solid 1px white;
+	padding: 1em;
+}
+
 #agenda {
 	height: 500px;
-	overflow: auto;
 }
 
 #nearby-events {
 	height: 700px;
-	overflow: auto;
 }
 
 #welcome-box {
