@@ -55,6 +55,7 @@ def load_trips():
 		db.session.add(trip)
 		db.session.commit()
 
+		# Create admin permission
 		perm = Permission(trip_id=trip.trip_id,
 				  user_id=admin_id,
 				  can_view=True,

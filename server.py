@@ -57,6 +57,7 @@ def login():
 
 	if user:
 		session["user_id"] = user.user_id
+		session["fname"] = user.fname
 		return redirect("/trips")
 
 	else:
@@ -175,25 +176,25 @@ def trip_planner(trip_id):
 
 	if 'user_id' in session:
 		viewer_id = session['user_id']
-		admin_id = Trip.query.get(trip_id).admin_id
+		trip = Trip.query.get(trip_id)
+		admin_id = trip.admin_id
 		permissions = Permission.query.filter(Permission.trip_id == trip_id, Permission.user_id != admin_id).all()
 		friendships = Friendship.query.filter_by(admin_id = viewer_id).all()
 		friends = [(friendship.friend.fname, friendship.friend_id) for friendship in friendships]
 		# FIXME loop thru; only add friendships that don't already have permissions associated.
 
 
-		# FIXME optionally add can_edit to session
+		trip = Trip.query.get(trip_id)
+		trip_start_str = datetime.strftime(trip.start, "%Y-%m-%dT%H:%M:%SZ")
+		trip_end_str = datetime.strftime(trip.end, "%Y-%m-%dT%H:%M:%SZ")
+
+		# Pass 'can_edit' boolean into the template
 		user_perm = Permission.query.filter(Permission.trip_id == trip_id, Permission.user_id == viewer_id).one()
-		print "\n\n User %r can_edit: %r\n\n" % (viewer_id, user_perm.can_edit)
 
 		if user_perm.can_edit:
 			can_edit = True
 		else:
 			can_edit = False
-
-		trip = Trip.query.get(trip_id)
-		trip_start_str = datetime.strftime(trip.start, "%Y-%m-%dT%H:%M:%SZ")
-		trip_end_str = datetime.strftime(trip.end, "%Y-%m-%dT%H:%M:%SZ")
 
 		return render_template("trip_planner.html",
 								admin_id=admin_id,
@@ -219,22 +220,31 @@ def add_permission():
 	trip_id = request.form.get("trip_id")
 	friend_id = request.form.get("friend_id")
 	can_edit = int(request.form.get("can_edit"))
+	
+	try:
+		# Check for existing permissions, update if found
+		perm = Permission.query.filter(Permission.user_id == friend_id, Permission.trip_id == trip_id).one()
+		perm.can_edit = can_edit
+		db.session.flush()
 
-	# Add permission to DB
-	perm = Permission(trip_id=trip_id,
-					  user_id=friend_id,
-					  can_view=True,
-					  can_edit=can_edit
-					  )
-	db.session.add(perm)
+	except NoResultFound:
+		# Add new permission to DB
+		perm = Permission(trip_id=trip_id,
+						  user_id=friend_id,
+						  can_view=True,
+						  can_edit=can_edit
+						  )
+		db.session.add(perm)
+		
 	db.session.commit()
 
 	# Confirm submission
-	friend = User.query.get(friend_id)
 	if can_edit:
 		ability = "view & edit"
 	else:
 		ability = "view"
+
+	friend = User.query.get(friend_id)
 
 	msg = "%s is now allowed to %s this trip!" % (friend.fname, ability)
 	flash(msg)
