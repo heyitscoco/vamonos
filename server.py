@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import geocoder
 import os
 import requests
+import random
 
 token = os.environ['PERSONAL_OAUTH']
 
@@ -17,16 +18,20 @@ app.secret_key = "most_secret_key_EVER!!!!!!!"
 def home():
 	"""Displays homepage"""
 
-	popular_cities = ['Boston', 'London', 'Paris']
+	cities = ['Boston', 'Seoul', 'London', 'Paris', 'Berlin', 'Venice', 'Stockholm']
+	cities_sample = random.sample(cities, 4)
+
 
 	cities_dict = {}
-	for city in popular_cities:
+	for city in cities_sample:
 		cities_dict[city] = city
 
 	cities_json = json.dumps(cities_dict)
 	print "\n\n",type(cities_json), cities_json,"\n\n"
 	
-	return render_template('home.html', cities=popular_cities, citiesJSON=cities_json)
+	return render_template('home.html',
+							cities=cities_sample,
+							citiesJSON=cities_json)
 
 
 

@@ -24,7 +24,7 @@
 			<div id={{ city }} style="display:inline-block; padding: 1em">
 				<div id="stream-div-{{ city }}" class="scrollable" style="height: 200px; width: 200px">
 					<ul class="events" id="{{ city }}-events"></ul>
-				<div>
+				</div>
 			</div>
 			{% endfor %}
 		</div>
@@ -59,7 +59,7 @@ function getEvents() {
 			// add city name to DOM
 			var cityName = $('<h3>')
 							.text(city);
-			$("#" + city).append(cityName);
+			$("#" + city).prepend(cityName);
 
 			var events = result.events;
 			events.forEach(function(event) {
