@@ -430,7 +430,14 @@ def create_event():
 
 	# Get info from form
 	title = request.form.get("title")
-	city = request.form.get("city")
+	location = request.form.get("location")
+	location = geocoder.google(location)
+
+	address = location.address
+	lat = location.lat
+	lng = location.lng
+	city = location.city
+	country_code = location.country
 
 	start_raw = request.form.get("start")
 	start = datetime.strptime(start_raw, "%Y-%m-%dT%H:%M")
@@ -444,12 +451,17 @@ def create_event():
 	# Add event to DB
 	if day:
 		day = day[0]
+
 		event = Event(day_id=day.day_id,
 					  user_id=session['user_id'],
 					  title=title,
 					  start=start,
 					  end=end,
-					  city=city
+					  address=address,
+					  latitude=lat,
+					  longitude=lng,
+					  city=city,
+					  country_code=country_code
 					  )
 		db.session.add(event)
 		db.session.commit()

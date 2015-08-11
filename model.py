@@ -66,10 +66,7 @@ class Trip(db.Model):
 	longitude = db.Column(db.Float, nullable=False)
 	address = db.Column(db.String(200))
 	city = db.Column(db.String(60))
-	region = db.Column(db.String(60))
-	postal_code = db.Column(db.String(20))
 	country_code = db.Column(db.String(5))
-	country_name = db.Column(db.String(60))
 
 
 	def __repr__(self):
@@ -176,13 +173,9 @@ class Event(db.Model):
 	place_name = db.Column(db.String(100))
 	latitude = db.Column(db.Float)
 	longitude = db.Column(db.Float)
-	address_1 = db.Column(db.String(200))
-	address_2 = db.Column(db.String(200))
+	address = db.Column(db.String(200))
 	city = db.Column(db.String(60), nullable=False)
-	region = db.Column(db.String(60))
-	postal_code = db.Column(db.String(20))
 	country_code = db.Column(db.String(10))
-	country_name = db.Column(db.String(60))
 
 	user = db.relationship(
 				'User',

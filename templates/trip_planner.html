@@ -192,7 +192,7 @@
 					{% if can_edit %}
 					<button type="button" class="btn btn-info" data-toggle="modal" data-target="#my-modal">Create Event</button>
 					{% endif %}
-<!-- New Event Modal -->
+<!-- Create Event Modal -->
 					<!-- Modal Window-->
 					<div id="my-modal" class="modal fade" role="dialog">
 						<div class="modal-dialog">
@@ -219,8 +219,8 @@
 							        		<input class="form-control" name="end" type="datetime-local">
 							        	</label>
 							        	<br>
-							        	<label class="form-group">
-							        		<input class="form-control" name="city" type="hidden" value={{ trip.city }}>
+							        	<label>
+							        		<input class="form-control" name="location" type="text" placeholder="location">
 							        	</label>
 							        	<br>
 							        	<label class="form-group">
@@ -259,7 +259,7 @@ function getEvents() {
 		var trip_end = $("#agenda").data("end");
 		console.log(trip_start);
 		console.log(trip_end);
-		
+
 		var data = {token: token,
 					"location.latitude": latitude,
 					"location.longitude": longitude,
