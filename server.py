@@ -207,7 +207,6 @@ def trip_planner(trip_id):
 			admin = False
 
 		return render_template("trip_planner.html",
-								admin_id=admin_id,
 								trip=trip,
 								trip_start_str=trip_start_str,
 								trip_end_str=trip_end_str,
@@ -542,6 +541,26 @@ def add_event(event_id, trip_id):
 		msg = "Oops! Something went wrong."
 	
 	url = "/trip%s" %(str(trip_id))
+	return redirect(url)
+
+
+
+@app.route("/rm_event", methods=["POST"])
+def rm_event():
+	"""Removes an event from the trip"""
+	
+	event_id = request.form.get("event_id")
+	trip_id = int(request.form.get("trip_id"))
+
+	event = Event.query.filter(Event.event_id == event_id, Day.trip_id == trip_id).first()
+
+	db.session.delete(event)
+	db.session.commit()
+
+	msg = "You have successfully removed this event."
+	flash(msg)
+
+	url = "/trip%d" % (trip_id)
 	return redirect(url)
 
 #############################################################
