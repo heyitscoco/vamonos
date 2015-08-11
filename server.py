@@ -24,6 +24,7 @@ def home():
 		cities_dict[city] = city
 
 	cities_json = json.dumps(cities_dict)
+	print "\n\n",type(cities_json), cities_json,"\n\n"
 	
 	return render_template('home.html', cities=popular_cities, citiesJSON=cities_json)
 
@@ -181,8 +182,6 @@ def trip_planner(trip_id):
 		permissions = Permission.query.filter(Permission.trip_id == trip_id, Permission.user_id != admin_id).all()
 		friendships = Friendship.query.filter_by(admin_id = viewer_id).all()
 		friends = [(friendship.friend.fname, friendship.friend_id) for friendship in friendships]
-		# FIXME loop thru; only add friendships that don't already have permissions associated.
-
 
 		trip = Trip.query.get(trip_id)
 		trip_start_str = datetime.strftime(trip.start, "%Y-%m-%dT%H:%M:%SZ")
@@ -222,9 +221,14 @@ def add_permission():
 	"""Adds a new permission to the DB"""
 
 	# Get info from form
-	trip_id = request.form.get("trip_id")
-	friend_id = request.form.get("friend_id")
-	can_edit = int(request.form.get("can_edit"))
+	trip_id = int(request.form.get("tripId"))
+	friend_id = int(request.form.get("friendId"))
+	can_edit = int(request.form.get("canEdit"))
+
+	if can_edit: # can_edit was 1
+		can_edit = True
+	else: # can_edit was 0
+		can_edit = False
 	
 	try:
 		# Check for existing permissions, update if found
@@ -240,7 +244,6 @@ def add_permission():
 						  can_edit=can_edit
 						  )
 		db.session.add(perm)
-		
 	db.session.commit()
 
 	# Confirm submission
@@ -253,7 +256,12 @@ def add_permission():
 	msg = "%s is now allowed to %s this trip!" % (friend.fname, ability)
 	flash(msg)
 
-	return redirect("/") # FIXME Don't redirect here!
+	friends_dict = {}
+
+	for friend in friends:
+		friend
+
+	return json.dumps(friends_dict) # FIXME Don't return this!
 
 
 
@@ -266,7 +274,6 @@ def rm_permission():
 	trip_id = request.form.get("trip_id")
 
 	# Remove permission based on info
-
 	perm = Permission.query.filter(Permission.user_id == friend_id, Permission.trip_id == trip_id).one()
 
 	db.session.delete(perm)
@@ -392,7 +399,9 @@ def edit_start():
 	trip.start = start
 	db.session.commit()
 
-	return "Nice!" # FIXME Dont return this!
+	msg = "Nice!"
+	flash(msg)
+	return msg # FIXME Dont return this!
 
 
 
@@ -470,6 +479,8 @@ def add_event(event_id, trip_id):
 	venue = requests.get(venue_uri).json()
 
 	title = event['name']['text']
+	url = event['url']
+
 	start = event['start']['utc']
 	start = datetime.strptime(start, "%Y-%m-%dT%H:%M:%SZ")
 
@@ -509,7 +520,8 @@ def add_event(event_id, trip_id):
 					  postal_code=postal_code,
 					  country_code=country_code,
 					  latitude=lat,
-					  longitude=lng
+					  longitude=lng,
+					  url=url
 					  )
 		db.session.add(event)
 		db.session.commit()
@@ -518,8 +530,8 @@ def add_event(event_id, trip_id):
 	else:
 		msg = "Oops! Something went wrong."
 	
-	flash(msg)
-	return redirect("#")
+	response_dict = { msg: msg }
+	return json.dumps(response_dict)
 
 #############################################################
 

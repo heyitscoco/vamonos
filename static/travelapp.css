@@ -2,6 +2,57 @@ body {
 	background-color: rgba(100,200,255, 1);
 }
 
+th {
+	background-color: rgba(255,255,255, 0.5);
+	border: 1px solid white;
+}
+
+td {
+	background-color: rgba(255,255,255, 0.3);
+	border: 1px solid white;
+}
+
+h4 {
+	text-align: center;
+	padding-bottom: 1em;
+}
+
+ul {
+	list-style-type: none;
+}
+
+select {
+    border: 1px solid white;
+    background-color: rgba(0,0,0,0);
+}
+
+.edit-btn {
+	background-image: url("/static/img/edit-pencil.png");
+}
+
+.add-btn {
+	background-image: url("/static/img/add.png");
+}
+
+.view-btn {
+	background-image: url("/static/img/view.png");
+
+}
+
+.delete-btn {
+	background-image: url("/static/img/trash.png");
+}
+
+.icon {
+	width: 15px;
+	height: 15px;
+
+	background-size: 100%;
+	background-repeat: no-repeat;
+	background-color: rgba(0,0,0,0);
+	border: none;
+}
+
 .content {
 	background-color: rgba(255,255,255, 0.7);
 	border: solid 1px white;

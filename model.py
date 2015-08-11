@@ -190,7 +190,7 @@ class Event(db.Model):
 				)
 	day = db.relationship(
 				'Day',
-				backref=db.backref('events', order_by=day_id)
+				backref=db.backref('events', order_by=start)
 				)
 
 	def __repr__(self):
@@ -242,14 +242,12 @@ def connect_to_db(app):
 
     # Configure to use our SQLite database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///travelapp.db'
-	# app.config['SQLALCHEMY_ECHO'] = True
+    app.config['SQLALCHEMY_ECHO'] = True
     db.app = app
     db.init_app(app)
 
 
 if __name__ == "__main__":
-    # As a convenience, if we run this module interactively, it will leave
-    # you in a state of being able to work with the database directly.
 
     from server import app
     connect_to_db(app)
