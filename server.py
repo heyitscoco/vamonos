@@ -500,11 +500,8 @@ def add_event(event_id, trip_id):
 	end = datetime.strptime(end, "%Y-%m-%dT%H:%M:%SZ")
 
 	place_name = venue.get('address',{}).get('name')
-	address_1 = venue['address'].get('address_1')
-	address_2 = venue['address'].get('address_2')
+	address = venue['address'].get('address_1')
 	city = venue['address'].get('city')
-	region = venue['address'].get('region')
-	postal_code = venue['address'].get('postal_code')
 	country_code = venue['address'].get('country')
 	lat = venue['latitude']
 	lng = venue['longitude']
@@ -525,11 +522,8 @@ def add_event(event_id, trip_id):
 					  start=start,
 					  end=end,
 					  place_name=place_name,
-					  address_1=address_1,
-					  address_2=address_2,
+					  address=address,
 					  city=city,
-					  region=region,
-					  postal_code=postal_code,
 					  country_code=country_code,
 					  latitude=lat,
 					  longitude=lng,
@@ -542,8 +536,8 @@ def add_event(event_id, trip_id):
 	else:
 		msg = "Oops! Something went wrong."
 	
-	response_dict = { msg: msg }
-	return json.dumps(response_dict)
+	url = "/trip%s" %(str(trip_id))
+	return redirect(url)
 
 #############################################################
 
