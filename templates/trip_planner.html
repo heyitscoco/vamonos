@@ -173,11 +173,24 @@
 							<tbody>
 								<tr>
 								{% for day in trip.days %}
-									<td style="padding: 1em; width: 200px;">
+									<td>
 										<ul>
 											{% for event in day.events %}
 												<li class="event">
 													{{ event.title }}
+													
+													{% if admin %}
+													<button class="icon delete-btn"></button>
+													{% endif %}
+
+													{% if event.url %}
+													<a href={{ event.url }} target="_blank">
+														<img src="/static/img/eventbrite.png" class="icon">
+													</a>
+													{% endif %}
+
+
+
 												</li>
 											{% endfor %}
 										</ul>
