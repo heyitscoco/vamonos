@@ -118,13 +118,13 @@
 								<!-- Edit Destination Form -->
 						        <form action="/edit_destination" method="POST">
 						        	<label class="form-group">
-						        		<input class="form-control" name="destination" type="text" placeholder="New Destination">
+						        		<input id="new-dest" class="form-control" name="destination" type="text" placeholder="New Destination">
 						        	</label>
 						        	<label class="form-group">
-						        		<input class="form-control" name="trip_id" type="hidden" value={{ trip.trip_id }}>
+						        		<input id="trip-id" class="form-control" name="trip_id" type="hidden" value={{ trip.trip_id }}>
 						        	</label>
 						        	<label class="form-group">
-						        		<input class="form-control btn btn-info" type="submit" value="Submit">
+						        		<input id="edit-dest" class="form-control btn btn-info" type="submit" value="Submit">
 						        	</label>
 						        </form>
 
@@ -199,8 +199,8 @@
 		</div>
 <!-- Agenda -->
 		<div class="row">	
-			<div class="col-xs-12" data-trip={{ trip.trip_id }} data-start={{ trip_start_str }} data-end={{ trip_end_str }}>
-				<div class="content" id="agenda">
+			<div class="col-xs-12">
+				<div class="content" id="agenda" data-trip={{ trip.trip_id }} data-start={{ trip_start_str }} data-end={{ trip_end_str }}>
 					<h4>Agenda</h4>
 					<div class="scrollable">
 						<table>
@@ -292,6 +292,7 @@ function getEvents() {
 		var token = parsedJSON.token
 
 		var tripId = $("#agenda").data("trip");
+		console.log(tripId)
 		var latitude = $("#nearby-events").data("latitude");
 		var longitude = $("#nearby-events").data("longitude");
 
@@ -337,21 +338,22 @@ function getEvents() {
 	});
 };
 
-// $(document).on("ready", getEvents);
+$(document).on("ready", getEvents);
 
 
-function editPerms(evt) {
+function editDest(evt) {
 	evt.preventDefault();
 
-	// var formInputs = { type: $("#type").val(), amount: $("#amount").val() };
+	var tripId = $("#agenda").data("trip");
+	var formInputs = { destination: $("#new-dest").val(), tripId: tripId };
 
- //  $.post("/new-order", formInputs, function (result) {
- //      alert(result);
- //    }
- //  );
+	$.post("/edit_destination", formInputs, function (result) {
+      alert(result);
+    }
+  );
 }
 
-$('.edit-perms').on('click', editPerms);
+$('#edit-dest').on('click', editDest);
 
 </script>
 {% endblock %}

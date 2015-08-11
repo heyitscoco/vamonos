@@ -357,7 +357,7 @@ def edit_destination():
 	"""Modifies the trip destination"""
 
 	# Get info from form
-	trip_id = request.form.get("trip_id")
+	trip_id = int(request.form.get("tripId"))
 	destination = request.form.get("destination")
 	destination = geocoder.google(destination)
 
