@@ -100,7 +100,7 @@ class Trip(db.Model):
 
 
 	def generateItinerary(self, filename):
-		"""Writes the itinerary on a canvas"""
+		"""Generates a PDF of the itinerary"""
 
 		# Create canvas
 		my_canvas = canvas.Canvas(filename, bottomup=0)

@@ -215,7 +215,7 @@
 						<button type="button" class="btn btn-info" data-toggle="modal" data-target="#my-modal">Create Event</button>
 					{% endif %}
 					<button type="button" class="btn btn-default" id="gen-pdf">
-						Download PDF
+						PDF
 					</button>
 <!-- Create Event Modal -->
 					<!-- Modal Window-->
@@ -368,15 +368,17 @@ function toggleTooltip() {
     $('[data-toggle="tooltip"]').tooltip(); 
 }
 
-
-
 function generatePDF() {
 	var formInputs = { tripId: $("#agenda").data("trip") };
 
 	$.post("/pdf", formInputs, function (result) {
 		resultJSON = JSON.parse(result)
-		msg = resultJSON.msg
-		console.log(msg)
+		//var msg = resultJSON.msg
+		// console.log(msg)
+		var filename = resultJSON.filename
+
+		var url = "/itinerary" + $("#agenda").data("trip")
+		window.open(url, "PopupWindow", "width=600,height=600,scrollbars=yes,resizable=no");
 	})
 };
 

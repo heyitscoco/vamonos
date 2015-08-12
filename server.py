@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, flash, session, request, json, make_response
+from flask import Flask, redirect, render_template, flash, session, request, json, send_file
 from model import *
 from datetime import datetime, timedelta
 import geocoder
@@ -23,10 +23,20 @@ def generatePDF():
 
 	trip.generateItinerary(filename)
 
-	response_dict = {'msg': 'File generated.'}
+	# response_dict = {'msg': 'File generated.'}
+	response_dict = {'filename': filename}
 	response = json.dumps(response_dict)
+
 	return response
 
+
+@app.route("/itinerary<int:trip_id>")
+def showPDF(trip_id):
+	"""Displays the PDF itinerary"""
+
+	filename = 'itinerary%r.pdf' % (trip_id)
+	itinerary = open(filename, 'rb')
+	return send_file(itinerary)
 
 
 @app.route("/")
