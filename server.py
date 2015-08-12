@@ -522,7 +522,7 @@ def add_event(event_id, trip_id):
 	trip_end = Trip.query.get(trip_id).end
 
 	# Determine correct day
-	day = Day.query.filter(Day.trip_id == int(trip_id), Day.start <= start, Day.end >= end).all()
+	day = Day.query.filter(Day.trip_id == int(trip_id), Day.start <= start, Day.end >= start).all()
 
 	# Add event to DB
 	if day:
