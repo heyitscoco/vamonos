@@ -20,7 +20,6 @@ def generatePDF():
 	trip_id = int(request.form['tripId'])
 	trip = Trip.query.get(trip_id)
 	filename = "itinerary%d.pdf" % (trip_id)
-
 	trip.generateItinerary(filename)
 
 	# response_dict = {'msg': 'File generated.'}
@@ -30,7 +29,7 @@ def generatePDF():
 	return response
 
 
-@app.route("/itinerary<int:trip_id>")
+@app.route("/itinerary<int:trip_id>", methods=['GET', 'POST'])
 def showPDF(trip_id):
 	"""Displays the PDF itinerary"""
 

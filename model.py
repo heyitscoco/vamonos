@@ -105,10 +105,29 @@ class Trip(db.Model):
 		# Create canvas
 		my_canvas = canvas.Canvas(filename, bottomup=0)
 
-		# Write to canvas
-		my_canvas.drawString(100, 100, "This is my itinerary!")
+		my_canvas.drawString(100, 100, self.title)
 
-		# Save canvas to PDF file
+		y = 140
+		for day in self.days:
+
+			if day.events:
+				
+				day_start = datetime.strftime(day.start, "%b %d")
+				day_header = "%s (Day %d)" % (day_start, day.day_num)
+
+				my_canvas.drawString(100, y, day_header)
+				y += 20
+
+				for event in day.events:
+
+					event_start = datetime.strftime(event.start, "%-I:%M %p")
+					event_header = "%s - %s" % (event_start, event.title)
+
+					my_canvas.drawString(100, y, event_header)
+					y += 20
+
+				y += 20
+
 		my_canvas.showPage
 		my_canvas.save()
 

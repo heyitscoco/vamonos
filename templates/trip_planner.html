@@ -378,7 +378,7 @@ function generatePDF() {
 		var filename = resultJSON.filename
 
 		var url = "/itinerary" + $("#agenda").data("trip")
-		window.open(url, "PopupWindow", "width=600,height=600,scrollbars=yes,resizable=no");
+		window.open(url, "_blank");
 	})
 };
 
@@ -390,8 +390,7 @@ function generatePDF() {
 	// On-ready event lisiteners
 $(document).ready(setupTooltips);
 $(document).ready(toggleTooltip);
-
-$(document).ready(getEvents);
+// $(document).ready(getEvents);
 
 	// Clickable event listeners
 $('#submit-view').on('click', submitViewPermission);
