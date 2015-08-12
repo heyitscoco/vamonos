@@ -214,6 +214,7 @@
 					{% if can_edit %}
 					<button type="button" class="btn btn-info" data-toggle="modal" data-target="#my-modal">Create Event</button>
 					{% endif %}
+					<button type="button" class="btn btn-default" id="gen-pdf">Download PDF</button>
 <!-- Create Event Modal -->
 					<!-- Modal Window-->
 					<div id="my-modal" class="modal fade" role="dialog">
@@ -263,6 +264,7 @@
 
 
 {% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.1.135/jspdf.debug.js"></script> 
 <script>
 
 // Functions
@@ -365,6 +367,11 @@ function toggleTooltip() {
 }
 
 
+
+function generatePDF() {
+
+};
+
 //////////////////////////////////////////////////////////////////
 
 // Event listeners
@@ -377,9 +384,9 @@ $(document).ready(toggleTooltip);
 $(document).ready(getEvents);
 
 	// Clickable event listeners
-$('#edit-dest').on('click', editDest);
 $('#submit-view').on('click', submitViewPermission);
-$("#submit-edit").on("click", submitEditPermission);
+$("#submit-edit").on('click', submitEditPermission);
+$("#gen-pdf").on('click', generatePDF);
 
 </script>
 

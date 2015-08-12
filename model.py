@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime, timedelta
+from reportlab.pdfgen import canvas
 
 db = SQLAlchemy()
 
@@ -96,6 +97,20 @@ class Trip(db.Model):
 			day_end += timedelta(days=1)
 
 		db.session.commit()
+
+
+	def generateItinerary(self, filename):
+		"""Writes the itinerary on a canvas"""
+
+		# Create canvas
+		my_canvas = canvas.Canvas(filename, bottomup=0)
+
+		# Write to canvas
+		my_canvas.drawString(100, 100, "This is my itinerary!")
+
+		# Save canvas to PDF file
+		my_canvas.showPage
+		my_canvas.save()
 
 
 

@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, flash, session, request, json
+from flask import Flask, redirect, render_template, flash, session, request, json, make_response
 from model import *
 from datetime import datetime, timedelta
 import geocoder
@@ -13,6 +13,20 @@ app.secret_key = "most_secret_key_EVER!!!!!!!"
 
 #############################################################
 # Routes
+
+@app.route("/pdf/<int:trip_id>")
+def generatePDF(trip_id):
+	"""Generates a PDF of the itinerary"""
+
+	trip = Trip.query.get(trip_id)
+	filename = "itinerary%r.pdf" % (trip_id)
+
+	trip.generateItinerary(filename)
+
+	flash("File generated.")
+	return redirect("/")
+
+
 
 @app.route("/")
 def home():
