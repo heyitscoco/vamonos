@@ -14,17 +14,18 @@ app.secret_key = "most_secret_key_EVER!!!!!!!"
 #############################################################
 # Routes
 
-@app.route("/pdf/<int:trip_id>")
-def generatePDF(trip_id):
+@app.route("/pdf", methods=["POST"])
+def generatePDF():
 	"""Generates a PDF of the itinerary"""
-
+	trip_id = int(request.form['tripId'])
 	trip = Trip.query.get(trip_id)
-	filename = "itinerary%r.pdf" % (trip_id)
+	filename = "itinerary%d.pdf" % (trip_id)
 
 	trip.generateItinerary(filename)
 
-	flash("File generated.")
-	return redirect("/")
+	response_dict = {'msg': 'File generated.'}
+	response = json.dumps(response_dict)
+	return response
 
 
 
