@@ -165,6 +165,7 @@ class Event(db.Model):
 						nullable=False
 						)
 	title = db.Column(db.String(100))
+	description = db.Column(db.Text, default="No description available.", nullable=False)
 	start = db.Column(db.DateTime, nullable=False)
 	end = db.Column(db.DateTime, nullable=False)
 	url = db.Column(db.String(300))

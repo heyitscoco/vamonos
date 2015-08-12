@@ -175,8 +175,9 @@
 										<ul>
 											{% for event in day.events %}
 												<li class="event">
-													{{ event.title }}
-
+													<p data-toggle="tooltip" title="{{ event.description }}">
+														{{ event.title }}
+													</p>
 													{% if admin %}
 														<form action="/rm_event" method="POST" style="display: inline-block">
 															<label>
@@ -192,7 +193,7 @@
 													{% endif %}
 
 													{% if event.url %}
-													<a href={{ event.url }} target="_blank">
+													<a href={{ event.url }} target="_blank"data-toggle="tooltip" title="View on Eventbrite">
 														<img src="/static/img/eventbrite.png" class="icon">
 													</a>
 													{% endif %}
@@ -278,8 +279,6 @@ function getEvents() {
 
 		var trip_start = $("#agenda").data("start");
 		var trip_end = $("#agenda").data("end");
-		console.log(trip_start);
-		console.log(trip_end);
 
 		var data = {token: token,
 					"location.latitude": latitude,
@@ -321,18 +320,7 @@ function getEvents() {
 	});
 };
 
-function editDest(evt) { // FIXME: Implement AJAX here?
-	evt.preventDefault();
-	var formInputs = { destination: $("#new-dest").val(), tripId: $("#agenda").data("trip") };
-
-	$.post("/edit_destination", formInputs, function (result) {
-    	// flash(result);
-    });
-}
-
-
-
-function submitView(evt) {
+function submitViewPermission(evt) {
 	evt.preventDefault();
 
 	var tripId = $("#agenda").data("trip");
@@ -351,7 +339,7 @@ function submitView(evt) {
 	});	
 }
 
-function submitEdit(evt) {
+function submitEditPermission(evt) {
 	evt.preventDefault();
 	var formInputs = { tripId: $("#agenda").data("trip"), friendId: $("#friend_id").val(), canEdit: 1 };
 
@@ -361,15 +349,37 @@ function submitEdit(evt) {
 	);
 }
 
+function setupTooltips() {
+	$(".delete-btn").attr("data-toggle", "tooltip")
+					.attr("title", "Delete");
+
+	$(".edit-btn").attr("data-toggle", "tooltip")
+					.attr("title", "Edit");
+
+	$(".view-btn").attr("data-toggle", "tooltip")
+					.attr("title", "View");				
+}
+
+function toggleTooltip() {
+    $('[data-toggle="tooltip"]').tooltip(); 
+}
+
 
 //////////////////////////////////////////////////////////////////
 
 // Event listeners
 
-$(document).on("ready", getEvents);
+
+	// On-ready event lisiteners
+$(document).ready(setupTooltips);
+$(document).ready(toggleTooltip);
+
+$(document).ready(getEvents);
+
+	// Clickable event listeners
 $('#edit-dest').on('click', editDest);
-$('#submit-view').on('click', submitView);
-$("#submit-edit").on("click", submitEdit);
+$('#submit-view').on('click', submitViewPermission);
+$("#submit-edit").on("click", submitEditPermission);
 
 </script>
 
