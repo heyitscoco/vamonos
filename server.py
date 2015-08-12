@@ -192,6 +192,11 @@ def trip_planner(trip_id):
 		trip_start_str = datetime.strftime(trip.start, "%Y-%m-%dT%H:%M:%SZ")
 		trip_end_str = datetime.strftime(trip.end, "%Y-%m-%dT%H:%M:%SZ")
 
+		trip_start_dsply = datetime.strftime(trip.start, "%b %d, %Y")
+		last_day = trip.end - timedelta(1)
+		trip_end_dsply = datetime.strftime(last_day, "%b %d, %Y")
+
+
 		# Pass 'can_edit' boolean into template
 		user_perm = Permission.query.filter(Permission.trip_id == trip_id, Permission.user_id == viewer_id).one()
 
@@ -210,6 +215,8 @@ def trip_planner(trip_id):
 								trip=trip,
 								trip_start_str=trip_start_str,
 								trip_end_str=trip_end_str,
+								trip_start_dsply=trip_start_dsply,
+								trip_end_dsply=trip_end_dsply,
 								permissions=permissions,
 								friends=friends,
 								can_edit=can_edit,
@@ -416,7 +423,7 @@ def edit_end():
 	# Get info from form
 	trip_id = request.form.get("trip_id")
 	end_raw = request.form.get("end")
-	end = datetime.strptime(end_raw, "%Y-%m-%d")
+	end = datetime.strptime(end_raw, "%Y-%m-%d") + timedelta(1)
 
 	# Update DB
 	trip = Trip.query.get(trip_id)
