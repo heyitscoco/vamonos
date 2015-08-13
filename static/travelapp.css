@@ -44,6 +44,10 @@ select {
 	background-image: url("/static/img/trash.png");
 }
 
+.phone-btn {
+	background-image: url("/static/img/phone.png");
+}
+
 .icon {
 	width: 15px;
 	height: 15px;
