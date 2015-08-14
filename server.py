@@ -24,8 +24,8 @@ def send_text():
 
 	trip_id = int(request.form['tripId'])
 	trip = Trip.query.get(trip_id)
-
 	if not trip.notification_sent:
+		
 		numbers = []
 		for perm in trip.permissions:
 			user = User.query.get(perm.user_id)
@@ -33,13 +33,18 @@ def send_text():
 				numbers.append(user.phone)
 
 		client = TwilioRestClient(tw_sid, tw_token)
-		body = "Travelling tomorrow!" # FIXME: Dynamic message?
+
+		admin_name = User.query.get(trip.admin_id).fname
+		msg_body = "REMINDER: %s's trip to %s starts tomorrow!" % (admin_name, trip.city)
 
 		for number in numbers:
 			message = client.messages.create(from_ = TWILIO_NUMBER,
-										 to = number,
-										 body = body
-										 )
+										 	 to=number,
+										 	 body=msg_body
+										 	 )
+		trip.notification_sent = True
+		db.session.commit()
+
 	return "We did it!" # FIXME: What should I return here?
 
 
@@ -478,6 +483,7 @@ def edit_start():
 	trip = Trip.query.get(trip_id)
 
 	trip.start = start
+	trip.notification_sent = False
 	db.session.commit()
 	trip.update_days()
 

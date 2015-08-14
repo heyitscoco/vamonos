@@ -85,9 +85,11 @@ class Trip(db.Model):
 
 		# Create canvas
 		my_canvas = canvas.Canvas(filename, bottomup=0)
-
+		
+		# Add trip title
 		my_canvas.drawString(100, 100, self.title)
 
+		# Add events for each day
 		y = 140
 		for day in self.days:
 

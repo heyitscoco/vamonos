@@ -11,7 +11,7 @@ def load_users():
 	file = open('static/data/users.txt')
 
 	for line in file:
-		fname, lname, email, password, img_url = line.rstrip().split(",")
+		fname, lname, email, password, img_url,  = line.rstrip().split(",")
 
 		user = User(fname=fname,
 				   lname=lname,
@@ -20,6 +20,9 @@ def load_users():
 				   img_url = img_url
 				   )
 		db.session.add(user)
+	db.session.commit()
+	# Add Carolyn's phone number to the DB
+	User.query.get(1).phone = '6179973559'
 
 
 
