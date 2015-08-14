@@ -48,6 +48,8 @@ class User(db.Model):
 		except NoResultFound:
 			return None
 
+
+
 class Trip(db.Model):
 
 	__tablename__ = "Trips"
@@ -76,31 +78,6 @@ class Trip(db.Model):
 
 	def __repr__(self):
 		return "< Trip ID: %d ADMIN: %s TITLE: %s >" % (self.trip_id, self.admin_id, self.title)
-
-
-	def create_days(self):
-		"""Creates the appropriate number of days for this trip"""
-
-		trip_start = self.start
-		trip_end = self.end
-
-		day_start = trip_start
-		day_end = day_start + timedelta(hours=23, minutes=59)
-		day_num = 1
-
-		while day_end <= trip_end:
-			day = Day(trip_id = self.trip_id,
-					  day_num = day_num,
-					  start=day_start,
-					  end=day_end
-					  )
-			db.session.add(day)
-
-			day_num += 1
-			day_start += timedelta(days=1)
-			day_end += timedelta(days=1)
-
-		db.session.commit()
 
 
 	def generate_itinerary(self, filename):
@@ -135,11 +112,74 @@ class Trip(db.Model):
 		my_canvas.showPage
 		my_canvas.save()
 
+	def create_days(self):
+		"""Creates the appropriate number of days for this trip"""
 
-	def set_timer(self):
-		"""Sets a timer for this trip"""
+		trip_start = self.start
+		trip_end = self.end
 
-		pass
+		day_start = trip_start
+		day_end = day_start + timedelta(hours=23, minutes=59)
+		day_num = 1
+
+		while day_end <= trip_end:
+			day = Day(trip_id = self.trip_id,
+					  day_num = day_num,
+					  start=day_start,
+					  end=day_end
+					  )
+			db.session.add(day)
+
+			day_num += 1
+			day_start += timedelta(days=1)
+			day_end += timedelta(days=1)
+
+		db.session.commit()
+
+
+	def update_days(self):
+		"""Adds/Removes days from the trip as necessary"""
+
+		trip_start = self.start
+		trip_end = self.end
+		trip_id = self.trip_id
+
+		day_start = trip_start
+		day_end = day_start + timedelta(hours=23, minutes=59)
+		day_num = 1
+
+
+		# Delete unnecessary days
+		for day in self.days:
+			if day.start < trip_start or day.start > trip_end:
+				# delete all of that day's events first, for referential integrity
+				for event in day.events:
+					db.session.delete(event)
+				db.session.delete(day)
+
+		# Add necessary days
+		while day_end <= trip_end:
+			try:
+				# Check for a day on this trip starting at the specified time
+				day = Day.query.filter(Day.trip_id == trip_id, Day.start == day_start).one()
+				day.day_num = day_num
+
+			except NoResultFound:
+				# Create the necessary day
+				day = Day(trip_id=trip_id,
+						  day_num=day_num,
+						  start=day_start,
+						  end=day_end
+						  )
+				db.session.add(day)
+
+			day_num += 1
+			day_start += timedelta(days=1)
+			day_end += timedelta(days=1)
+
+		db.session.commit()
+
+
 
 class Permission(db.Model):
 
@@ -170,6 +210,7 @@ class Permission(db.Model):
 		return "< Permission ID: %s TRIP: %s USER: %s Edit: %r >" % (self.perm_id, self.trip_id, self.user_id, self.can_edit)
 
 
+
 class Day(db.Model):
 
 	__tablename__ = "Days"
@@ -185,11 +226,12 @@ class Day(db.Model):
 	
 	trip = db.relationship(
 				'Trip',
-				backref=db.backref('days', order_by=day_num)
+				backref=db.backref('days', order_by=start)
 				)
 
 	# def __repr__(self):
 	# 	return "< Day ID: %d TRIP: %d DAY_NUM: %d >" % (self.day_id, self.trip_id, self.day_num)
+
 
 
 class Event(db.Model):

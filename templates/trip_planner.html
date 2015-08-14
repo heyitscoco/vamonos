@@ -5,16 +5,17 @@
 {% block content %}
 <div class="row">
 <!-- Nearby Events -->
-	{% if can_edit %}
+
 	<div class="col-xs-3">
 		<div id="nearby-events" class="content" data-latitude={{ trip.latitude }} data-longitude={{ trip.longitude }}>
+			{% if can_edit %}
 			<h4>Nearby Events</h4>
 			<div class="scrollable" style="height: 600px">
 				<ul id="events-list"></ul>
 			</div>
+			{% endif %}
 		</div>
 	</div>
-	{% endif %}
 	<div class="col-xs-9">
 		<div class="row">
 <!-- Permissions -->
@@ -268,11 +269,8 @@
 
 
 {% block scripts %}
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.1.135/jspdf.debug.js"></script>  -->
 <script>
-
 // Functions
-
 function getEvents() {
 
 	$.get("/token", function (result) {
@@ -298,7 +296,6 @@ function getEvents() {
 			// request events
 			$.get(url, data, function(result) {
 				var topEvents = result.events;
-			
 
 				// add event names to the dom
 				topEvents.forEach(function(event) {
@@ -385,17 +382,7 @@ function generatePDF() {
 	})
 }
 
-function sendEmail(tripId) {
-	// GO TO THE "/send_text" route!
-
-	data = { 'tripId': tripId };
-
-	$.post("/send_text", data, function(result){
-		alert(result);
-	});
-}
-
-function checkDate() {
+function sendReminders() {
 	var today = newDate();
 	var startDateString = $('#trip-date-details').data('start-date');
 	var startDate = newDate(startDateString);
@@ -405,11 +392,11 @@ function checkDate() {
 	dayBeforeStartDate.setDate(startDate.getDate() - 1);
 
 	if (today.valueOf() === dayBeforeStartDate.valueOf()) {
-		console.log('we should send an sms!!!');
-		sendEmail(tripId);
+		data = { 'tripId': tripId };
 
-	} else {
-		console.log('still more time!!');
+		$.post("/send_text", data, function(result){
+			console.log(result);
+		});
 	};
 
 	function newDate(dateString) {
@@ -428,19 +415,14 @@ function checkDate() {
 //////////////////////////////////////////////////////////////////
 
 // Event listeners
-
-
-	// On-ready event lisiteners
 $(document).ready(setupTooltips);
 $(document).ready(toggleTooltip);
-$(document).ready(checkDate);
+$(document).ready(sendReminders);
 // $(document).ready(getEvents);
 
-	// Clickable event listeners
 $('#submit-view').click(submitViewPermission);
 $("#submit-edit").click(submitEditPermission);
 $("#gen-pdf").click(generatePDF);
 
 </script>
-
 {% endblock %}

@@ -24,22 +24,30 @@ def send_text():
 
 	trip_id = int(request.form['tripId'])
 	trip = Trip.query.get(trip_id)
-	numbers = []
 
-	for perm in trip.permissions:
-		user = User.query.get(perm.user_id)
-		if user.phone:
-			numbers.append(user.phone)
+	if not trip.notification_sent:
+		numbers = []
+		for perm in trip.permissions:
+			user = User.query.get(perm.user_id)
+			if user.phone:
+				numbers.append(user.phone)
 
-	client = TwilioRestClient(tw_sid, tw_token)
-	body = "Travelling tomorrow!" # FIXME: Dynamic message?
+		client = TwilioRestClient(tw_sid, tw_token)
+		body = "Travelling tomorrow!" # FIXME: Dynamic message?
 
-	for number in numbers:
-		message = client.messages.create(from_ = TWILIO_NUMBER,
-									 to = number,
-									 body = body
-									 )
-	return "We did it!"
+		for number in numbers:
+			message = client.messages.create(from_ = TWILIO_NUMBER,
+										 to = number,
+										 body = body
+										 )
+	return "We did it!" # FIXME: What should I return here?
+
+
+@app.route("/send_email", methods=['POST', 'GET'])
+def send_email():
+	"""Emails out the PDF itinerary to trip viewers"""
+
+	
 
 
 
@@ -181,7 +189,6 @@ def profile(user_id):
 
 	user = User.query.get(user_id)
 	friends = [(friendship.friend_id, friendship.friend.fname, friendship.friend.img_url) for friendship in user.friendships]
-	print friends
 	return render_template("profile.html", user=user, friends=friends)
 
 
@@ -191,6 +198,7 @@ def edit_phone():
 	"""Updates the user's phone number"""
 
 	phone = str(request.form['phone'])
+	phone = '+1' + phone
 	user = User.query.get(session['user_id'])
 
 	user.phone = phone
@@ -319,7 +327,6 @@ def add_permission():
 		# Add new permission to DB
 		perm = Permission(trip_id=trip_id,
 						  user_id=friend_id,
-						  can_view=True,
 						  can_edit=can_edit
 						  )
 		db.session.add(perm)
@@ -333,7 +340,6 @@ def add_permission():
 
 	friend = User.query.get(friend_id)
 	msg = "%s is now allowed to %s this trip!" % (friend.fname, ability)
-	flash(msg)
 
 	return msg # FIXME Don't return this!
 
@@ -345,7 +351,7 @@ def rm_permission():
 
 	# Get info from form
 	friend_id = request.form.get("friend_id")
-	trip_id = request.form.get("trip_id")
+	trip_id = int(request.form.get("trip_id"))
 
 	# Remove permission based on info
 	perm = Permission.query.filter(Permission.user_id == friend_id, Permission.trip_id == trip_id).one()
@@ -357,7 +363,8 @@ def rm_permission():
 	msg = "%s is no longer allowed to view this trip." % (friend.fname)
 	flash(msg)
 
-	return redirect("/") # FIXME Don't redirect here!
+	url = "/trip%d" % (trip_id)
+	return redirect(url)
 
 
 
@@ -472,6 +479,7 @@ def edit_start():
 
 	trip.start = start
 	db.session.commit()
+	trip.update_days()
 
 	msg = "Nice!"
 	flash(msg)
@@ -493,6 +501,7 @@ def edit_end():
 	
 	trip.end = end
 	db.session.commit()
+	trip.update_days()
 
 	return "Sweet!" # FIXME Dont return this!
 
