@@ -388,7 +388,7 @@ function generatePDF() {
 function sendEmail(tripId) {
 	// GO TO THE "/send_text" route!
 
-	data = { tripId: tripId };
+	data = { 'tripId': tripId };
 
 	$.post("/send_text", data, function(result){
 		alert(result);
@@ -398,14 +398,15 @@ function sendEmail(tripId) {
 function checkDate() {
 	var today = newDate();
 	var startDateString = $('#trip-date-details').data('start-date');
-	var startDate = newDate(startDateString); 
+	var startDate = newDate(startDateString);
+	var tripId = $("#agenda").data("trip");
 
 	var dayBeforeStartDate = newDate();
 	dayBeforeStartDate.setDate(startDate.getDate() - 1);
 
 	if (today.valueOf() === dayBeforeStartDate.valueOf()) {
 		console.log('we should send an sms!!!');
-		sendEmail();
+		sendEmail(tripId);
 
 	} else {
 		console.log('still more time!!');

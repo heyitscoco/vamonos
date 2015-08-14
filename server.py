@@ -20,9 +20,9 @@ app.secret_key = "most_secret_key_EVER!!!!!!!"
 
 @app.route("/send_text", methods=["POST", "GET"])
 def send_text():
-	"""Sends a text"""
+	"""Sends a text to the viewers of the trip!"""
 
-	trip_id = request.form['tripId']
+	trip_id = int(request.form['tripId'])
 	trip = Trip.query.get(trip_id)
 	numbers = []
 
@@ -32,7 +32,7 @@ def send_text():
 			numbers.append(user.phone)
 
 	client = TwilioRestClient(tw_sid, tw_token)
-	body = "Test message notification."
+	body = "Travelling tomorrow!"
 
 	# numbers = ["+16179973559"] # FIXME: Get the right number from DB!
 	for number in numbers:
