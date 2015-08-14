@@ -5,8 +5,12 @@ import geocoder
 import os
 import requests
 import random
+from twilio.rest import TwilioRestClient
 
-token = os.environ['PERSONAL_OAUTH']
+eb_token = os.environ['EB_PERSONAL_OAUTH']
+tw_token = os.environ['TW_AUTH_TOKEN']
+tw_sid = os.environ['TW_ACCOUNT_SID']
+TWILIO_NUMBER = "+16172061188"
 
 app = Flask(__name__)
 app.secret_key = "most_secret_key_EVER!!!!!!!"
@@ -14,13 +18,45 @@ app.secret_key = "most_secret_key_EVER!!!!!!!"
 #############################################################
 # Routes
 
+@app.route("/send_text", methods=["POST", "GET"])
+def send_text():
+	"""Sends a text"""
+
+	trip_id = request.form['tripId']
+	trip = Trip.query.get(trip_id)
+	numbers = []
+
+	for perm in trip.permissions:
+		user = User.query.get(perm.user_id)
+		if user.phone:
+			numbers.append(user.phone)
+
+	client = TwilioRestClient(tw_sid, tw_token)
+	body = "Test message notification."
+
+	# numbers = ["+16179973559"] # FIXME: Get the right number from DB!
+	for number in numbers:
+		message = client.messages.create(from_ = TWILIO_NUMBER,
+									 to = number,
+									 body = body
+									 )
+
+	# message = client.messages.create(from_ = TWILIO_NUMBER,
+	# 								 to = number,
+	# 								 body = body
+	# 								 )
+	return "We did it!"
+
+
+
 @app.route("/pdf", methods=["POST"])
-def generatePDF():
+def generate_pdf():
 	"""Generates a PDF of the itinerary"""
+
 	trip_id = int(request.form['tripId'])
 	trip = Trip.query.get(trip_id)
 	filename = "itinerary%d.pdf" % (trip_id)
-	trip.generateItinerary(filename)
+	trip.generate_itinerary(filename)
 
 	# response_dict = {'msg': 'File generated.'}
 	response_dict = {'filename': filename}
@@ -30,7 +66,7 @@ def generatePDF():
 
 
 @app.route("/itinerary<int:trip_id>", methods=['GET', 'POST'])
-def showPDF(trip_id):
+def show_pdf(trip_id):
 	"""Displays the PDF itinerary"""
 
 	filename = 'itinerary%r.pdf' % (trip_id)
@@ -51,7 +87,6 @@ def home():
 		cities_dict[city] = city
 
 	cities_json = json.dumps(cities_dict)
-	print "\n\n",type(cities_json), cities_json,"\n\n"
 	
 	return render_template('home.html',
 							cities=cities_sample,
@@ -63,7 +98,7 @@ def home():
 def return_token():
 	"""Returns a jsonified version of my token"""
 
-	token_dict = {'token': token}
+	token_dict = {'token': eb_token}
 	return json.dumps(token_dict)
 
 
@@ -157,6 +192,18 @@ def profile(user_id):
 
 
 
+@app.route("/add_phone", methods=['POST'])
+def edit_phone():
+	"""Updates the user's phone number"""
+
+	phone = str(request.form['phone'])
+	user = User.query.get(session['user_id'])
+
+	user.phone = phone
+	db.session.commit()
+
+
+
 @app.route("/add_friend", methods=["POST"])
 def add_friend():
 	"""Adds a new friendship to the DB"""
@@ -211,6 +258,7 @@ def trip_planner(trip_id):
 		permissions = Permission.query.filter(Permission.trip_id == trip_id, Permission.user_id != admin_id).all()
 		friendships = Friendship.query.filter_by(admin_id = viewer_id).all()
 		friends = [(friendship.friend.fname, friendship.friend_id) for friendship in friendships]
+		friend_ids = [friendship.friend_id for friendship in friendships]
 
 		trip = Trip.query.get(trip_id)
 		trip_start_str = datetime.strftime(trip.start, "%Y-%m-%dT%H:%M:%SZ")
@@ -243,6 +291,7 @@ def trip_planner(trip_id):
 								trip_end_dsply=trip_end_dsply,
 								permissions=permissions,
 								friends=friends,
+								friend_ids=friend_ids,
 								can_edit=can_edit,
 								admin=admin
 								)
@@ -250,6 +299,7 @@ def trip_planner(trip_id):
 	else:
 		flash("Sorry, you need to be logged in to do that!")
 		return redirect("/login")
+
 
 @app.route("/add_permission", methods=["POST"])
 def add_permission():
@@ -291,12 +341,7 @@ def add_permission():
 	msg = "%s is now allowed to %s this trip!" % (friend.fname, ability)
 	flash(msg)
 
-	friends_dict = {}
-
-	for friend in friends:
-		friend
-
-	return json.dumps(friends_dict) # FIXME Don't return this!
+	return msg # FIXME Don't return this!
 
 
 
@@ -518,21 +563,24 @@ def add_event(event_id, trip_id):
 	"""Given an eventbrite event resource_uri, adds the event to the agenda"""
 
 	# get event info from Eventbrite API
-	event_uri = "https://www.eventbriteapi.com/v3/events/%s/?token=%s" % (event_id, token)
+	event_uri = "https://www.eventbriteapi.com/v3/events/%s/?token=%s" % (event_id, eb_token)
 	event = requests.get(event_uri).json()
-
-	venue_id = event['venue_id']
-	venue_uri = "https://www.eventbriteapi.com/v3/venues/%s/?token=%s" % (venue_id, token)
-	venue = requests.get(venue_uri).json()
 
 	title = event['name']['text']
 	url = event['url']
+	description = event['description']['text']
 
 	start = event['start']['utc']
 	start = datetime.strptime(start, "%Y-%m-%dT%H:%M:%SZ")
 
 	end = event['end']['utc']
 	end = datetime.strptime(end, "%Y-%m-%dT%H:%M:%SZ")
+
+
+	venue_id = event['venue_id']
+	venue_uri = "https://www.eventbriteapi.com/v3/venues/%s/?token=%s" % (venue_id, eb_token)
+	venue = requests.get(venue_uri).json()
+
 
 	place_name = venue.get('address',{}).get('name')
 	address = venue['address'].get('address_1')
@@ -562,7 +610,8 @@ def add_event(event_id, trip_id):
 					  country_code=country_code,
 					  latitude=lat,
 					  longitude=lng,
-					  url=url
+					  url=url,
+					  description=description
 					  )
 		db.session.add(event)
 		db.session.commit()
@@ -570,6 +619,8 @@ def add_event(event_id, trip_id):
 		msg = "Your event has been added!"
 	else:
 		msg = "Oops! Something went wrong."
+
+	flash(msg)
 	
 	url = "/trip%s" %(str(trip_id))
 	return redirect(url)

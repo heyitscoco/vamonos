@@ -29,7 +29,7 @@
 			</label>
 		</form>
 	</div>
-<!-- Edit Start Modal -->
+<!-- Edit Phone Modal -->
 	<!-- Modal Window-->
 	<div id="edit-phone" class="modal fade" role="dialog">
 		<div class="modal-dialog">
@@ -43,12 +43,12 @@
 	      		<div class="modal-body centered">
 
 					<!-- Edit Destination Form -->
-			        <form action="/add_phone" method="POST">
+			        <form method="POST">
 			        	<label class="form-group">
-			        		<input type="text" name="phone">
+			        		<input type="text" name="phone" id="phone">
 			        	</label>
 			        	<label class="form-group">
-			        		<input class="form-control btn btn-info" type="submit" value="Submit">
+			        		<input class="form-control btn btn-info" type="submit" value="Submit" id="phone-submit">
 			        	</label>
 			        </form>
 
@@ -58,6 +58,21 @@
 	</div>
 </div>
 <div class="col-xs-0 col-sm-3"></div>
+{% endblock %}
 
 
+{% block scripts %}
+<script>
+
+function submitPhone(evt) {
+	evt.preventDefault();
+	var phone = $('#phone').val();
+	var formInputs = { 'phone': phone };
+
+	$.post("/add_phone", formInputs);
+}
+
+$('#phone-submit').click(submitPhone);
+
+</script>
 {% endblock %}

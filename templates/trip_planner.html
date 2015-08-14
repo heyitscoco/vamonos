@@ -24,7 +24,7 @@
 					{% if admin %}
 						<form>
 							<label class="form-group">
-								<select id="friend_id">
+								<select id="friend_id" data-friend-ids="{{ friend_ids }}">
 									{% for name, friend_id in friends %}
 										<option value="{{ friend_id }}">
 											{{ name }}
@@ -61,7 +61,9 @@
 								{% endif %}
 								<a href="/user{{ perm.user_id }}/profile">{{ perm.user.fname }}</a>
 								{% if perm.can_edit %}
-									(editor)
+									<span id="friend{{ perm.user_id }}">(editor)</span>
+								{% else %}
+									<span class="hidden" id="friend{{ perm.user_id }}"></span>
 								{% endif %}
 							</li>
 						{% endfor %}
@@ -70,7 +72,7 @@
 			</div>
 <!-- Details -->
 			<div class="col-xs-12 col-sm-6">
-				<div class="content floater-box scrollable">
+				<div class="content floater-box scrollable" id="trip-date-details" data-start-date='{{ trip.start }}' data-end-date='{{ trip.end }}'>
 					<h4>Details</h4>
 					<ul>
 						<li>
@@ -331,15 +333,11 @@ function submitViewPermission(evt) {
 	var formInputs = { tripId: $("#agenda").data("trip"), friendId: $("#friend_id").val(), canEdit: 0 };
 
 	$.post("/add_permission", formInputs, function (result) {
+		var friendSelector = '#friend' + formInputs.friendId;
+		var friend = $(friendSelector);
 
-		// Is there a way to refresh only one div?
-		$.ajax({
-			url: "",
-			context:  $('#perms-list'),
-			success: function () {
-				$('#perms-list').html(result);
-			}
-		});
+		friend.addClass('hidden');
+
 	});	
 }
 
@@ -347,10 +345,15 @@ function submitEditPermission(evt) {
 	evt.preventDefault();
 	var formInputs = { tripId: $("#agenda").data("trip"), friendId: $("#friend_id").val(), canEdit: 1 };
 
-	$.post("/add_permission", formInputs, function (result) {
-		// alert("Edit success");
+	$.post("/add_permission", formInputs)
+	 .done(function() {
+		var friendSelector = '#friend' + formInputs.friendId;
+		var friend = $(friendSelector);
+
+		if (friend.is(':hidden')) {
+			friend.text('(editor)').removeClass('hidden');
 		}
-	);
+	 });
 }
 
 function setupTooltips() {
@@ -380,7 +383,46 @@ function generatePDF() {
 		var url = "/itinerary" + $("#agenda").data("trip")
 		window.open(url, "_blank");
 	})
-};
+}
+
+function sendEmail(tripId) {
+	// GO TO THE "/send_text" route!
+
+	data = { tripId: tripId };
+
+	$.post("/send_text", data, function(result){
+		alert(result);
+	});
+}
+
+function checkDate() {
+	var today = newDate();
+	var startDateString = $('#trip-date-details').data('start-date');
+	var startDate = newDate(startDateString); 
+
+	var dayBeforeStartDate = newDate();
+	dayBeforeStartDate.setDate(startDate.getDate() - 1);
+
+	if (today.valueOf() === dayBeforeStartDate.valueOf()) {
+		console.log('we should send an sms!!!');
+		sendEmail();
+
+	} else {
+		console.log('still more time!!');
+	};
+
+	function newDate(dateString) {
+
+		if (dateString) {
+			var date = new Date(dateString);
+		} else {
+			var date = new Date();
+		};
+
+		date.setHours(0, 0, 0, 0);
+		return date;
+	}
+}
 
 //////////////////////////////////////////////////////////////////
 
@@ -390,12 +432,13 @@ function generatePDF() {
 	// On-ready event lisiteners
 $(document).ready(setupTooltips);
 $(document).ready(toggleTooltip);
-$(document).ready(getEvents);
+$(document).ready(checkDate);
+// $(document).ready(getEvents);
 
 	// Clickable event listeners
-$('#submit-view').on('click', submitViewPermission);
-$("#submit-edit").on('click', submitEditPermission);
-$("#gen-pdf").on('click', generatePDF);
+$('#submit-view').click(submitViewPermission);
+$("#submit-edit").click(submitEditPermission);
+$("#gen-pdf").click(generatePDF);
 
 </script>
 

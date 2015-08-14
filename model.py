@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime, timedelta
 from reportlab.pdfgen import canvas
+import time
+from threading import Timer
 
 db = SQLAlchemy()
 
@@ -20,6 +22,7 @@ class User(db.Model):
 	email = db.Column(db.String(100), nullable=False, unique=True)
 	password = db.Column(db.String(30), nullable=False)
 	img_url = db.Column(db.String(300))
+	phone = db.Column(db.String(12), unique=True)
 	
 	def __repr__(self):
 		return "< User ID: %d, NAME: %s >" %(self.user_id, self.fname)
@@ -99,7 +102,7 @@ class Trip(db.Model):
 		db.session.commit()
 
 
-	def generateItinerary(self, filename):
+	def generate_itinerary(self, filename):
 		"""Generates a PDF of the itinerary"""
 
 		# Create canvas
@@ -132,6 +135,10 @@ class Trip(db.Model):
 		my_canvas.save()
 
 
+	def set_timer(self):
+		"""Sets a timer for this trip"""
+
+		pass
 
 class Permission(db.Model):
 
@@ -241,9 +248,9 @@ class Friendship(db.Model):
 						)
 
 	admin = db.relationship('User',
-							   primaryjoin="User.user_id == Friendship.admin_id",
-							   backref=db.backref("friendships")
-							   )
+						   primaryjoin="User.user_id == Friendship.admin_id",
+						   backref=db.backref("friendships")
+						   )
 
 	friend = db.relationship('User', primaryjoin="User.user_id == Friendship.friend_id")
 
