@@ -32,19 +32,13 @@ def send_text():
 			numbers.append(user.phone)
 
 	client = TwilioRestClient(tw_sid, tw_token)
-	body = "Travelling tomorrow!"
+	body = "Travelling tomorrow!" # FIXME: Dynamic message?
 
-	# numbers = ["+16179973559"] # FIXME: Get the right number from DB!
 	for number in numbers:
 		message = client.messages.create(from_ = TWILIO_NUMBER,
 									 to = number,
 									 body = body
 									 )
-
-	# message = client.messages.create(from_ = TWILIO_NUMBER,
-	# 								 to = number,
-	# 								 body = body
-	# 								 )
 	return "We did it!"
 
 

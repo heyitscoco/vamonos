@@ -63,6 +63,7 @@ class Trip(db.Model):
 	title = db.Column(db.String(100))
 	start = db.Column(db.DateTime, nullable=False)
 	end = db.Column(db.DateTime, nullable=False)
+	notification_sent = db.Column(db.Boolean, default=0, nullable=False)
 
 	# Location details
 	place_name = db.Column(db.String(100))
@@ -153,7 +154,6 @@ class Permission(db.Model):
 						db.ForeignKey('Users.user_id'),
 						nullable=False
 						)
-	can_view = db.Column(db.Boolean, nullable=False)
 	can_edit = db.Column(db.Boolean, nullable=False)
 
 	user = db.relationship(

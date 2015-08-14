@@ -58,7 +58,6 @@ def load_trips():
 		# Create admin permission
 		perm = Permission(trip_id=trip.trip_id,
 				  user_id=admin_id,
-				  can_view=True,
 				  can_edit=True
 				  )
 		db.session.add(perm)
@@ -75,12 +74,10 @@ def load_permissions():
 	for line in file:
 		trip_id, user_id, can_view, can_edit = line.rstrip().split(",")
 
-		can_view = loads(can_view.lower())
 		can_edit = loads(can_edit.lower())
 
 		perm = Permission(trip_id=trip_id,
 					  user_id=user_id,
-					  can_view=can_view,
 					  can_edit=can_edit
 					  )
 		db.session.add(perm)
