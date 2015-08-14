@@ -470,7 +470,7 @@ def edit_start():
 	"""Changes the trip start"""
 
 	# Get info from form
-	trip_id = request.form.get("trip_id")
+	trip_id = int(request.form.get("trip_id"))
 	start_raw = request.form.get("start")
 	start = datetime.strptime(start_raw, "%Y-%m-%d")
 
@@ -481,9 +481,8 @@ def edit_start():
 	db.session.commit()
 	trip.update_days()
 
-	msg = "Nice!"
-	flash(msg)
-	return msg # FIXME Dont return this!
+	url = "/trip%d" % (trip_id)
+	return redirect(url)
 
 
 
@@ -492,7 +491,7 @@ def edit_end():
 	"""Changes the trip end"""
 
 	# Get info from form
-	trip_id = request.form.get("trip_id")
+	trip_id = int(request.form.get("trip_id"))
 	end_raw = request.form.get("end")
 	end = datetime.strptime(end_raw, "%Y-%m-%d") + timedelta(1)
 
@@ -503,7 +502,8 @@ def edit_end():
 	db.session.commit()
 	trip.update_days()
 
-	return "Sweet!" # FIXME Dont return this!
+	url = "/trip%d" % (trip_id)
+	return redirect(url)
 
 
 

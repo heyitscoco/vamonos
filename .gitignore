@@ -2,3 +2,7 @@ env
 secrets.sh
 *.pyc
 *.db
+static/img/
+itinerary*
+plans/
+static/data/
