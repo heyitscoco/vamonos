@@ -5,6 +5,13 @@ from datetime import datetime, timedelta
 from reportlab.pdfgen import canvas
 import time
 from threading import Timer
+from twilio.rest import TwilioRestClient
+import os
+
+eb_token = os.environ['EB_PERSONAL_OAUTH']
+tw_token = os.environ['TW_AUTH_TOKEN']
+tw_sid = os.environ['TW_ACCOUNT_SID']
+TWILIO_NUMBER = "+16172061188"
 
 db = SQLAlchemy()
 
@@ -80,40 +87,6 @@ class Trip(db.Model):
 		return "< Trip ID: %d ADMIN: %s TITLE: %s >" % (self.trip_id, self.admin_id, self.title)
 
 
-	def generate_itinerary(self, filename):
-		"""Generates a PDF of the itinerary"""
-
-		# Create canvas
-		my_canvas = canvas.Canvas(filename, bottomup=0)
-		
-		# Add trip title
-		my_canvas.drawString(100, 100, self.title)
-
-		# Add events for each day
-		y = 140
-		for day in self.days:
-
-			if day.events:
-				
-				day_start = datetime.strftime(day.start, "%b %d")
-				day_header = "%s (Day %d)" % (day_start, day.day_num)
-
-				my_canvas.drawString(100, y, day_header)
-				y += 20
-
-				for event in day.events:
-
-					event_start = datetime.strftime(event.start, "%-I:%M %p")
-					event_header = "%s - %s" % (event_start, event.title)
-
-					my_canvas.drawString(100, y, event_header)
-					y += 20
-
-				y += 20
-
-		my_canvas.showPage
-		my_canvas.save()
-
 	def create_days(self):
 		"""Creates the appropriate number of days for this trip"""
 
@@ -181,6 +154,67 @@ class Trip(db.Model):
 
 		db.session.commit()
 
+
+	def generate_itinerary(self, filename):
+		"""Generates a PDF of the itinerary"""
+
+		# Create canvas
+		my_canvas = canvas.Canvas(filename, bottomup=0)
+		
+		# Add trip title
+		my_canvas.drawString(100, 100, self.title)
+
+		# Add events for each day
+		y = 140
+		for day in self.days:
+
+			if day.events:
+				
+				day_start = datetime.strftime(day.start, "%b %d")
+				day_header = "%s (Day %d)" % (day_start, day.day_num)
+
+				my_canvas.drawString(100, y, day_header)
+				y += 20
+
+				for event in day.events:
+
+					event_start = datetime.strftime(event.start, "%-I:%M %p")
+					event_header = "%s - %s" % (event_start, event.title)
+
+					my_canvas.drawString(100, y, event_header)
+					y += 20
+
+				y += 20
+
+		my_canvas.showPage
+		my_canvas.save()
+
+
+	def send_SMS(self, twilio_sid, twilio_token):
+		"""Sends a text to the viewers of the trip"""
+
+		if not self.notification_sent:
+			numbers = []
+			for perm in self.permissions:
+				user = User.query.get(perm.user_id)
+				if user.phone:
+					numbers.append(user.phone)
+
+			client = TwilioRestClient(twilio_sid, twilio_token)
+
+			admin_name = User.query.get(self.admin_id).fname
+			msg_body = "REMINDER: %s's trip to %s starts tomorrow!" % (admin_name, self.city)
+
+			for number in numbers:
+				message = client.messages.create(from_ = TWILIO_NUMBER,
+											 	 to=number,
+											 	 body=msg_body
+											 	 )
+			self.notification_sent = True
+			db.session.commit()
+
+	def send_email(self):
+		"""Sends an email to the viewers of the trip"""
 
 
 class Permission(db.Model):
