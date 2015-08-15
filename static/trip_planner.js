@@ -1,4 +1,17 @@
 // Functions
+function setupDraggables() {
+	$('.draggable').draggable({
+		helper: 'clone'
+	});
+	$('#agenda').droppable({
+		drop: handleDropEvent
+	});
+}
+
+function handleDropEvent( event, ui ) {
+	var draggable = ui.draggable;
+}
+
 function setupTooltips() {
 	$(".delete-btn").attr("data-toggle", "tooltip")
 					.attr("title", "Delete");
@@ -75,24 +88,29 @@ function getEvents() {
 							// var addLink = $('<a>')
 							// 	.attr('href', "/add_event/" + event.id + "/" + tripId)
 							// 	.attr('class', "btn btn-default btn-xs")
-							// 	.text('+')
+							// 	.text('+');
 							// var nameLink = $('<a>')
 							// 	.attr('href', event.url)
 							// 	.attr('target', "_blank")
-							// 	.text(event.name.text)
+							// 	.text(event.name.text);
 
-							// $("#events-list").append(addLink)
-							// 				 .append(nameLink)
+							// $("#events-list")//.append(addLink)
+							// 				 .append(nameLink);
 
 							var adderBtn = $('<a>')
 								.attr('href', '/add_event/' + event.id + '/' + tripId)
-								.attr('class', 'btn btn-default btn-xs')
+								// .attr('class', 'btn btn-default btn-xs')
+								.attr('class', 'draggable')
+								.attr('style', 'display: inline-block')
 								.attr('id', event.id)
-								.text(event.name.text)
+								.text(event.name.text);
 								
-							$("#events-list").append(adderBtn)
+							$("#events-list").append(adderBtn);
+
 				});
+				setupDraggables();
 			});
+
 	});
 };
 
@@ -115,15 +133,14 @@ function submitEditPermission(evt) {
 	evt.preventDefault();
 	var formInputs = { tripId: $("#agenda").data("trip"), friendId: $("#friend_id").val(), canEdit: 1 };
 
-	$.post("/add_permission", formInputs)
-	 .done(function() {
+	$.post("/add_permission", formInputs, function() {
 		var friendSelector = '#friend' + formInputs.friendId;
 		var friend = $(friendSelector);
 
 		if (friend.is(':hidden')) {
 			friend.text('(editor)').removeClass('hidden');
-		}
-	 });
+		};
+	});
 }
 
 function generatePDF() {

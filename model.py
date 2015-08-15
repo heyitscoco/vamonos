@@ -3,14 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime, timedelta
 from reportlab.pdfgen import canvas
-import time
-from threading import Timer
 from twilio.rest import TwilioRestClient
-import os
+from os import environ
 
-eb_token = os.environ['EB_PERSONAL_OAUTH']
-tw_token = os.environ['TW_AUTH_TOKEN']
-tw_sid = os.environ['TW_ACCOUNT_SID']
+eb_token = environ['EB_PERSONAL_OAUTH']
+tw_token = environ['TW_AUTH_TOKEN']
+tw_sid = environ['TW_ACCOUNT_SID']
 TWILIO_NUMBER = "+16172061188"
 
 db = SQLAlchemy()
@@ -212,9 +210,6 @@ class Trip(db.Model):
 											 	 )
 			self.notification_sent = True
 			db.session.commit()
-
-	def send_email(self):
-		"""Sends an email to the viewers of the trip"""
 
 
 class Permission(db.Model):

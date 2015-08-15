@@ -10,6 +10,7 @@
 		<div id="nearby-events" class="content" data-latitude={{ trip.latitude }} data-longitude={{ trip.longitude }}>
 			{% if can_edit %}
 			<h4>Nearby Events</h4>
+			<button id="retrieve-events" class="btn btn-default">Retrieve Events</button>
 			<div class="scrollable" style="height: 600px">
 				<ul id="events-list"></ul>
 			</div>
@@ -261,9 +262,12 @@
 							        		<input class="form-control" name="location" type="text">
 							        	</label>
 							        	<br>
+										<label>
+											<input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
+										</label>
 							        	<label>
 							        		Description:
-							        		<textarea class="form-control" rows="4" cols="30"></textarea>
+							        		<textarea name="description" class="form-control" rows="4" cols="30"></textarea>
 							        	</label>
 							        	<br>
 							        	<label class="form-group">
@@ -291,8 +295,8 @@
 $(document).ready(setupTooltips);
 $(document).ready(toggleTooltip);
 $(document).ready(sendReminders);
-// $(document).ready(getEvents);
 
+$('#retrieve-events').click(getEvents);
 $('#submit-view').click(submitViewPermission);
 $("#submit-edit").click(submitEditPermission);
 $("#gen-pdf").click(generatePDF);

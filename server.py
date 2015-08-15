@@ -2,15 +2,8 @@ from flask import Flask, redirect, render_template, flash, session, request, jso
 from model import *
 from datetime import datetime, timedelta
 import geocoder
-import os
 import requests
 import random
-from twilio.rest import TwilioRestClient
-
-eb_token = os.environ['EB_PERSONAL_OAUTH']
-tw_token = os.environ['TW_AUTH_TOKEN']
-tw_sid = os.environ['TW_ACCOUNT_SID']
-TWILIO_NUMBER = "+16172061188"
 
 app = Flask(__name__)
 app.secret_key = "most_secret_key_EVER!!!!!!!"
@@ -20,23 +13,14 @@ app.secret_key = "most_secret_key_EVER!!!!!!!"
 
 @app.route("/send_text", methods=["POST", "GET"])
 def send_reminders():
-	"""Sends reminders"""
+	"""Sends reminders to trip viewers"""
 
 	trip_id = int(request.form['tripId'])
 	trip = Trip.query.get(trip_id)
 
 	trip.send_SMS(tw_sid, tw_token)
-	# trip.send_email()
 
 	return "We did it!" # FIXME: What should I return here?
-
-
-@app.route("/send_email", methods=['POST', 'GET'])
-def send_email():
-	"""Emails out the PDF itinerary to trip viewers"""
-
-	
-
 
 
 @app.route("/pdf", methods=["POST"])
@@ -502,7 +486,9 @@ def create_event():
 	"""Adds a new event to the DB"""
 
 	# Get info from form
+	trip_id = int(request.form.get("trip_id"))
 	title = request.form.get("title")
+	description = request.form.get("description")
 	location = request.form.get("location")
 	location = geocoder.google(location)
 
@@ -519,7 +505,7 @@ def create_event():
 	end = datetime.strptime(end_raw, "%Y-%m-%dT%H:%M")
 
 	# Determine correct day
-	day = Day.query.filter(Day.start <= start, Day.end >= start).all() # FIXME: Day.trip_id == trip_id
+	day = Day.query.filter(Day.trip_id == trip_id, Day.start <= start, Day.end >= start).all() # FIXME: Day.trip_id == trip_id
 
 	# Add event to DB
 	if day:
@@ -534,6 +520,7 @@ def create_event():
 					  latitude=lat,
 					  longitude=lng,
 					  city=city,
+					  description=description,
 					  country_code=country_code
 					  )
 		db.session.add(event)
@@ -545,8 +532,7 @@ def create_event():
 	
 	flash(msg)
 	
-	trip = Trip.query.get(day.trip_id)
-	url = "/trip%d" % (trip.trip_id)
+	url = "/trip%d" % (trip_id)
 	return redirect(url)
 
 
