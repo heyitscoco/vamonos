@@ -203,7 +203,7 @@
 													        		<h4 class="modal-title">{{ event.title }}</h4>
 													      		</div>
 													      		<div class="modal-body centered">
-
+												      			<!-- Event details -->
 													      			<div>
 													      				<h6><b>Address: </b>{{ event.address }}</h6>
 													      				<h6><b>Start: </b>{{ event.start }}</h6>
@@ -211,6 +211,8 @@
 														      			<p>{{ event.description }}</p>
 														      		</div>
 
+																<!-- 'Attending' button -->
+																	<button id="#attending-btn" type="button" class="btn btn-info btn-sm">Attending</button>
 
 																	{% if admin %}
 																<!-- 'Delete Event' Button -->
