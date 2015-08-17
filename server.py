@@ -625,6 +625,22 @@ def rm_event():
 	url = "/trip%d" % (trip_id)
 	return redirect(url)
 
+
+
+@app.route("/add_attendee", methods=['POST'])
+def add_attendee():
+	"""Adds an 'attendance' to the DB"""
+
+	event_id = int(request.form.get('eventId'))
+	user_id = session['user_id']
+
+	att = Attendance(event_id=event_id,
+					 user_id=user_id
+					)
+	db.session.add(att)
+	db.session.commit()
+	return 'It worked!' # FIXME: don't return this. Return status code 200.
+
 #############################################################
 
 if __name__ == "__main__":

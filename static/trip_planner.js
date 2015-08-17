@@ -159,6 +159,12 @@ function submitEditPermission(evt) {
 	});
 }
 
+function addAttendee(evt) {
+	evt.preventDefault();
+	var formInputs = { eventId: $('#event-id').val() };
+	$.post('/add_attendee', formInputs);
+}
+
 function generatePDF() {
 	var tripId = $("#agenda").data("trip");
 	var formInputs = { tripId: tripId };

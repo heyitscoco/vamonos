@@ -212,7 +212,10 @@
 														      		</div>
 
 																<!-- 'Attending' button -->
-																	<button id="#attending-btn" type="button" class="btn btn-info btn-sm">Attending</button>
+																	<form method='POST'>
+																		<input id="event-id" value="{{ event.event_id }}" type="hidden">
+																		<input id="attending-btn" type="submit" class="btn btn-info btn-sm" value="Attending">
+																	</form>
 
 																	{% if admin %}
 																<!-- 'Delete Event' Button -->
@@ -331,5 +334,6 @@ $('#retrieve-events').click(getEvents);
 $('#submit-view').click(submitViewPermission);
 $("#submit-edit").click(submitEditPermission);
 $("#gen-pdf").click(generatePDF);
+$('#attending-btn').click(addAttendee);
 </script>
 {% endblock %}
