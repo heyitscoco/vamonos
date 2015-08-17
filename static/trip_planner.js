@@ -99,10 +99,6 @@ function getEvents() {
 
 				// add event names to the dom
 				topEvents.forEach(function(event) {
-							// var addLink = $('<a>')
-							// 	.attr('href', "/add_event/" + event.id + "/" + tripId)
-							// 	.attr('class', "btn btn-default btn-xs")
-							// 	.text('+');
 							var nameLink = $('<a>')
 								.attr('id', event.id)
 								.attr('class', 'draggable')
@@ -111,19 +107,7 @@ function getEvents() {
 								// .attr('href', "/add_event/" + event.id + "/" + tripId)
 								.attr('target', "_blank")
 								.attr('style', 'display: inline-block');
-
-							$("#events-list")//.append(addLink)
-											 .append(nameLink);
-
-							// var adderBtn = $('<a>')
-							// 	.attr('href', '/add_event/' + event.id + '/' + tripId)
-							// 	// .attr('class', 'btn btn-default btn-xs')
-							// 	.attr('class', 'draggable')
-							// 	.attr('style', 'display: inline-block')
-							// 	.attr('id', event.id)
-							// 	.text(event.name.text);
-								
-							// $("#events-list").append(adderBtn);
+							$("#events-list").append(nameLink);
 
 				});
 				setupDraggables();
