@@ -10,13 +10,16 @@ function setupDraggables() {
 
 function handleDropEvent(event, ui) {
 	var draggable = ui.draggable;
-	console.log('Item dropped.');
 
-	var eventId = ui.id;
+	var eventId = draggable.attr('id');
 	var tripId = $("#agenda").data("trip");
+
+	console.log('eventId: ' + eventId);
 	var url = '/add_event/' + eventId + '/' + tripId;
 
-	$.get(url);
+	$.get(url, function() {
+		console.log('It worked! Your event has been added.');
+	});
 
 
 }
