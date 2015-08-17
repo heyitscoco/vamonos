@@ -161,8 +161,20 @@ function submitEditPermission(evt) {
 
 function addAttendee(evt) {
 	evt.preventDefault();
-	var formInputs = { eventId: $('#event-id').val() };
-	$.post('/add_attendee', formInputs);
+	var eventId = $('#event-id').val()
+	var formInputs = { eventId: eventId };
+	$.post('/add_attendee', formInputs, function() {
+		$('#fname-' + eventId).removeClass('hidden');
+	});
+}
+
+function rmAttendee(evt) {
+	evt.preventDefault();
+	var eventId = $('#event-id').val()
+	var formInputs = { eventId: eventId };
+	$.post('/rm_attendee', formInputs, function() {
+		$('#fname-' + eventId).addClass('hidden');
+	});
 }
 
 function generatePDF() {
@@ -170,8 +182,8 @@ function generatePDF() {
 	var formInputs = { tripId: tripId };
 
 	$.post("/pdf", formInputs, function (result) {
-		resultJSON = JSON.parse(result);
-		var filename = resultJSON.filename;
+		result = JSON.parse(result);
+		var filename = result.filename;
 		var url = "/itinerary" + tripId;
 		window.open(url, "_blank");
 	})

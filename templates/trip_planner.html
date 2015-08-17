@@ -186,10 +186,10 @@
 										<ul>
 											{% for event in day.events %}
 												<li class="event">
-													<p data-toggle="tooltip" title="{{ event.description }}">
+													<p>
 														{{ event.title }}
 													</p>
-													<button type="button" class="info-btn icon btn btn-info" data-toggle="modal" data-target="#event{{ event.event_id }}">info</button>
+													<button type="button" class="info-btn icon btn btn-info" data-toggle="modal" data-target="#event{{ event.event_id }}"></button>
 
 								<!-- Event Details Modal -->
 													<!-- Modal Window-->
@@ -212,18 +212,28 @@
 														      		</div>
 
 														      		<div>
+											      			<!-- FIXME: AJAX updates to this section are super broken -->
 														      			<h5>Attending: </h5>
 															      		<p>
-														      			{% for att in event.attendances %}
-																			{{ att.user.fname }}
-																		{% endfor %}
+														      			{% if event.attendances %}
+															      			{% for att in event.attendances %}
+																				{{ att.user.fname }}
+																			{% endfor %}
+																		{% else %}
+																			Nobody, yet...
+																		{% endif %}
+																		<span id="fname-{{ event.event_id }}" class="hidden">{{ session['fname'] }}</span>
 															      		</p>
 														      		</div>
 																	
-																<!-- 'Attending' button -->
+																
 																	<form method='POST'>
 																		<input id="event-id" value="{{ event.event_id }}" type="hidden">
+				<!-- FIXME: Only one of these buttons should appear at one time-->
+																	<!-- 'Attend' button -->
 																		<input id="attending-btn" type="submit" class="btn btn-info btn-sm" value="Attend">
+																	<!-- 'Not Attending' button -->
+																		<input id="not-attending-btn" type="submit" class="btn btn-info btn-sm" value="Not Attending">
 																	</form>
 
 																	{% if admin %}
@@ -335,8 +345,8 @@
 
 <script src="/static/trip_planner.js"></script>
 <script>
-// $(document).ready(setupTooltips);
-// $(document).ready(toggleTooltip);
+$(document).ready(setupTooltips);
+$(document).ready(toggleTooltip);
 $(document).ready(sendReminders);
 
 $('#retrieve-events').click(getEvents);
@@ -344,5 +354,7 @@ $('#submit-view').click(submitViewPermission);
 $("#submit-edit").click(submitEditPermission);
 $("#gen-pdf").click(generatePDF);
 $('#attending-btn').click(addAttendee);
+$('#not-attending-btn').click(rmAttendee);
+
 </script>
 {% endblock %}

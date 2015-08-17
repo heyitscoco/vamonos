@@ -304,8 +304,6 @@ def add_permission():
 		db.session.add(perm)
 	db.session.commit()
 
-	# return status code 200
-
 	# Confirm submission
 	if can_edit:
 		ability = "view & edit"
@@ -627,6 +625,21 @@ def rm_event():
 
 
 
+@app.route('/check_attendance', methods=['POST'])
+def check_attendance():
+	"""Checks if a user is attending a given event"""
+
+	event_id = int(request.form.get('eventId'))
+	user_id = session['user_id']
+
+	try:
+		Attendance.query.filter_by(event_id=event_id, user_id=user_id).one()
+		return True
+	
+	except NoResultFound:
+		return False
+
+
 @app.route("/add_attendee", methods=['POST'])
 def add_attendee():
 	"""Adds an 'attendance' to the DB"""
@@ -636,16 +649,34 @@ def add_attendee():
 
 	try:
 		Attendance.query.filter_by(event_id=event_id, user_id=user_id).one()
-		msg = 'You are already attending this event.'
+
 	except NoResultFound:
 		att = Attendance(event_id=event_id,
 						 user_id=user_id
 						)
 		db.session.add(att)
 		db.session.commit()
-		msg = 'You are now attending this event.'
 
-	return msg # FIXME: don't return this. Return status code 200.
+	return 'It worked' # FIXME: return status code 200.
+
+
+
+@app.route('/rm_attendee', methods=['POST'])
+def rm_attendee():
+	"""Removes an 'attendance' from the DB"""
+
+	event_id = int(request.form.get('eventId'))
+	user_id = session['user_id']
+
+	try:
+		att = Attendance.query.filter_by(event_id=event_id, user_id=user_id).one()
+		db.session.delete(att)
+		db.session.commit()
+	except NoResultFound:
+		pass
+
+	return 'It worked' # FIXME: return status code 200.
+
 
 #############################################################
 
