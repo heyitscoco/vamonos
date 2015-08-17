@@ -395,7 +395,6 @@ def new_trip():
 	# Add admin permission to DB
 	perm = Permission(trip_id=trip.trip_id,
 					  user_id=session["user_id"],
-					  can_view=True,
 					  can_edit=True
 					  )
 	db.session.add(perm)

@@ -74,8 +74,8 @@ class Trip(db.Model):
 
 	# Location details
 	place_name = db.Column(db.String(100))
-	latitude = db.Column(db.Float, nullable=False)
-	longitude = db.Column(db.Float, nullable=False)
+	latitude = db.Column(db.Float, nullable=True) # FIXME: set these to false!
+	longitude = db.Column(db.Float, nullable=True) # FIXME: set these to false!
 	address = db.Column(db.String(200))
 	city = db.Column(db.String(60))
 	country_code = db.Column(db.String(5))
@@ -227,11 +227,11 @@ class Permission(db.Model):
 						)
 	can_edit = db.Column(db.Boolean, nullable=False)
 
+	# Relationships
 	user = db.relationship(
 				'User',
 				backref=db.backref('permissions', order_by=trip_id)
 				)
-
 	trip = db.relationship(
 				'Trip',
 				backref=db.backref('permissions', order_by=trip_id)
@@ -255,6 +255,7 @@ class Day(db.Model):
 	start = db.Column(db.DateTime, nullable=False)
 	end = db.Column(db.DateTime, nullable=False)
 	
+	# Relationships
 	trip = db.relationship(
 				'Trip',
 				backref=db.backref('days', order_by=start)
@@ -292,6 +293,7 @@ class Event(db.Model):
 	city = db.Column(db.String(60), nullable=False)
 	country_code = db.Column(db.String(10))
 
+	# Relationships
 	user = db.relationship(
 				'User',
 				backref=db.backref('events', order_by=start) # user.events returns all of the events added by a given user
@@ -304,6 +306,31 @@ class Event(db.Model):
 	def __repr__(self):
 		return "<Event ID: %d TITLE: %s>" % (self.event_id, self.title)
 
+
+
+class Attendances(db.Model):
+
+	__tablename__ = "Attendances"
+
+	attendance_id = db.Column(db.Integer,
+						primary_key=True,
+						autoincrement=True
+						)
+	event_id = db.Column(db.Integer,
+						 db.ForeignKey('Events.event_id'),
+						 nullable=False
+						 )
+	user_id = db.Column(db.Integer,
+						db.ForeignKey('Users.user_id'),
+						nullable=False
+						)
+	# Relationships
+	event = db.relationship('Event',
+							backref=db.backref('attendances')
+							)
+	user = db.relationship('User',
+							backref=db.backref('attendances')
+							)
 
 
 class Friendship(db.Model):
@@ -325,6 +352,7 @@ class Friendship(db.Model):
 						   backref=db.backref("friendships")
 						   )
 
+	# Relationships
 	friend = db.relationship('User', primaryjoin="User.user_id == Friendship.friend_id")
 
 	def __repr__(self):
