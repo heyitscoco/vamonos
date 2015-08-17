@@ -9,7 +9,7 @@ from os import environ
 eb_token = environ['EB_PERSONAL_OAUTH']
 tw_token = environ['TW_AUTH_TOKEN']
 tw_sid = environ['TW_ACCOUNT_SID']
-TWILIO_NUMBER = "+16172061188"
+TWILIO_NUMBER = '+16172061188'
 
 db = SQLAlchemy()
 
@@ -74,8 +74,8 @@ class Trip(db.Model):
 
 	# Location details
 	place_name = db.Column(db.String(100))
-	latitude = db.Column(db.Float, nullable=True) # FIXME: set these to false!
-	longitude = db.Column(db.Float, nullable=True) # FIXME: set these to false!
+	latitude = db.Column(db.Float, nullable=False) # FIXME: set these to false!
+	longitude = db.Column(db.Float, nullable=False) # FIXME: set these to false!
 	address = db.Column(db.String(200))
 	city = db.Column(db.String(60))
 	country_code = db.Column(db.String(5))
@@ -308,7 +308,7 @@ class Event(db.Model):
 
 
 
-class Attendances(db.Model):
+class Attendance(db.Model):
 
 	__tablename__ = "Attendances"
 

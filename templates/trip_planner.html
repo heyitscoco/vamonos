@@ -11,6 +11,7 @@
 			{% if can_edit %}
 			<h4>Nearby Events</h4>
 			<button id="retrieve-events" class="btn btn-default">Retrieve Events</button>
+			<img id='loading-img' style="width: 30px" src="/static/img/loading.gif" class='hidden'>
 			<div class="scrollable" style="height: 600px">
 				<ul id="events-list"></ul>
 			</div>
@@ -188,27 +189,56 @@
 													<p data-toggle="tooltip" title="{{ event.description }}">
 														{{ event.title }}
 													</p>
-													{% if admin %}
-														<form action="/rm_event" method="POST" style="display: inline-block">
-															<label>
-																<input type="hidden" name="event_id" value="{{ event.event_id }}">
-															</label>
-															<label>
-																<input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
-															</label>
-															<label>
-																<input type="submit" value="" class="icon delete-btn edit-perms btn btn-default btn-xs">
-															</label>
-														</form>
-													{% endif %}
+													<button type="button" class="info-btn icon btn btn-info" data-toggle="modal" data-target="#event{{ event.event_id }}">info</button>
 
-													{% if event.url %}
-													<a href={{ event.url }} target="_blank"data-toggle="tooltip" title="View on Eventbrite">
-														<img src="/static/img/eventbrite.png" class="icon">
-													</a>
-													{% endif %}
+								<!-- Event Details Modal -->
+													<!-- Modal Window-->
+													<div id="event{{ event.event_id }}" class="modal fade" role="dialog">
+														<div class="modal-dialog">
+
+															<!-- Modal content-->
+													    	<div class="modal-content my-modal">
+													    		<div class="modal-header centered">
+													    			<button type="button" class="close" data-dismiss="modal">&times;</button>
+													        		<h4 class="modal-title">{{ event.title }}</h4>
+													      		</div>
+													      		<div class="modal-body centered">
+
+													      			<div>
+													      				<h6><b>Address: </b>{{ event.address }}</h6>
+													      				<h6><b>Start: </b>{{ event.start }}</h6>
+													      				<h6><b>End: </b>{{ event.end }}</h6>
+														      			<p>{{ event.description }}</p>
+														      		</div>
 
 
+																	{% if admin %}
+																<!-- 'Delete Event' Button -->
+																		<form action="/rm_event" method="POST" style="display: inline-block">
+																			<label>
+																				<input type="hidden" name="event_id" value="{{ event.event_id }}">
+																			</label>
+																			<label>
+																				<input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
+																			</label>
+																			<label>
+																				<input type="submit" value="" class="icon delete-btn edit-perms btn btn-default btn-xs">
+																			</label>
+																		</form>
+																	{% endif %}
+
+																	{% if event.url %}
+																<!-- 'View On Eventbrite' Button -->
+																	<a href={{ event.url }} target="_blank"data-toggle="tooltip" title="View on Eventbrite">
+																		<img src="/static/img/eventbrite.png" class="icon">
+																	</a>
+																	{% endif %}
+
+															    </div>
+													  		</div>
+														</div>
+													</div>
+								<!-- End Modal -->
 
 												</li>
 											{% endfor %}
@@ -287,13 +317,12 @@
 {% endblock %}
 
 
-
 {% block scripts %}
 
 <script src="/static/trip_planner.js"></script>
 <script>
-$(document).ready(setupTooltips);
-$(document).ready(toggleTooltip);
+// $(document).ready(setupTooltips);
+// $(document).ready(toggleTooltip);
 $(document).ready(sendReminders);
 
 $('#retrieve-events').click(getEvents);

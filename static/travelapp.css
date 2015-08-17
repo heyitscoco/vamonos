@@ -48,6 +48,10 @@ select {
 	background-image: url("/static/img/phone.png");
 }
 
+.info-btn {
+	background-image: url("/static/img/info.png");
+}
+
 .icon {
 	width: 15px;
 	height: 15px;

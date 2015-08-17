@@ -68,6 +68,8 @@ function sendReminders() {
 
 function getEvents() {
 
+	$('#loading-img').removeClass('hidden');
+
 	$.get("/token", function (result) {
 		var parsedJSON = JSON.parse(result);
 		var token = parsedJSON.token
@@ -103,6 +105,7 @@ function getEvents() {
 								.attr('class', 'draggable')
 								.text(event.name.text)
 								.attr('href', event.url)
+								// .attr('href', "/add_event/" + event.id + "/" + tripId)
 								.attr('target', "_blank")
 								.attr('style', 'display: inline-block');
 
@@ -121,6 +124,7 @@ function getEvents() {
 
 				});
 				setupDraggables();
+				$('#loading-img').addClass('hidden');
 			});
 
 	});

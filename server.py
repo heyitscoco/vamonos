@@ -304,6 +304,8 @@ def add_permission():
 		db.session.add(perm)
 	db.session.commit()
 
+	# return status code 200
+
 	# Confirm submission
 	if can_edit:
 		ability = "view & edit"
