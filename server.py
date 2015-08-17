@@ -634,12 +634,18 @@ def add_attendee():
 	event_id = int(request.form.get('eventId'))
 	user_id = session['user_id']
 
-	att = Attendance(event_id=event_id,
-					 user_id=user_id
-					)
-	db.session.add(att)
-	db.session.commit()
-	return 'It worked!' # FIXME: don't return this. Return status code 200.
+	try:
+		Attendance.query.filter_by(event_id=event_id, user_id=user_id).one()
+		msg = 'You are already attending this event.'
+	except NoResultFound:
+		att = Attendance(event_id=event_id,
+						 user_id=user_id
+						)
+		db.session.add(att)
+		db.session.commit()
+		msg = 'You are now attending this event.'
+
+	return msg # FIXME: don't return this. Return status code 200.
 
 #############################################################
 
