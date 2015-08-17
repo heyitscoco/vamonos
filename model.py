@@ -122,11 +122,16 @@ class Trip(db.Model):
 		day_num = 1
 
 
+		# FIXME: SUCKY RUNTIME
+
 		# Delete unnecessary days
 		for day in self.days:
 			if day.start < trip_start or day.start > trip_end:
 				# delete all of that day's events first, for referential integrity
 				for event in day.events:
+					# delete all of that event's attendances first, for referential integrity
+					for att in event.attendances:
+						db.session.delete(att)
 					db.session.delete(event)
 				db.session.delete(day)
 
