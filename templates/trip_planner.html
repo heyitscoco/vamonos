@@ -10,7 +10,36 @@
 		<div id="nearby-events" class="content" data-latitude={{ trip.latitude }} data-longitude={{ trip.longitude }}>
 			{% if can_edit %}
 			<h4>Nearby Events</h4>
-			<button id="retrieve-events" class="btn btn-default">Retrieve Events</button>
+
+			<!-- Event Filters -->
+			<form id="event-filters">
+				<label class="form-group">Distance: 
+					<input id="distance" type="number" min="1">mi.
+				</label>
+
+				<label>Free Events Only
+					<input id="price" type="checkbox" name="price" value="free">
+				</label>
+
+				<label>Category:
+				    <select name="categories" id="categories" multiple="multiple">
+				        <option value="103">Music</option>
+				        <option value="101">Business & Professional</option>
+				        <option value="110">Food & Drink</option>
+				        <option value="113">Community & Culture</option>
+				        <option value="105">Performing & Visual Arts</option>
+				        <option value="104">Film, Media & Entertainment</option>
+				    </select>
+				</label>
+
+				<label>
+					<input type="submit" value="Retrieve Events" id="retrieve-events-btn" class="btn btn-default">
+				</label>
+			</form>
+
+			<!-- 'Retrieve Events' button -->
+			<!-- <button id="retrieve-events" class="btn btn-default">Retrieve Events</button> -->
+
 			<img id='loading-img' style="width: 30px" src="/static/img/loading.gif" class='hidden'>
 			<div class="scrollable" style="height: 600px">
 				<ul id="events-list"></ul>
@@ -343,20 +372,19 @@
 
 
 {% block scripts %}
-
 <script src="/static/trip_planner.js"></script>
+
 <script>
 // Event listeners
 $(document).ready(setupTooltips);
 $(document).ready(toggleTooltip);
 $(document).ready(sendReminders);
 
-$('#retrieve-events').click(getEvents);
+$('#retrieve-events-btn').click(getEvents);
 $('#submit-view').click(submitViewPermission);
 $("#submit-edit").click(submitEditPermission);
 $("#gen-pdf").click(generatePDF);
 $('#attending-btn').click(addAttendee);
 $('#not-attending-btn').click(rmAttendee);
-
 </script>
 {% endblock %}

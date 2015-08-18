@@ -1,3 +1,27 @@
+// Eventbrite categories
+var categories = {
+	"Music": 103,
+	"Business & Professional": 101,
+	"Food & Drink": 110,
+	"Community & Culture": 113,
+	"Performing & Visual Arts": 105,
+	"Film, Media & Entertainment": 104,
+	"Sports & Fitness": 108,
+	"Health & Wellness": 107,
+	"Science & Technology": 102,
+	"Travel & Outdoor": 109,
+	"Charity & Causes": 111,
+	"Religion & Spirituality": 114,
+	"Family & Education": 115,
+	"Seasonal & Holiday": 116,
+	"Government & Politics": 112,
+	"Fashion & Beauty": 106,
+	"Home & Lifestyle": 117,
+	"Auto, Boat & Air": 118,
+	"Hobbies & Special Interest": 119,
+	"Other": 199
+};
+
 // Functions
 function setupDraggables() {
 	$('.draggable').draggable({
@@ -69,14 +93,17 @@ function sendReminders() {
 	}
 }
 
-function getEvents() {
+function getEvents(evt) {
+	evt.preventDefault();
 
 	$('#loading-img').removeClass('hidden');
 
+	// Get my token from the server
 	$.get("/token", function (result) {
 		var parsedJSON = JSON.parse(result);
 		var token = parsedJSON.token
 
+		// Get filter info from data- attributes
 		var tripId = $("#agenda").data("trip");
 		var latitude = $("#nearby-events").data("latitude");
 		var longitude = $("#nearby-events").data("longitude");
@@ -84,17 +111,34 @@ function getEvents() {
 		var trip_start = $("#agenda").data("start");
 		var trip_end = $("#agenda").data("end");
 
-		var data = {token: token,
-					"location.latitude": latitude,
-					"location.longitude": longitude,
-					"location.within": "10mi",
-					"start_date.range_start": trip_start,
-					"start_date.range_end": trip_end
-					},
+		// Get filter info from #event-filters form
+		var distance = $('#distance').val() || '10';
+		
+		var categories_array = $('#categories').val() || [];
+		var categories_str = categories_array.join();
+
+		var price = $('#price').prop('checked');
+		if (price) {
+			price = 'free';
+		} else {
+			price = ''; // returns free & paid events
+		};
+
+		var filters = {
+			"token": token,
+			"start_date.range_start": trip_start,
+			"start_date.range_end": trip_end,
+			"location.latitude": latitude,
+			"location.longitude": longitude,
+			"location.within": distance + 'mi',
+			"categories": categories_str,
+			"price": price 
+		};		
+
 			url = "https://www.eventbriteapi.com/v3/events/search/"
 
 			// request events
-			$.get(url, data, function(result) {
+			$.get(url, filters, function(result) {
 				var topEvents = result.events;
 
 				// add event names to the dom

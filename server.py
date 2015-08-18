@@ -20,7 +20,7 @@ def send_reminders():
 
 	trip.send_SMS(tw_sid, tw_token)
 
-	return "We did it!" # FIXME: What should I return here?
+	return "Checked for text message" # FIXME: What should I return here?
 
 
 @app.route("/pdf", methods=["POST"])
