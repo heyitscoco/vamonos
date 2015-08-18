@@ -14,7 +14,7 @@
 			<!-- Event Filters -->
 			<form id="event-filters">
 				<label class="form-group">Distance: 
-					<input id="distance" type="number" min="1">mi.
+					<input id="distance" type="number" min="1" width="70px">mi.
 				</label>
 
 				<label>Free Events Only
@@ -250,17 +250,28 @@
 													      				<h5><b>End: </b>{{ event.end }}</h5>
 														      			<p>{{ event.description }}</p>
 														      		</div>
+														      	<!-- Google Map -->
+													      			<iframe
+													      				class=""
+																	    width="90%"
+																	    height="300px"
+																	    frameborder="0" style="border:0"
+																	    src="https://www.google.com/maps/embed/v1/place?key={{ gg_browser_key }}
+																	    	&q={{ event.address }}
+																	    	&zoom=15
+																	    	&attribution_source=Google+Maps+Embed+API
+																	    	&attribution_web_url=http://www.butchartgardens.com/
+																	    	&attribution_ios_deep_link_id=comgooglemaps://?daddr=Butchart+Gardens+Victoria+BC" allowfullscreen>
+																	</iframe>
 
 														      		<div>
 											      			<!-- FIXME: AJAX updates to this section are super broken -->
+														      			{% if event.attendances %}
 														      			<h5>Attending: </h5>
 															      		<p>
-														      			{% if event.attendances %}
 															      			{% for att in event.attendances %}
 																				{{ att.user.fname }}
 																			{% endfor %}
-																		{% else %}
-																			Nobody, yet...
 																		{% endif %}
 																		<span id="fname-{{ event.event_id }}" class="hidden">{{ session['fname'] }}</span>
 															      		</p>

@@ -48,6 +48,7 @@ def show_pdf(trip_id):
 	return send_file(itinerary)
 
 
+
 @app.route("/")
 def home():
 	"""Displays homepage"""
@@ -274,7 +275,8 @@ def trip_planner(trip_id):
 								friends=friends,
 								friend_ids=friend_ids,
 								can_edit=can_edit,
-								admin=admin
+								admin=admin,
+								gg_browser_key=gg_browser_key
 								)
 
 	else:

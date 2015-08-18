@@ -5,11 +5,13 @@ from datetime import datetime, timedelta
 from reportlab.pdfgen import canvas
 from twilio.rest import TwilioRestClient
 from os import environ
+from pytz import timezone, utc
 
 eb_token = environ['EB_PERSONAL_OAUTH']
 tw_token = environ['TW_AUTH_TOKEN']
 tw_sid = environ['TW_ACCOUNT_SID']
-TWILIO_NUMBER = '+16172061188'
+TWILIO_NUMBER = environ['TWILIO_NUMBER']
+gg_browser_key = environ['GG_BROWSER_KEY']
 
 db = SQLAlchemy()
 
@@ -170,9 +172,7 @@ class Trip(db.Model):
 		# Add events for each day
 		y = 140
 		for day in self.days:
-
 			if day.events:
-				
 				day_start = datetime.strftime(day.start, "%b %d")
 				day_header = "%s (Day %d)" % (day_start, day.day_num)
 
@@ -180,13 +180,21 @@ class Trip(db.Model):
 				y += 20
 
 				for event in day.events:
-
 					event_start = datetime.strftime(event.start, "%-I:%M %p")
 					event_header = "%s - %s" % (event_start, event.title)
 
 					my_canvas.drawString(100, y, event_header)
 					y += 20
 
+					if event.attendances:
+						friend_names = []
+						for att in event.attendances:
+							fname = User.query.get(att.user_id).fname
+							friend_names.append(fname)
+
+						friend_names = 'Attending: ' + ' '.join(friend_names)
+						my_canvas.drawString(100, y, friend_names)
+						y += 20
 				y += 20
 
 		my_canvas.showPage
@@ -365,6 +373,32 @@ class Friendship(db.Model):
 
 ########################################################################
 # Helper functions
+
+def convert_to_tz(dt, tz):
+	"""Returns the datetime object in the given timezone
+
+	Given a naive datetime:
+		>>> dt = datetime(2015, 12, 20)
+		>>> convert_to_tz(dt, utc)
+		datetime.datetime(2015, 12, 20, 0, 0, tzinfo=<UTC>)
+
+	Given an aware datetime:
+		>>> dt = datetime(2015, 12, 20)
+		>>> pacific = timezone('America/Los_Angeles')
+		>>> dt = pacific.localize(dt, utc)
+		>>> convert_to_tz(dt, utc)
+		datetime.datetime(2015, 12, 20, 8, 0, tzinfo=<UTC>)
+
+	"""
+	
+	if dt.tzinfo:
+		dt = dt.astimezone(tz) # declare that this DT is in UTC
+	else:
+		dt = tz.localize(dt) # convert this DT to UTC
+
+	return dt
+
+
 def find_next_day(date):
 	"""Given a datetime object, returns the following day as a datetime object
 	
