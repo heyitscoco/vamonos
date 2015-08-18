@@ -439,16 +439,23 @@ def edit_start():
 
 	# Update DB
 	trip = Trip.query.get(trip_id)
+	
+	tz_id = geocoder.timezone(trip.address).timeZoneId
+	tz = pytz.timezone(tz_id) # This is a pytz timezone object
+
+	start_raw = request.form.get("start")
+	start_aware = convert_to_tz(start_raw, tz)
+	start = datetime.strptime(start_aware, "%Y-%m-%d") + timedelta(1)
 
 	trip.start = start
-	trip.notification_sent = False
+	trip.notification_sent = False # FIXME: Will notifications still happen at the correct time?
 	
 	db.session.commit()
 	trip.update_days()
 
 	url = "/trip%d" % (trip_id)
 	return redirect(url)
-
+	
 
 
 @app.route("/edit_end", methods=["POST"])
@@ -456,13 +463,19 @@ def edit_end():
 	"""Changes the trip end"""
 
 	# Get info from form
+
 	trip_id = int(request.form.get("trip_id"))
-	end_raw = request.form.get("end")
-	end = datetime.strptime(end_raw, "%Y-%m-%d") + timedelta(1)
 
 	# Update DB
 	trip = Trip.query.get(trip_id)
 	
+	tz_id = geocoder.timezone(trip.address).timeZoneId
+	tz = pytz.timezone(tz_id) # This is a pytz timezone object
+
+	end_raw = request.form.get("end")
+	end_aware = convert_to_tz(end_raw, tz)
+	end = datetime.strptime(end_aware, "%Y-%m-%d") + timedelta(1)
+
 	trip.end = end
 	db.session.commit()
 	trip.update_days()
