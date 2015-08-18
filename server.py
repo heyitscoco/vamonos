@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import geocoder
 import requests
 import random
+import pytz
 
 app = Flask(__name__)
 app.secret_key = "most_secret_key_EVER!!!!!!!"
@@ -355,7 +356,7 @@ def create_trip():
 
 	if 'user_id' in session:
 		user_id = session["user_id"]
-		return render_template("create_trip.html", user_id=user_id)
+		return render_template("create_trip.html")
 
 	else:
 		flash("Sorry, you need to be logged in to do that!")
@@ -369,15 +370,19 @@ def new_trip():
 
 	# Get trip details from form
 	title = request.form.get("title")
+	destination = request.form.get("destination")
+
+	tz_id = geocoder.timezone(destination).timeZoneId
+	tz = pytz.timezone(tz_id) # This is a pytz timezone object
 
 	start_raw = request.form.get("start")
-	start = datetime.strptime(start_raw, "%Y-%m-%d")
+	start_aware = convert_to_tz(start_raw, tz)
+	start = datetime.strptime(start_aware, "%Y-%m-%d")
 
 	end_raw = request.form.get("end")
-	end = datetime.strptime(end_raw, "%Y-%m-%d")
+	end_aware = convert_to_tz(end_raw, tz)
+	end = datetime.strptime(end_aware, "%Y-%m-%d")
 	end = find_next_day(end)
-
-	destination = request.form.get("destination")
 
 	# Get more details from geocoder
 	destination = geocoder.google(destination)
@@ -386,6 +391,9 @@ def new_trip():
 	lng = destination.lng
 	city = destination.city
 	country_code = destination.country
+
+
+
 
 	# Add trip to DB
 	trip = Trip(admin_id=session["user_id"],
@@ -417,31 +425,6 @@ def new_trip():
 
 	url = "/trip%d" % (trip.trip_id)
 	return redirect(url)
-
-
-
-@app.route("/edit_destination", methods=["POST"])
-def edit_destination():
-	"""Modifies the trip destination"""
-
-	# Get info from form
-	trip_id = int(request.form.get("tripId"))
-	destination = request.form.get("destination")
-	destination = geocoder.google(destination)
-
-	# Update DB
-	trip = Trip.query.get(trip_id)
-
-	trip.address = destination.address
-	trip.latitude = destination.lat
-	trip.longitude = destination.lng
-	trip.city = destination.city
-	trip.country_code = destination.country
-
-	db.session.commit()
-
-
-	return "Did it!" # FIXME Dont return this!
 
 
 
