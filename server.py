@@ -455,7 +455,7 @@ def edit_start():
 
 	url = "/trip%d" % (trip_id)
 	return redirect(url)
-	
+
 
 
 @app.route("/edit_end", methods=["POST"])
@@ -502,11 +502,16 @@ def create_event():
 	city = location.city
 	country_code = location.country
 
+	tz_id = geocoder.timezone(address).timeZoneId
+	tz = pytz.timezone(tz_id) # This is a pytz timezone object
+
 	start_raw = request.form.get("start")
-	start = datetime.strptime(start_raw, "%Y-%m-%dT%H:%M")
+	start_aware = convert_to_tz(start_raw, tz)
+	start = datetime.strptime(start_aware, "%Y-%m-%dT%H:%M")
 
 	end_raw = request.form.get("end")
-	end = datetime.strptime(end_raw, "%Y-%m-%dT%H:%M")
+	end_aware = convert_to_tz(end_raw, tz)
+	end = datetime.strptime(end_aware, "%Y-%m-%dT%H:%M")
 
 	# Determine correct day
 	day = Day.query.filter(Day.trip_id == trip_id, Day.start <= start, Day.end >= start).all() # FIXME: Day.trip_id == trip_id
@@ -553,7 +558,7 @@ def add_event(event_id, trip_id):
 	url = event['url']
 	description = event['description']['text']
 
-	start = event['start']['utc']
+	start = event['start']['local']
 	start = datetime.strptime(start, "%Y-%m-%dT%H:%M:%SZ")
 
 	end = event['end']['utc']
@@ -571,6 +576,19 @@ def add_event(event_id, trip_id):
 	country_code = venue['address'].get('country')
 	lat = venue['latitude']
 	lng = venue['longitude']
+
+	tz_id = event['start']['timezone']
+	tz = pytz.timezone(tz_id) # This is a pytz timezone object
+
+	start_raw = request.form.get("start")
+	start_aware = convert_to_tz(start_raw, tz)
+	start = datetime.strptime(start_aware, "%Y-%m-%dT%H:%M")
+
+	end_raw = request.form.get("end")
+	end_aware = convert_to_tz(end_raw, tz)
+	end = datetime.strptime(end_aware, "%Y-%m-%dT%H:%M")
+
+
 
 	# create the event for the DB
 	trip_start = Trip.query.get(trip_id).start
