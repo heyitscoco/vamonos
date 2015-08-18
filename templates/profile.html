@@ -9,22 +9,28 @@
 	<div class="content main centered">
 		<h3 style="display:inline-block">{{ user.fname }} {{ user.lname }}</h3>
 		{% if user.user_id == session['user_id'] %}
-		<span data-toggle="tooltip" title="hello">
+		<span data-toggle="tooltip"
+			{% if user.phone %}
+				title="Change phone"
+			{% else %}
+				title="Add phone"
+			{% endif %}>
 			<button style="display:inline-block" type="button" class="icon phone-btn btn btn-default btn-xs" data-toggle="modal" data-target="#edit-phone"></button>
 		</span>
 		{% endif %}
 
-		<h5>Friends:</h5>
-		{% for friend_id, fname, img_url in friends %}
-			<a href="/user{{ friend_id }}/profile">
-				<img src="{{ img_url }}" style="width: 60px">
-				{{ fname }}
-			</a> <br>
-		{% endfor %}
+		{% if friends %}
+			<h5>Friends:</h5>
+			{% for friend_id, fname, img_url in friends %}
+				<a href="/user{{ friend_id }}/profile">
+					<img class="pro-pic" src="{{ img_url }}" data-toggle="tooltip" title="{{ fname }}">
+				</a>
+			{% endfor %}
+		{% endif %}
 
 		<form action="/add_friend" method="POST"><h5>Add a friend:</h5>
 			<label>
-				<input type="email" name="email" id="email" placeholder="email">
+				<input class="form-control" type="email" name="email" id="email" placeholder="email">
 			</label>
 			<label>
 				<input type="submit" value="+" class="btn btn-info btn-sm">

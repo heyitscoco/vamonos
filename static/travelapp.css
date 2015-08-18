@@ -27,6 +27,10 @@ select {
     background-color: rgba(0,0,0,0);
 }
 
+.pro-pic {
+	width: 50px;
+}
+
 .edit-btn {
 	background-image: url("/static/img/edit-pencil.png");
 }

@@ -26,7 +26,7 @@ class User(db.Model):
 	lname = db.Column(db.String(30), nullable=False)
 	email = db.Column(db.String(100), nullable=False, unique=True)
 	password = db.Column(db.String(30), nullable=False)
-	img_url = db.Column(db.String(300))
+	img_url = db.Column(db.String(300), nullable=False, default='/static/img/avatar.png')
 	phone = db.Column(db.String(12), unique=True)
 	
 	def __repr__(self):

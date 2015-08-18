@@ -186,13 +186,20 @@ def add_friend():
 	friend = User.get_by_email(email)
 
 	if friend:
-		# Add friendship to the DB
-		friendship = Friendship(admin_id=session['user_id'],
-								friend_id=friend.user_id
-								)
-		db.session.add(friendship)
-		db.session.commit()
-		msg = "You have successfully added %s to your friends!" % (friend.fname)
+		try: # Check for an existing friendship
+			Friendship.query.filter_by(admin_id=session['user_id'],
+									   friend_id=friend.user_id
+									   ).one()
+			msg = "You were already friends with %s!" % (friend.fname)
+
+		except NoResultFound:
+			# Add friendship to the DB
+			friendship = Friendship(admin_id=session['user_id'],
+									friend_id=friend.user_id
+									)
+			db.session.add(friendship)
+			db.session.commit()
+			msg = "You have successfully added %s to your friends!" % (friend.fname)
 
 	else:
 		msg = "We couldn't find anyone with that email in our system."

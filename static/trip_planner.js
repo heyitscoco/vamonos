@@ -22,20 +22,7 @@ function handleDropEvent(event, ui) {
 	});
 }
 
-function setupTooltips() {
-	$(".delete-btn").attr("data-toggle", "tooltip")
-					.attr("title", "Delete");
 
-	$(".edit-span").attr("data-toggle", "tooltip") // this goes on the span (not the button) so that the button can say data-toggle="tooltip"
-					.attr("title", "Edit");
-
-	$(".view-btn").attr("data-toggle", "tooltip")
-					.attr("title", "View");				
-}
-
-function toggleTooltip() {
-    $('[data-toggle="tooltip"]').tooltip(); 
-}
 
 function sendReminders() {
 	var today = newDate();
