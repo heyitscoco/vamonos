@@ -9,7 +9,9 @@
 	<div class="content main centered">
 		<h3 style="display:inline-block">{{ user.fname }} {{ user.lname }}</h3>
 		{% if user.user_id == session['user_id'] %}
-		<button style="display:inline-block" type="button" class="icon phone-btn btn btn-default btn-xs" data-toggle="modal" data-target="#edit-phone"></button>
+		<span data-toggle="tooltip" title="hello">
+			<button style="display:inline-block" type="button" class="icon phone-btn btn btn-default btn-xs" data-toggle="modal" data-target="#edit-phone"></button>
+		</span>
 		{% endif %}
 
 		<h5>Friends:</h5>

@@ -20,8 +20,6 @@ function handleDropEvent(event, ui) {
 	$.get(url, function() {
 		console.log('It worked! Your event has been added.');
 	});
-
-
 }
 
 function setupTooltips() {

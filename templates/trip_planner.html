@@ -45,17 +45,14 @@
 						<option value="199">Other</option>
 				    </select>
 				</label>
-
+			<!-- 'Retrieve Events' button -->
 				<label>
 					<input type="submit" value="Retrieve Events" id="retrieve-events-btn" class="btn btn-default">
 				</label>
 			</form>
 
-			<!-- 'Retrieve Events' button -->
-			<!-- <button id="retrieve-events" class="btn btn-default">Retrieve Events</button> -->
-
-			<img id='loading-img' style="width: 30px" src="/static/img/loading.gif" class='hidden'>
 			<div class="scrollable" style="height: 600px">
+				<img id='loading-img' style="width: 30px" src="/static/img/loading.gif" class='hidden'>
 				<ul id="events-list"></ul>
 			</div>
 			{% endif %}
