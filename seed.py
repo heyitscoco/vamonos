@@ -37,8 +37,16 @@ def load_trips():
 
 		admin_id = int(admin_id)
 		tz_name = geocoder.timezone(destination).timeZoneId
-		start = datetime.strptime(start_raw, "%Y, %m, %d")
-		end = datetime.strptime(end_raw, "%Y, %m, %d")
+		
+		start_dt = datetime.strptime(start_raw, "%Y, %m, %d")
+		start_local = convert_to_tz(start_dt, tz_name) # give it tzinfo=tz_name
+		print "start_local:", start_local
+		start_utc = convert_to_tz(start_local, 'utc') # convert that time to UTC
+		print "start_utc:", start_utc
+
+		end_dt = datetime.strptime(end_raw, "%Y, %m, %d")
+		end_local = convert_to_tz(end_dt, tz_name)
+		end_utc = convert_to_tz(end_local, 'utc')
 
 		destination = geocoder.google(destination)
 		address = destination.address
@@ -49,8 +57,8 @@ def load_trips():
 
 		trip = Trip(admin_id=admin_id,
 					title=title,
-					start=start,
-					end=end,
+					start=start_utc,
+					end=end_utc,
 					latitude=lat,
 					longitude=lng,
 					address=address,

@@ -375,11 +375,15 @@ def new_trip():
 	tz_name = geocoder.timezone(destination).timeZoneId
 
 	start_raw = request.form.get("start")
-	start = datetime.strptime(start_raw, "%Y-%m-%d")
+	start_dt = datetime.strptime(start_raw, "%Y-%m-%d") # naive UTC
+	start_local = convert_to_tz(start_dt, tz_name) # We want to store in the database a UTC time that represents midnight in the trip's LOCAL time.
+	start_utc = convert_to_tz(start_local, 'utc')
 
 	end_raw = request.form.get("end")
-	end = datetime.strptime(end_raw, "%Y-%m-%d")
-	end = find_next_day(end)
+	end_dt = datetime.strptime(end_raw, "%Y-%m-%d")
+	end_dt = find_next_day(end_dt)
+	end_local = convert_to_tz(end_dt, tz_name)
+	end_utc = convert_to_tz(end_local, 'utc')
 
 	# Get more details from geocoder
 	destination = geocoder.google(destination)
@@ -389,14 +393,11 @@ def new_trip():
 	city = destination.city
 	country_code = destination.country
 
-
-
-
 	# Add trip to DB
 	trip = Trip(admin_id=session["user_id"],
 				title=title,
-				start=start,
-				end=end,
+				start=start_utc,
+				end=end_utc,
 				latitude=lat,
 				longitude=lng,
 				address=address,
