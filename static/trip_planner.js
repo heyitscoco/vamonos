@@ -14,12 +14,13 @@ function handleDropEvent(event, ui) {
 	var eventId = draggable.attr('id');
 	var tripId = $("#agenda").data("trip");
 
-	console.log('eventId: ' + eventId);
 	var url = '/add_event/' + eventId + '/' + tripId;
 
 	$.get(url, function() {
 		console.log('It worked! Your event has been added.');
 	});
+	
+	location.reload();
 }
 
 
