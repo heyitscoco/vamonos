@@ -372,16 +372,13 @@ def new_trip():
 	title = request.form.get("title")
 	destination = request.form.get("destination")
 
-	tz_id = geocoder.timezone(destination).timeZoneId
-	tz = pytz.timezone(tz_id) # This is a pytz timezone object
+	tz_name = geocoder.timezone(destination).timeZoneId
 
 	start_raw = request.form.get("start")
-	start_naive = datetime.strptime(start_raw, "%Y-%m-%d")
-	start = convert_to_tz(start_naive, tz)
+	start = datetime.strptime(start_raw, "%Y-%m-%d")
 
 	end_raw = request.form.get("end")
-	end_naive = datetime.strptime(end_raw, "%Y-%m-%d")
-	end = convert_to_tz(end_naive, tz)
+	end = datetime.strptime(end_raw, "%Y-%m-%d")
 	end = find_next_day(end)
 
 	# Get more details from geocoder
@@ -404,7 +401,8 @@ def new_trip():
 				longitude=lng,
 				address=address,
 				city=city,
-				country_code=country_code
+				country_code=country_code,
+				tz_name=tz_name
 				)
 	db.session.add(trip)
 	db.session.commit() # Commit here so that you can retrieve the trip_id!
@@ -439,20 +437,11 @@ def edit_start():
 
 	# Update DB
 	trip = Trip.query.get(trip_id)
-	
-	tz_id = geocoder.timezone(trip.address).timeZoneId
-	tz = pytz.timezone(tz_id) # This is a pytz timezone object
-
-	start_raw = request.form.get("start")
-	start_naive = datetime.strptime(start_raw, "%Y-%m-%d") + timedelta(1)
-	start = convert_to_tz(start_naive, tz)
-	print "\n\nstart: %s\n\n" % (type(start))
 
 	trip.start = start
 	trip.notification_sent = False # FIXME: Will notifications still happen at the correct time?
 	
 	db.session.commit()
-	print "\n\ntime to update_days!\n\n"
 	trip.update_days()
 
 	url = "/trip%d" % (trip_id)
@@ -465,21 +454,15 @@ def edit_end():
 	"""Changes the trip end"""
 
 	# Get info from form
-
 	trip_id = int(request.form.get("trip_id"))
+	end_raw = request.form.get("end")
+	end = datetime.strptime(end_raw, "%Y-%m-%d") + timedelta(1)
 
 	# Update DB
 	trip = Trip.query.get(trip_id)
-	
-	tz_id = geocoder.timezone(trip.address).timeZoneId
-	tz = pytz.timezone(tz_id) # This is a pytz timezone object
-
-	end_raw = request.form.get("end")
-	end_naive = datetime.strptime(end_raw, "%Y-%m-%d") + timedelta(1)
-	end = convert_to_tz(end_naive, tz)
-
 
 	trip.end = end
+	
 	db.session.commit()
 	trip.update_days()
 

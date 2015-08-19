@@ -1,11 +1,15 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
+
 from datetime import datetime, timedelta
+import pytz
+
 from reportlab.pdfgen import canvas
+
 from twilio.rest import TwilioRestClient
 from os import environ
-import pytz
+
 
 eb_token = environ['EB_PERSONAL_OAUTH']
 tw_token = environ['TW_AUTH_TOKEN']
@@ -72,6 +76,7 @@ class Trip(db.Model):
 	title = db.Column(db.String(100))
 	start = db.Column(db.DateTime, nullable=False)
 	end = db.Column(db.DateTime, nullable=False)
+	tz_name = db.Column(db.String(50), nullable=False)
 	notification_sent = db.Column(db.Boolean, default=0, nullable=False)
 
 	# Location details
@@ -438,7 +443,7 @@ def find_next_day(date):
 		datetime.datetime(2016, 1, 1, 0, 0)
 
 	"""
-
+	
 	day = timedelta(days=1)
 	date += day
 	return date
