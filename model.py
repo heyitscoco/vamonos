@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from reportlab.pdfgen import canvas
 from twilio.rest import TwilioRestClient
 from os import environ
-from pytz import timezone, utc
+import pytz
 
 eb_token = environ['EB_PERSONAL_OAUTH']
 tw_token = environ['TW_AUTH_TOKEN']
@@ -374,27 +374,42 @@ class Friendship(db.Model):
 ########################################################################
 # Helper functions
 
-def convert_to_tz(dt, tz):
+def convert_to_tz(dt, tz_name):
 	"""Returns the datetime object in the given timezone
 
-	Given a naive datetime:
-		>>> dt = datetime(2015, 12, 20)
-		>>> convert_to_tz(dt, utc)
-		datetime.datetime(2015, 12, 20, 0, 0, tzinfo=<UTC>)
+	Naive datetime -> UTC:
+		>>> dt = datetime(2015, 12, 25)
+		>>> tz_name = 'UTC'
+		>>> convert_to_tz(dt, tz_name)
+		datetime.datetime(2015, 12, 25, 0, 0, tzinfo=<UTC>)
 
-	Given an aware datetime:
-		>>> dt = datetime(2015, 12, 20)
-		>>> pacific = timezone('America/Los_Angeles')
-		>>> dt = pacific.localize(dt, utc)
-		>>> convert_to_tz(dt, utc)
-		datetime.datetime(2015, 12, 20, 8, 0, tzinfo=<UTC>)
+	Naive datetime -> pacific:
+		>>> dt = datetime(2015, 12, 25)
+		>>> tz_name = 'America/Los_Angeles'
+		>>> convert_to_tz(dt, tz_name)
+		datetime.datetime(2015, 12, 25, 0, 0, tzinfo=<DstTzInfo 'America/Los_Angeles' PST-1 day, 16:00:00 STD>)
+
+	Aware datetime -> UTC:
+		>>> dt = datetime(2015, 12, 25)
+		>>> tz = pytz.utc
+		>>> dt = tz.localize(dt)
+		>>> dt
+		datetime.datetime(2015, 12, 25, 0, 0, tzinfo=<UTC>)
+		>>> convert_to_tz(dt, 'America/Los_Angeles')
+		datetime.datetime(2015, 12, 24, 16, 0, tzinfo=<DstTzInfo 'America/Los_Angeles' PST-1 day, 16:00:00 STD>)
 
 	"""
-	
-	if dt.tzinfo:
-		dt = dt.astimezone(tz) # declare that this DT is in UTC
+
+	if tz_name.lower() == 'utc': # If the desired tz is UTC
+		tz = pytz.utc
 	else:
-		dt = tz.localize(dt) # convert this DT to UTC
+		tz = pytz.timezone(tz_name)
+
+
+	if dt.tzinfo: # if we were given an aware dt obj
+		dt = dt.astimezone(tz)
+	else:
+		dt = tz.localize(dt)
 
 	return dt
 
@@ -402,9 +417,26 @@ def convert_to_tz(dt, tz):
 def find_next_day(date):
 	"""Given a datetime object, returns the following day as a datetime object
 	
-	>>> date = datetime(2015, 12, 23) 
-	>>> find_next_day(date)
-	datetime.datetime(2015, 12, 24, 0, 0)
+	Standard use case:
+		>>> date = datetime(2015, 12, 23) 
+		>>> find_next_day(date)
+		datetime.datetime(2015, 12, 24, 0, 0)
+
+	Leap-year:
+		>>> date = datetime(2016, 02, 28)
+		>>> find_next_day(date)
+		datetime.datetime(2016, 2, 29, 0, 0)
+
+	Non-leap-year:
+		>>> date = datetime(2015, 02, 28)
+		>>> find_next_day(date)
+		datetime.datetime(2015, 3, 1, 0, 0)
+
+	Year end:
+		>>> date = datetime(2015, 12, 31)
+		>>> find_next_day(date)
+		datetime.datetime(2016, 1, 1, 0, 0)
+
 	"""
 
 	day = timedelta(days=1)
@@ -413,7 +445,7 @@ def find_next_day(date):
 
 
 def connect_to_db(app):
-    """Connect the database to our Flask app."""
+    """Connects the database to our Flask app."""
 
     # Configure to use our SQLite database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///travelapp.db'

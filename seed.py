@@ -1,6 +1,7 @@
 from model import *
 from server import app
 import geocoder
+import pytz
 from datetime import datetime
 from json import loads
 
@@ -32,11 +33,18 @@ def load_trips():
 	file = open('static/data/trips.txt')
 
 	for line in file:
-		admin_id, title, start, end, destination = line.rstrip().split("|")
+		admin_id, title, start_raw, end_raw, destination = line.rstrip().split("|")
 
 		admin_id = int(admin_id)
-		start = datetime.strptime(start, "%Y, %m, %d")
-		end = datetime.strptime(end, "%Y, %m, %d")
+
+		tz_id = geocoder.timezone(destination).timeZoneId
+		tz = pytz.timezone(tz_id)
+
+		start_naive = datetime.strptime(start_raw, "%Y, %m, %d")
+		start = convert_to_tz(start_naive, tz)
+
+		end_naive = datetime.strptime(end_raw, "%Y, %m, %d")
+		end = convert_to_tz(end_naive, tz)
 
 		destination = geocoder.google(destination)
 		address = destination.address
@@ -70,7 +78,7 @@ def load_trips():
 
 
 def load_permissions():
-	"""Load permissions for Carolyn & Balloonicorn on carolyn's vacation"""
+	"""Load the permissions"""
 
 	file = open("static/data/permissions.txt")
 
@@ -86,29 +94,35 @@ def load_permissions():
 		db.session.add(perm)
 
 def load_events():
-	"""Load one event for Carolyn's trip"""
+	"""Load the events"""
 
 	file = open('static/data/events.txt')
 
 	for line in file:
-		day_id, user_id, title, start, end, city = line.rstrip().split("|")
+		day_id, user_id, title, start_raw, end_raw, city = line.rstrip().split("|")
 
-		start = datetime.strptime(start, "datetime(%Y, %m, %d)")
-		end = datetime.strptime(end, "datetime(%Y, %m, %d)")
+		tz_id = 'America/Los_Angeles'
+		tz = pytz.timezone(tz_id)
+
+		start_naive = datetime.strptime(start_raw, "datetime(%Y, %m, %d)")
+		start = convert_to_tz(start_naive, tz)
+
+		end_naive = datetime.strptime(end_raw, "datetime(%Y, %m, %d)")
+		end = convert_to_tz(end_naive, tz)
 		
 		event = Event(day_id=day_id,
 					  user_id=user_id,
 					  title=title,
 					  start=start,
 					  end=end,
-					  city=city,
-					)
+					  city=city
+					  )
 
 		db.session.add(event)
 
 
 def load_friendships():
-	"""Load the friendships between Balloonicorn & Carolyn"""
+	"""Load the friendships"""
 
 	file = open('static/data/friendships.txt')
 

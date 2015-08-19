@@ -376,12 +376,12 @@ def new_trip():
 	tz = pytz.timezone(tz_id) # This is a pytz timezone object
 
 	start_raw = request.form.get("start")
-	start_aware = convert_to_tz(start_raw, tz)
-	start = datetime.strptime(start_aware, "%Y-%m-%d")
+	start_naive = datetime.strptime(start_raw, "%Y-%m-%d")
+	start = convert_to_tz(start_naive, tz)
 
 	end_raw = request.form.get("end")
-	end_aware = convert_to_tz(end_raw, tz)
-	end = datetime.strptime(end_aware, "%Y-%m-%d")
+	end_naive = datetime.strptime(end_raw, "%Y-%m-%d")
+	end = convert_to_tz(end_naive, tz)
 	end = find_next_day(end)
 
 	# Get more details from geocoder
@@ -444,13 +444,15 @@ def edit_start():
 	tz = pytz.timezone(tz_id) # This is a pytz timezone object
 
 	start_raw = request.form.get("start")
-	start_aware = convert_to_tz(start_raw, tz)
-	start = datetime.strptime(start_aware, "%Y-%m-%d") + timedelta(1)
+	start_naive = datetime.strptime(start_raw, "%Y-%m-%d") + timedelta(1)
+	start = convert_to_tz(start_naive, tz)
+	print "\n\nstart: %s\n\n" % (type(start))
 
 	trip.start = start
 	trip.notification_sent = False # FIXME: Will notifications still happen at the correct time?
 	
 	db.session.commit()
+	print "\n\ntime to update_days!\n\n"
 	trip.update_days()
 
 	url = "/trip%d" % (trip_id)
@@ -473,8 +475,9 @@ def edit_end():
 	tz = pytz.timezone(tz_id) # This is a pytz timezone object
 
 	end_raw = request.form.get("end")
-	end_aware = convert_to_tz(end_raw, tz)
-	end = datetime.strptime(end_aware, "%Y-%m-%d") + timedelta(1)
+	end_naive = datetime.strptime(end_raw, "%Y-%m-%d") + timedelta(1)
+	end = convert_to_tz(end_naive, tz)
+
 
 	trip.end = end
 	db.session.commit()
@@ -506,12 +509,12 @@ def create_event():
 	tz = pytz.timezone(tz_id) # This is a pytz timezone object
 
 	start_raw = request.form.get("start")
-	start_aware = convert_to_tz(start_raw, tz)
-	start = datetime.strptime(start_aware, "%Y-%m-%dT%H:%M")
+	start_naive = datetime.strptime(start_raw, "%Y-%m-%dT%H:%M")
+	start = convert_to_tz(start_naive, tz)
 
 	end_raw = request.form.get("end")
-	end_aware = convert_to_tz(end_raw, tz)
-	end = datetime.strptime(end_aware, "%Y-%m-%dT%H:%M")
+	end_naive = datetime.strptime(end_raw, "%Y-%m-%dT%H:%M")
+	end = convert_to_tz(end_naive, tz)
 
 	# Determine correct day
 	day = Day.query.filter(Day.trip_id == trip_id, Day.start <= start, Day.end >= start).all() # FIXME: Day.trip_id == trip_id
@@ -581,13 +584,12 @@ def add_event(event_id, trip_id):
 	tz = pytz.timezone(tz_id) # This is a pytz timezone object
 
 	start_raw = request.form.get("start")
-	start_aware = convert_to_tz(start_raw, tz)
-	start = datetime.strptime(start_aware, "%Y-%m-%dT%H:%M")
+	start_naive = datetime.strptime(start_raw, "%Y-%m-%dT%H:%M")
+	start = convert_to_tz(start_naive, tz)
 
 	end_raw = request.form.get("end")
-	end_aware = convert_to_tz(end_raw, tz)
-	end = datetime.strptime(end_aware, "%Y-%m-%dT%H:%M")
-
+	end_naive = datetime.strptime(end_raw, "%Y-%m-%dT%H:%M")
+	end = convert_to_tz(end_naive, tz)
 
 
 	# create the event for the DB
