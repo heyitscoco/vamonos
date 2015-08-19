@@ -462,7 +462,7 @@ def edit_end():
 	trip = Trip.query.get(trip_id)
 
 	trip.end = end
-	
+
 	db.session.commit()
 	trip.update_days()
 
@@ -488,16 +488,13 @@ def create_event():
 	city = location.city
 	country_code = location.country
 
-	tz_id = geocoder.timezone(address).timeZoneId
-	tz = pytz.timezone(tz_id) # This is a pytz timezone object
+	start_raw = request.form.get("start") # This is given to us by the user in LOCAL TIME
+	start_local = datetime.strptime(start_raw, "%Y-%m-%dT%H:%M")
+	start = convert_to_tz(start_local, 'utc')
 
-	start_raw = request.form.get("start")
-	start_naive = datetime.strptime(start_raw, "%Y-%m-%dT%H:%M")
-	start = convert_to_tz(start_naive, tz)
-
-	end_raw = request.form.get("end")
-	end_naive = datetime.strptime(end_raw, "%Y-%m-%dT%H:%M")
-	end = convert_to_tz(end_naive, tz)
+	end_raw = request.form.get("end") # This is given to us by the user in LOCAL TIME
+	end_local = datetime.strptime(end_raw, "%Y-%m-%dT%H:%M")
+	end = convert_to_tz(end_local, 'utc')
 
 	# Determine correct day
 	day = Day.query.filter(Day.trip_id == trip_id, Day.start <= start, Day.end >= start).all() # FIXME: Day.trip_id == trip_id
