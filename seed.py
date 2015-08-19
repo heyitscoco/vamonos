@@ -40,9 +40,7 @@ def load_trips():
 		
 		start_dt = datetime.strptime(start_raw, "%Y, %m, %d")
 		start_local = convert_to_tz(start_dt, tz_name) # give it tzinfo=tz_name
-		print "start_local:", start_local
 		start_utc = convert_to_tz(start_local, 'utc') # convert that time to UTC
-		print "start_utc:", start_utc
 
 		end_dt = datetime.strptime(end_raw, "%Y, %m, %d")
 		end_local = convert_to_tz(end_dt, tz_name)

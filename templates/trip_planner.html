@@ -131,7 +131,7 @@
 								<button type="button" class="icon edit-btn btn btn-default btn-xs" data-toggle="modal" data-target="#edit-start"></button>
 							</span>
 							{% endif %}
-							Start: {{ trip_start_dsply }}
+							Start: {{ convert_to_tz(trip.start, trip.tz_name) | datetime('date') }}
 						</li>
 						<li>
 							{% if admin %}
@@ -139,7 +139,7 @@
 								<button type="button" class="icon edit-btn btn btn-default btn-xs" data-toggle="modal" data-target="#edit-end"></button>
 							</span>
 							{% endif %}
-							End: {{ trip_end_dsply }}
+							End: {{ convert_to_tz(trip.end, trip.tz_name) | datetime('date', trip_end=True) }}
 						</li>
 					</ul>
 				</div>
@@ -210,7 +210,9 @@
 <!-- Agenda -->
 		<div class="row">	
 			<div class="col-xs-12">
-				<div class="content" id="agenda" data-trip="{{ trip.trip_id }}" data-start="{{ trip_start_str }}" data-end="{{ trip_end_str }}">
+				<div class="content" id="agenda" data-trip="{{ trip.trip_id }}"
+												 data-start="{{ trip.start | datetime }}"
+												 data-end="{{ trip.end | datetime(trip_end=True) }}">
 					<h4>Agenda</h4>
 					<div class="scrollable">
 						<table>
@@ -251,8 +253,8 @@
 												      			<!-- Event details -->
 													      			<div>
 													      				<h5><b>Address: </b>{{ event.address }}</h5>
-													      				<h5><b>Start: </b>{{ event.start }}</h5>
-													      				<h5><b>End: </b>{{ event.end }}</h5>
+													      				<h5><b>Time: </b>{{ convert_to_tz(event.start, trip.tz_name) | datetime('time') }}
+													      							   - {{ convert_to_tz(event.end, trip.tz_name) | datetime('time')  }}</h5>
 														      			<p>{{ event.description }}</p>
 														      		</div>
 														      	<!-- Google Map -->

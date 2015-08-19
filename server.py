@@ -9,6 +9,7 @@ import pytz
 app = Flask(__name__)
 app.secret_key = "most_secret_key_EVER!!!!!!!"
 
+
 #############################################################
 # Routes
 
@@ -244,16 +245,11 @@ def trip_planner(trip_id):
 		friend_ids = [friendship.friend_id for friendship in friendships]
 
 		trip = Trip.query.get(trip_id)
-		trip_start_str = datetime.strftime(trip.start, "%Y-%m-%dT%H:%M:%SZ")
-		trip_end_str = datetime.strftime(trip.end, "%Y-%m-%dT%H:%M:%SZ")
-
-		trip_start_dsply = datetime.strftime(trip.start, "%b %d, %Y")
-		last_day = trip.end - timedelta(1)
-		trip_end_dsply = datetime.strftime(last_day, "%b %d, %Y")
-
 
 		# Pass 'can_edit' boolean into template
-		user_perm = Permission.query.filter(Permission.trip_id == trip_id, Permission.user_id == viewer_id).one()
+		user_perm = Permission.query.filter(Permission.trip_id == trip_id,
+											Permission.user_id == viewer_id
+											).one()
 
 		if user_perm.can_edit:
 			can_edit = True
@@ -268,21 +264,19 @@ def trip_planner(trip_id):
 
 		return render_template("trip_planner.html",
 								trip=trip,
-								trip_start_str=trip_start_str,
-								trip_end_str=trip_end_str,
-								trip_start_dsply=trip_start_dsply,
-								trip_end_dsply=trip_end_dsply,
 								permissions=permissions,
 								friends=friends,
 								friend_ids=friend_ids,
 								can_edit=can_edit,
 								admin=admin,
-								gg_browser_key=gg_browser_key
+								gg_browser_key=gg_browser_key,
+								convert_to_tz=convert_to_tz
 								)
 
 	else:
 		flash("Sorry, you need to be logged in to do that!")
 		return redirect("/login")
+
 
 
 @app.route("/add_permission", methods=["POST"])
@@ -542,17 +536,15 @@ def add_event(event_id, trip_id):
 	url = event['url']
 	description = event['description']['text']
 
-	start = event['start']['local']
-	start = datetime.strptime(start, "%Y-%m-%dT%H:%M:%SZ")
+	start_raw = event['start']['utc']
+	start = datetime.strptime(start_raw, "%Y-%m-%dT%H:%M:%SZ")
 
-	end = event['end']['utc']
-	end = datetime.strptime(end, "%Y-%m-%dT%H:%M:%SZ")
-
+	end_raw = event['end']['utc']
+	end = datetime.strptime(end_raw, "%Y-%m-%dT%H:%M:%SZ")
 
 	venue_id = event['venue_id']
 	venue_uri = "https://www.eventbriteapi.com/v3/venues/%s/?token=%s" % (venue_id, eb_token)
 	venue = requests.get(venue_uri).json()
-
 
 	place_name = venue.get('address',{}).get('name')
 	address = venue['address'].get('address_1')
@@ -563,15 +555,6 @@ def add_event(event_id, trip_id):
 
 	tz_id = event['start']['timezone']
 	tz = pytz.timezone(tz_id) # This is a pytz timezone object
-
-	start_raw = request.form.get("start")
-	start_naive = datetime.strptime(start_raw, "%Y-%m-%dT%H:%M")
-	start = convert_to_tz(start_naive, tz)
-
-	end_raw = request.form.get("end")
-	end_naive = datetime.strptime(end_raw, "%Y-%m-%dT%H:%M")
-	end = convert_to_tz(end_naive, tz)
-
 
 	# create the event for the DB
 	trip_start = Trip.query.get(trip_id).start
@@ -685,6 +668,37 @@ def rm_attendee():
 
 
 #############################################################
+# Jinja2 Filters
+
+@app.template_filter('datetime')
+def _format_datetime(dt, format=None, trip_end=False):
+	"""Formats a datetime object for display """
+
+	'%Y-%m-%dT%H:%M:%SZ'
+
+	if trip_end:
+		dt = dt - timedelta(1)
+
+
+	if format == 'time':
+		dt = datetime.strftime(dt, '%-I:%M %p')
+
+	elif format == 'date':
+		dt = datetime.strftime(dt, '%b %d, %Y')
+
+	elif format == 'datetime pretty':
+		dt = datetime.strftime(dt, '%-I:%M %p, %b %d, %Y')
+
+	else:
+		dt = datetime.strftime(dt, '%Y-%m-%dT%H:%M:%SZ')
+
+	return dt
+
+
+
+
+#############################################################
+# Main
 
 if __name__ == "__main__":
 	connect_to_db(app)
