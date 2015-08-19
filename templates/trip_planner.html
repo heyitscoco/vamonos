@@ -4,60 +4,60 @@
 
 {% block content %}
 <div class="row">
-<!-- Nearby Events -->
+	<div class="col-xs-3">		
+		<!-- Nearby Events-->
+			<div id="nearby-events" class="content" data-latitude={{ trip.latitude }} data-longitude={{ trip.longitude }}>
+				{% if can_edit %}
+					<h4>Nearby Events</h4>
 
-	<div class="col-xs-3">
-		<div id="nearby-events" class="content" data-latitude={{ trip.latitude }} data-longitude={{ trip.longitude }}>
-			{% if can_edit %}
-			<h4>Nearby Events</h4>
+					<form id="event-filters">
+					<!-- Event Filters -->
+						<label class="form-group">Distance: 
+							<input id="distance" type="number" min="1" width="70px">mi.
+						</label>
 
-			<!-- Event Filters -->
-			<form id="event-filters">
-				<label class="form-group">Distance: 
-					<input id="distance" type="number" min="1" width="70px">mi.
-				</label>
+						<label>Free Events Only
+							<input id="price" type="checkbox" name="price" value="free">
+						</label>
 
-				<label>Free Events Only
-					<input id="price" type="checkbox" name="price" value="free">
-				</label>
+						<label>Category:
+							<select name="categories" id="categories" multiple="multiple">
+							    <option value="118">Auto, Boat & Air</option>
+								<option value="101">Business & Professional</option>
+								<option value="111">Charity & Causes</option>
+								<option value="113">Community & Culture</option>
+								<option value="115">Family & Education</option>
+								<option value="106">Fashion & Beauty</option>
+								<option value="104">Film, Media & Entertainment</option>
+								<option value="110">Food & Drink</option>
+								<option value="112">Government & Politics</option>
+								<option value="107">Health & Wellness</option>
+								<option value="119">Hobbies & Special Interest</option>
+								<option value="117">Home & Lifestyle</option>
+								<option value="103">Music</option>
+								<option value="105">Performing & Visual Arts</option>
+								<option value="114">Religion & Spirituality</option>
+								<option value="102">Science & Technology</option>
+								<option value="116">Seasonal & Holiday</option>
+								<option value="108">Sports & Fitness</option>
+								<option value="109">Travel & Outdoor</option>
+								<option value="199">Other</option>
+							</select>
+						</label>
+					<!-- 'Retrieve Events' button -->
+						<label>
+							<input type="submit" value="Retrieve Events" id="retrieve-events-btn" class="btn btn-default">
+						</label>
+					</form>
 
-				<label>Category:
-				    <select name="categories" id="categories" multiple="multiple">
-				        <option value="118">Auto, Boat & Air</option>
-						<option value="101">Business & Professional</option>
-						<option value="111">Charity & Causes</option>
-						<option value="113">Community & Culture</option>
-						<option value="115">Family & Education</option>
-						<option value="106">Fashion & Beauty</option>
-						<option value="104">Film, Media & Entertainment</option>
-						<option value="110">Food & Drink</option>
-						<option value="112">Government & Politics</option>
-						<option value="107">Health & Wellness</option>
-						<option value="119">Hobbies & Special Interest</option>
-						<option value="117">Home & Lifestyle</option>
-						<option value="103">Music</option>
-						<option value="105">Performing & Visual Arts</option>
-						<option value="114">Religion & Spirituality</option>
-						<option value="102">Science & Technology</option>
-						<option value="116">Seasonal & Holiday</option>
-						<option value="108">Sports & Fitness</option>
-						<option value="109">Travel & Outdoor</option>
-						<option value="199">Other</option>
-				    </select>
-				</label>
-			<!-- 'Retrieve Events' button -->
-				<label>
-					<input type="submit" value="Retrieve Events" id="retrieve-events-btn" class="btn btn-default">
-				</label>
-			</form>
-
-			<div class="scrollable" style="height: 600px">
-				<img id='loading-img' style="width: 30px" src="/static/img/loading.gif" class='hidden'>
-				<ul id="events-list"></ul>
+					<div class="scrollable" style="height: 600px">
+						<img id='loading-img' style="width: 30px" src="/static/img/loading.gif" class='hidden'>
+						<ul id="events-list"></ul>
+					</div>
+				{% endif %}
 			</div>
-			{% endif %}
-		</div>
 	</div>
+	
 	<div class="col-xs-9">
 		<div class="row">
 <!-- Permissions -->

@@ -16,6 +16,7 @@ th {
 td {
 	background-color: rgba(255,255,255, 0.3);
 	border: 1px solid white;
+	/*width: 25%;*/
 }
 
 h4 {
@@ -95,7 +96,6 @@ select {
 .navbar {
 	background-color: rgba(255,255,255, 0.7);
 	opacity: 0.8;
-
 	border: 1px solid white;
 }
 
@@ -105,6 +105,10 @@ select {
 
 .floater-box {
 	height: 200px;
+}
+
+.carousel-indicators {
+	background-color: red;
 }
 
 .my-modal {

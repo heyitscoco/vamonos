@@ -674,21 +674,16 @@ def rm_attendee():
 def _format_datetime(dt, format=None, trip_end=False):
 	"""Formats a datetime object for display """
 
-	'%Y-%m-%dT%H:%M:%SZ'
-
 	if trip_end:
 		dt = dt - timedelta(1)
 
 
 	if format == 'time':
 		dt = datetime.strftime(dt, '%-I:%M %p')
-
 	elif format == 'date':
 		dt = datetime.strftime(dt, '%b %d, %Y')
-
 	elif format == 'datetime pretty':
 		dt = datetime.strftime(dt, '%-I:%M %p, %b %d, %Y')
-
 	else:
 		dt = datetime.strftime(dt, '%Y-%m-%dT%H:%M:%SZ')
 
