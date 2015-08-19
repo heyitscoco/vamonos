@@ -62,7 +62,7 @@
 		<div class="row">
 <!-- Permissions -->
 			<div class="col-xs-12 col-sm-6">
-				<div class="content floater-box scrollable">
+				<div class="content floater-box">
 					<h4>Permissions</h4>
 					{% if admin %}
 						<form>
@@ -88,31 +88,33 @@
 							</label>
 						</form>
 					{% endif %}
-					<ul id="perms-list">
-						{% for perm in permissions %}
-							<li>
-								{% if admin %}
-									<form action="/rm_permission" method="POST" style="display: inline-block">
-										<label>
-											<input type="hidden" name="friend_id" value="{{ perm.user_id }}">
-										</label>
-										<label>
-											<input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
-										</label>
-										<label>
-											<input type="submit" value="" class="icon delete-btn edit-perms btn btn-default btn-xs">
-										</label>
-									</form>
-								{% endif %}
-								<a href="/user{{ perm.user_id }}/profile">{{ perm.user.fname }}</a>
-								{% if perm.can_edit %}
-									<span id="friend{{ perm.user_id }}">(editor)</span>
-								{% else %}
-									<span class="hidden" id="friend{{ perm.user_id }}"></span>
-								{% endif %}
-							</li>
-						{% endfor %}
-					</ul>
+					<div class="scrollable" style="height: 70px">
+						<ul id="perms-list">
+							{% for perm in permissions %}
+								<li>
+									{% if admin %}
+										<form action="/rm_permission" method="POST" style="display: inline-block">
+											<label>
+												<input type="hidden" name="friend_id" value="{{ perm.user_id }}">
+											</label>
+											<label>
+												<input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
+											</label>
+											<label>
+												<input type="submit" value="" class="icon delete-btn edit-perms btn btn-default btn-xs">
+											</label>
+										</form>
+									{% endif %}
+									<a href="/user{{ perm.user_id }}/profile">{{ perm.user.fname }}</a>
+									{% if perm.can_edit %}
+										<span id="friend{{ perm.user_id }}">(editor)</span>
+									{% else %}
+										<span class="hidden" id="friend{{ perm.user_id }}"></span>
+									{% endif %}
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
 				</div>
 			</div>
 <!-- Details -->
@@ -226,10 +228,13 @@
 										<ul>
 											{% for event in day.events %}
 												<li class="event">
-													<p>
-														{{ event.title }}
-													</p>
-													<button type="button" class="info-btn icon btn btn-info" data-toggle="modal" data-target="#event{{ event.event_id }}"></button>
+													<button type="button"
+															style="width: 24px; height: 24px;"
+    														class="info-btn icon btn btn-info"
+    														data-toggle="modal"
+    														data-target="#event{{ event.event_id }}">
+    												</button>
+    												{{ event.title }}
 
 								<!-- Event Details Modal -->
 													<!-- Modal Window-->

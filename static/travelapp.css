@@ -1,6 +1,11 @@
 body {
 	background-color: rgba(100,200,255, 1);
+	font-family: 'Century Gothic';
+}
 
+table {
+	width: 100%;
+	height: 350px;
 }
 
 th {

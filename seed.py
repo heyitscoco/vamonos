@@ -36,15 +36,9 @@ def load_trips():
 		admin_id, title, start_raw, end_raw, destination = line.rstrip().split("|")
 
 		admin_id = int(admin_id)
-
-		tz_id = geocoder.timezone(destination).timeZoneId
-		tz = pytz.timezone(tz_id)
-
-		start_naive = datetime.strptime(start_raw, "%Y, %m, %d")
-		start = convert_to_tz(start_naive, tz)
-
-		end_naive = datetime.strptime(end_raw, "%Y, %m, %d")
-		end = convert_to_tz(end_naive, tz)
+		tz_name = geocoder.timezone(destination).timeZoneId
+		start = datetime.strptime(start_raw, "%Y, %m, %d")
+		end = datetime.strptime(end_raw, "%Y, %m, %d")
 
 		destination = geocoder.google(destination)
 		address = destination.address
@@ -61,7 +55,8 @@ def load_trips():
 					longitude=lng,
 					address=address,
 					city=city,
-					country_code=country_code
+					country_code=country_code,
+					tz_name=tz_name
 					)
 		db.session.add(trip)
 		db.session.commit()
@@ -104,11 +99,9 @@ def load_events():
 		tz_id = 'America/Los_Angeles'
 		tz = pytz.timezone(tz_id)
 
-		start_naive = datetime.strptime(start_raw, "datetime(%Y, %m, %d)")
-		start = convert_to_tz(start_naive, tz)
+		start = datetime.strptime(start_raw, "datetime(%Y, %m, %d)")
 
-		end_naive = datetime.strptime(end_raw, "datetime(%Y, %m, %d)")
-		end = convert_to_tz(end_naive, tz)
+		end = datetime.strptime(end_raw, "datetime(%Y, %m, %d)")
 		
 		event = Event(day_id=day_id,
 					  user_id=user_id,

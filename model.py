@@ -386,7 +386,7 @@ def convert_to_tz(dt, tz_name):
 		>>> dt = datetime(2015, 12, 25)
 		>>> tz_name = 'UTC'
 		>>> convert_to_tz(dt, tz_name)
-		datetime.datetime(2015, 12, 25, 0, 0, tzinfo=<UTC>)
+		datetime.datetime(2015, 12, 25, 0, 0)
 
 	Naive datetime -> pacific:
 		>>> dt = datetime(2015, 12, 25)
@@ -394,7 +394,7 @@ def convert_to_tz(dt, tz_name):
 		>>> convert_to_tz(dt, tz_name)
 		datetime.datetime(2015, 12, 25, 0, 0, tzinfo=<DstTzInfo 'America/Los_Angeles' PST-1 day, 16:00:00 STD>)
 
-	Aware datetime -> UTC:
+	Aware datetime -> pacific:
 		>>> dt = datetime(2015, 12, 25)
 		>>> tz = pytz.utc
 		>>> dt = tz.localize(dt)
@@ -403,12 +403,23 @@ def convert_to_tz(dt, tz_name):
 		>>> convert_to_tz(dt, 'America/Los_Angeles')
 		datetime.datetime(2015, 12, 24, 16, 0, tzinfo=<DstTzInfo 'America/Los_Angeles' PST-1 day, 16:00:00 STD>)
 
+	Aware datetime -> UTC:
+		>>> dt = datetime(2015, 12, 25)
+		>>> tz = pytz.timezone('America/Los_Angeles')
+		>>> dt = tz.localize(dt)
+		>>> dt
+		datetime.datetime(2015, 12, 25, 0, 0, tzinfo=<DstTzInfo 'America/Los_Angeles' PST-1 day, 16:00:00 STD>)
+		>>> convert_to_tz(dt, 'utc')
+		datetime.datetime(2015, 12, 25, 8, 0)
+
 	"""
 
 	if tz_name.lower() == 'utc': # If the desired tz is UTC
 		tz = pytz.utc
+		utc = True
 	else:
 		tz = pytz.timezone(tz_name)
+		utc = False
 
 
 	if dt.tzinfo: # if we were given an aware dt obj
@@ -416,7 +427,13 @@ def convert_to_tz(dt, tz_name):
 	else:
 		dt = tz.localize(dt)
 
+
+	if utc:
+		# Always return UTC datetimes as NAIVE, to be stored in the DB
+		dt = dt.replace(tzinfo=None)
+
 	return dt
+
 
 
 def find_next_day(date):
@@ -443,7 +460,7 @@ def find_next_day(date):
 		datetime.datetime(2016, 1, 1, 0, 0)
 
 	"""
-	
+
 	day = timedelta(days=1)
 	date += day
 	return date
