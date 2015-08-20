@@ -379,20 +379,53 @@ class Friendship(db.Model):
 ########################################################################
 # Helper functions
 
-def convert_to_tz(dt, tz_name):
-	"""Returns the datetime object in the given timezone
+def declare_tz(dt, tz_name):
+	"""Given a naive datetime, assigns it the given timezone
 
 	Naive datetime -> UTC:
 		>>> dt = datetime(2015, 12, 25)
 		>>> tz_name = 'UTC'
-		>>> convert_to_tz(dt, tz_name)
+		>>> declare_tz(dt, tz_name)
 		datetime.datetime(2015, 12, 25, 0, 0)
 
 	Naive datetime -> pacific:
 		>>> dt = datetime(2015, 12, 25)
 		>>> tz_name = 'America/Los_Angeles'
-		>>> convert_to_tz(dt, tz_name)
+		>>> declare_tz(dt, tz_name)
 		datetime.datetime(2015, 12, 25, 0, 0, tzinfo=<DstTzInfo 'America/Los_Angeles' PST-1 day, 16:00:00 STD>)
+	
+	Given an aware datetime:
+		>>> dt = datetime(2015, 12, 25)
+		>>> tz = pytz.utc
+		>>> dt = tz.localize(dt)
+		>>> dt
+		datetime.datetime(2015, 12, 25, 0, 0, tzinfo=<UTC>)
+		>>> declare_tz(dt, 'America/Los_Angeles')
+		Traceback (most recent call last):
+		  ...
+		ValueError: Not naive datetime (tzinfo is already set)
+
+	"""
+
+	if tz_name.lower() == 'utc':
+		utc = True
+		tz = pytz.utc
+	else:
+		utc = False
+		tz = pytz.timezone(tz_name)
+
+	dt = tz.localize(dt)
+
+	# Always return UTC datetimes as NAIVE, to be stored in the DB
+	if utc:
+		dt = dt.replace(tzinfo=None)
+
+	return dt
+
+
+
+def convert_to_tz(dt, tz_name):
+	"""Given an aware datetime, converts it to the given timezone
 
 	Aware datetime -> pacific:
 		>>> dt = datetime(2015, 12, 25)
@@ -412,24 +445,26 @@ def convert_to_tz(dt, tz_name):
 		>>> convert_to_tz(dt, 'utc')
 		datetime.datetime(2015, 12, 25, 8, 0)
 
+	Given a naive datetime:
+		>>> dt = datetime(2015, 12, 25)
+		>>> convert_to_tz(dt, 'UTC')
+		Traceback (most recent call last):
+		  ...
+		ValueError: astimezone() cannot be applied to a naive datetime
+
 	"""
 
 	if tz_name.lower() == 'utc': # If the desired tz is UTC
-		tz = pytz.utc
 		utc = True
+		tz = pytz.utc
 	else:
-		tz = pytz.timezone(tz_name)
 		utc = False
+		tz = pytz.timezone(tz_name)
 
+	dt = dt.astimezone(tz)
 
-	if dt.tzinfo: # if we were given an aware dt obj
-		dt = dt.astimezone(tz)
-	else:
-		dt = tz.localize(dt)
-
-
+	# Always return UTC datetimes as NAIVE, to be stored in the DB
 	if utc:
-		# Always return UTC datetimes as NAIVE, to be stored in the DB
 		dt = dt.replace(tzinfo=None)
 
 	return dt
