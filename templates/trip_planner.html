@@ -253,8 +253,8 @@
 												      			<!-- Event details -->
 													      			<div>
 													      				<h5><b>Address: </b>{{ event.address }}</h5>
-													      				<h5><b>Time: </b>{{ convert_to_tz(event.start, trip.tz_name) | datetime('time') }}
-													      							   - {{ declare_tz(event.end, trip.tz_name) | datetime('time')  }}</h5>
+													      				<h5><b>Time: </b>{{ convert_to_tz(declare_tz(event.start, 'utc', result='aware'), trip.tz_name) | datetime('time') }}
+													      							   - {{ convert_to_tz(declare_tz(event.end, 'utc', result='aware'), trip.tz_name) | datetime('time')  }}</h5>
 														      			<p>{{ event.description }}</p>
 														      		</div>
 														      	<!-- Google Map -->

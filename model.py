@@ -449,7 +449,7 @@ def convert_to_tz(dt, tz_name, result='naive'):
 		>>> dt
 		datetime.datetime(2015, 12, 25, 0, 0, tzinfo=<DstTzInfo 'America/Los_Angeles' PST-1 day, 16:00:00 STD>)
 		>>> convert_to_tz(dt, 'utc', result='aware')
-		datetime.datetime(2015, 12, 25, 8, 0, tzinfo=<UTC>)		
+		datetime.datetime(2015, 12, 25, 8, 0, tzinfo=<UTC>)
 
 	Aware datetime -> pacific:
 		>>> dt = datetime(2015, 12, 25)
