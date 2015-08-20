@@ -154,6 +154,9 @@ function submitEditPermission(evt) {
 
 function addAttendee(evt) {
 	evt.preventDefault();
+
+	console.log('Adding attendee!')
+	
 	var eventId = $('#event-id').val()
 	var formInputs = { eventId: eventId };
 	$.post('/add_attendee', formInputs, function() {

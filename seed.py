@@ -100,39 +100,47 @@ def load_events():
 	file = open('static/data/events.txt')
 
 	for line in file:
-		day_id, user_id, title, start_raw, end_raw, city = line.rstrip().split("|")
+		day_id, user_id, title, start_raw, end_raw, location = line.rstrip().split("|")
 
-		tz_id = 'America/Los_Angeles'
+		tz_id = geocoder.timezone(location).timeZoneId
 		tz = pytz.timezone(tz_id)
 
-		start = datetime.strptime(start_raw, "datetime(%Y, %m, %d)")
+		location = geocoder.google(location)
+		address = location.address
+		city = location.city
+		latitude = location.lat
+		longitude = location.lng
 
-		end = datetime.strptime(end_raw, "datetime(%Y, %m, %d)")
+		start = datetime.strptime(start_raw, "datetime(%Y, %m, %d, %H, %M)")
+
+		end = datetime.strptime(end_raw, "datetime(%Y, %m, %d, %H, %M)")
 		
 		event = Event(day_id=day_id,
 					  user_id=user_id,
 					  title=title,
 					  start=start,
 					  end=end,
-					  city=city
+					  address=address,
+					  city=city,
+					  latitude=latitude,
+					  longitude=longitude
 					  )
 
 		db.session.add(event)
 
 
 def load_friendships():
-	"""Load the friendships"""
+	"""Load the friendships. Everyone is friends with everyone!"""
 
-	file = open('static/data/friendships.txt')
+	db.session.commit()
 
-	for line in file:
-		admin_id, friend_id = line.rstrip().split(",")
-
-		friendship = Friendship(admin_id=admin_id,
-								friend_id=friend_id
-								)
-
-		db.session.add(friendship)
+	for user1 in User.query.all():
+		for user2 in User.query.all():
+			if user1.user_id != user2.user_id:
+				friendship = Friendship(admin_id=user1.user_id,
+										friend_id=user2.user_id
+										)
+				db.session.add(friendship)
 
 #####################################################################
 # Main Block

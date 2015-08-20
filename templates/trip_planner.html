@@ -408,11 +408,11 @@
 
 $(document).ready(sendReminders);
 
-$('#retrieve-events-btn').click(getEvents);
 $('#submit-view').click(submitViewPermission);
 $("#submit-edit").click(submitEditPermission);
 $("#gen-pdf").click(generatePDF);
-$('#attending-btn').click(addAttendee);
-$('#not-attending-btn').click(rmAttendee);
+$('.attending-btn').click(addAttendee);
+$('.not-attending-btn').click(rmAttendee)
+$('#retrieve-events-btn').click(getEvents);;
 </script>
 {% endblock %}

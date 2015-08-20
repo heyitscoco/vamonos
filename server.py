@@ -164,6 +164,7 @@ def profile(user_id):
 
 	user = User.query.get(user_id)
 	friends = [(friendship.friend_id, friendship.friend.fname, friendship.friend.img_url) for friendship in user.friendships]
+	print '\n\n',user.friendships,'\n\n'
 	return render_template("profile.html", user=user, friends=friends)
 
 

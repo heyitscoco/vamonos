@@ -365,12 +365,12 @@ class Friendship(db.Model):
 						nullable=False
 						)
 
+	# Relationships
 	admin = db.relationship('User',
 						   primaryjoin="User.user_id == Friendship.admin_id",
 						   backref=db.backref("friendships")
 						   )
-
-	# Relationships
+	
 	friend = db.relationship('User', primaryjoin="User.user_id == Friendship.friend_id")
 
 	def __repr__(self):
