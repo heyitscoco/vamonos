@@ -84,7 +84,7 @@ def load_permissions():
 	file = open("static/data/permissions.txt")
 
 	for line in file:
-		trip_id, user_id, can_view, can_edit = line.rstrip().split(",")
+		trip_id, user_id, can_edit = line.rstrip().split(",")
 
 		can_edit = loads(can_edit.lower())
 
@@ -93,6 +93,8 @@ def load_permissions():
 					  can_edit=can_edit
 					  )
 		db.session.add(perm)
+
+
 
 def load_events():
 	"""Load the events"""
