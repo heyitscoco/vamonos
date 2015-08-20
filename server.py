@@ -271,7 +271,8 @@ def trip_planner(trip_id):
 								can_edit=can_edit,
 								admin=admin,
 								gg_browser_key=gg_browser_key,
-								convert_to_tz=convert_to_tz
+								convert_to_tz=convert_to_tz,
+								declare_tz=declare_tz
 								)
 
 	else:
@@ -371,13 +372,13 @@ def new_trip():
 
 	start_raw = request.form.get("start")
 	start_dt = datetime.strptime(start_raw, "%Y-%m-%d") # naive UTC
-	start_local = convert_to_tz(start_dt, tz_name) # We want to store in the database a UTC time that represents midnight in the trip's LOCAL time.
+	start_local = declare_tz(start_dt, tz_name)
 	start_utc = convert_to_tz(start_local, 'utc')
 
 	end_raw = request.form.get("end")
 	end_dt = datetime.strptime(end_raw, "%Y-%m-%d")
 	end_dt = find_next_day(end_dt)
-	end_local = convert_to_tz(end_dt, tz_name)
+	end_local = declare_tz(end_dt, tz_name)
 	end_utc = convert_to_tz(end_local, 'utc')
 
 	# Get more details from geocoder
@@ -478,6 +479,7 @@ def create_event():
 	location = request.form.get("location")
 	location = geocoder.google(location)
 
+	tz_name = Trip.query.get(trip_id).tz_name
 	address = location.address
 	lat = location.lat
 	lng = location.lng
@@ -486,10 +488,12 @@ def create_event():
 
 	start_raw = request.form.get("start") # This is given to us by the user in LOCAL TIME
 	start_local = datetime.strptime(start_raw, "%Y-%m-%dT%H:%M")
+	start_local = declare_tz(start_local, tz_name)
 	start = convert_to_tz(start_local, 'utc')
 
 	end_raw = request.form.get("end") # This is given to us by the user in LOCAL TIME
 	end_local = datetime.strptime(end_raw, "%Y-%m-%dT%H:%M")
+	end_local = declare_tz(end_local, tz_name)
 	end = convert_to_tz(end_local, 'utc')
 
 	# Determine correct day

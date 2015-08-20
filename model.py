@@ -379,14 +379,20 @@ class Friendship(db.Model):
 ########################################################################
 # Helper functions
 
-def declare_tz(dt, tz_name):
+def declare_tz(dt, tz_name, result='naive'):
 	"""Given a naive datetime, assigns it the given timezone
 
-	Naive datetime -> UTC:
+	Naive datetime -> naive UTC:
 		>>> dt = datetime(2015, 12, 25)
 		>>> tz_name = 'UTC'
 		>>> declare_tz(dt, tz_name)
 		datetime.datetime(2015, 12, 25, 0, 0)
+
+	Naive datetime -> aware UTC:
+		>>> dt = datetime(2015, 12, 25)
+		>>> tz_name = 'UTC'
+		>>> declare_tz(dt, tz_name, result='aware')
+		datetime.datetime(2015, 12, 25, 0, 0, tzinfo=<UTC>)
 
 	Naive datetime -> pacific:
 		>>> dt = datetime(2015, 12, 25)
@@ -416,16 +422,34 @@ def declare_tz(dt, tz_name):
 
 	dt = tz.localize(dt)
 
-	# Always return UTC datetimes as NAIVE, to be stored in the DB
-	if utc:
+	if utc and result == 'naive':
+		# return UTC datetime as NAIVE, to be stored in the DB
 		dt = dt.replace(tzinfo=None)
 
 	return dt
 
 
 
-def convert_to_tz(dt, tz_name):
+def convert_to_tz(dt, tz_name, result='naive'):
 	"""Given an aware datetime, converts it to the given timezone
+
+	Aware datetime -> naive UTC:
+		>>> dt = datetime(2015, 12, 25)
+		>>> tz = pytz.timezone('America/Los_Angeles')
+		>>> dt = tz.localize(dt)
+		>>> dt
+		datetime.datetime(2015, 12, 25, 0, 0, tzinfo=<DstTzInfo 'America/Los_Angeles' PST-1 day, 16:00:00 STD>)
+		>>> convert_to_tz(dt, 'utc')
+		datetime.datetime(2015, 12, 25, 8, 0)
+
+	Aware datetime -> aware UTC:
+		>>> dt = datetime(2015, 12, 25)
+		>>> tz = pytz.timezone('America/Los_Angeles')
+		>>> dt = tz.localize(dt)
+		>>> dt
+		datetime.datetime(2015, 12, 25, 0, 0, tzinfo=<DstTzInfo 'America/Los_Angeles' PST-1 day, 16:00:00 STD>)
+		>>> convert_to_tz(dt, 'utc', result='aware')
+		datetime.datetime(2015, 12, 25, 8, 0, tzinfo=<UTC>)		
 
 	Aware datetime -> pacific:
 		>>> dt = datetime(2015, 12, 25)
@@ -435,15 +459,6 @@ def convert_to_tz(dt, tz_name):
 		datetime.datetime(2015, 12, 25, 0, 0, tzinfo=<UTC>)
 		>>> convert_to_tz(dt, 'America/Los_Angeles')
 		datetime.datetime(2015, 12, 24, 16, 0, tzinfo=<DstTzInfo 'America/Los_Angeles' PST-1 day, 16:00:00 STD>)
-
-	Aware datetime -> UTC:
-		>>> dt = datetime(2015, 12, 25)
-		>>> tz = pytz.timezone('America/Los_Angeles')
-		>>> dt = tz.localize(dt)
-		>>> dt
-		datetime.datetime(2015, 12, 25, 0, 0, tzinfo=<DstTzInfo 'America/Los_Angeles' PST-1 day, 16:00:00 STD>)
-		>>> convert_to_tz(dt, 'utc')
-		datetime.datetime(2015, 12, 25, 8, 0)
 
 	Given a naive datetime:
 		>>> dt = datetime(2015, 12, 25)
@@ -463,8 +478,8 @@ def convert_to_tz(dt, tz_name):
 
 	dt = dt.astimezone(tz)
 
-	# Always return UTC datetimes as NAIVE, to be stored in the DB
-	if utc:
+	if utc and result == 'naive':
+		# return UTC datetimes as NAIVE, to be stored in the DB
 		dt = dt.replace(tzinfo=None)
 
 	return dt
