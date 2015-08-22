@@ -227,7 +227,7 @@
 								<tr>
 								{% for day in trip.days %}
 									<td>
-										<ul>
+										<ul id='day{{ day.day_id }}-events'>
 											{% for event in day.events %}
 												<li class="event">
 													<button type="button"

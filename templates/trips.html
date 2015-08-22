@@ -7,15 +7,36 @@
 	<div class="col-xs-0 col-sm-3"></div>
 	<div class="col-xs-12 col-sm-6">
 		<div class="content main">
-			<h4 class="centered">Trips</h4>
-			{% if trip_tuples %}
-				{% for title, trip_id in trip_tuples %}
-					<a href='/trip{{ trip_id }}' class="centered">{{ title }}</a>
-				{% endfor %}
+			<h2 class="centered">Trips</h2>
+			{% if trips %}
+				<table class="table table-hover">
+					<thead>
+						<th></th>
+						<th></th>
+						<th></th>
+					</thead>
+					<tbody>
+						{% for trip in trips %}
+							<tr onclick="location.href='/trip{{ trip.trip_id }}'">
+								<td>
+									<span class="centered">{{ trip.title }}</span>
+								</td>
+								<td>
+									<span class="centered">{{ trip.city }}</span>
+								</td>
+								<td>
+									<span class="centered">{{ trip.start | datetime('date-short')}} - {{ trip.end | datetime('date')}}</span>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
 			{% else %}
-			<p class="centered">You haven't created any trips yet.</p>
+				<p class="centered">You haven't created any trips yet.</p>
 			{% endif %}
-			<a href="/create_trip" class="centered"><i>Create a new trip!</i></a>
+
+			<a href="/create_trip" class="centered">
+				<button class="btn btn-info"><i>Create a new trip!</i></button></a>
 		</div>
 	</div>
 	<div class="col-xs-0 col-sm-3"></div>

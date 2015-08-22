@@ -13,6 +13,15 @@ app.secret_key = "most_secret_key_EVER!!!!!!!"
 #############################################################
 # Routes
 
+@app.route("/google_token", methods=['POST', 'GET'])
+def return_events():
+	"""Returns the google api token"""
+
+	token_dict = { 'googleToken': gg_browser_key }
+
+	return json.dumps(token_dict)
+
+
 @app.route("/send_text", methods=["POST", "GET"])
 def send_reminders():
 	"""Sends reminders to trip viewers"""
@@ -222,10 +231,9 @@ def trips():
 	if 'user_id' in session:
 		user_id = session["user_id"]
 		permissions = Permission.query.filter_by(user_id=user_id).all()
+		trips = [perm.trip for perm in permissions]
 
-		trip_tuples = [(perm.trip.title, perm.trip.trip_id) for perm in permissions]
-
-		return render_template("trips.html", user_id=user_id, trip_tuples=trip_tuples)
+		return render_template("trips.html", user_id=user_id, trips=trips)
 	
 	else:
 		flash("Sorry, you need to be logged in to do that!")
@@ -558,12 +566,10 @@ def add_event(event_id, trip_id):
 	lat = venue['latitude']
 	lng = venue['longitude']
 
-	tz_id = event['start']['timezone']
-	tz = pytz.timezone(tz_id) # This is a pytz timezone object
-
 	# create the event for the DB
-	trip_start = Trip.query.get(trip_id).start
-	trip_end = Trip.query.get(trip_id).end
+	trip = Trip.query.get(trip_id)
+	trip_start = trip.start
+	trip_end = trip.end
 
 	# Determine correct day
 	day = Day.query.filter(Day.trip_id == int(trip_id), Day.start <= start, Day.end >= start).all()
@@ -588,14 +594,40 @@ def add_event(event_id, trip_id):
 		db.session.add(event)
 		db.session.commit()
 
-		msg = "Your event has been added!"
-	else:
-		msg = "Oops! Something went wrong."
+	start = convert_to_tz(declare_tz(start, 'utc', result='aware'), trip.tz_name)
+	end = convert_to_tz(declare_tz(end, 'utc', result='aware'), trip.tz_name)
 
-	flash(msg)
-	
-	url = "/trip%s" %(str(trip_id))
-	return redirect(url)
+
+	if trip.admin_id == session['user_id']:
+		admin = True
+	else:
+		admin = False
+
+	response_dict = {
+		'user':{
+			'userId':session['user_id'],
+			'fname':session['fname'],
+			'admin':admin
+		},
+		'event':{
+			'dayId':event.day_id,
+			'eventId':event.event_id,
+			'url':event.url,
+			'title':event.title,
+			'address':event.address,
+			'start':start,
+			'end':end,
+			'description':event.description,
+			'attendances':{}
+		}
+
+	}
+
+	for att in response_dict['event']['attendances']:
+		response_dict['event']['attendances'][att.attendance_id] = att.user.fname
+
+	return json.dumps(response_dict)
+
 
 
 
@@ -687,6 +719,8 @@ def _format_datetime(dt, format=None, trip_end=False):
 		dt = datetime.strftime(dt, '%-I:%M %p')
 	elif format == 'date':
 		dt = datetime.strftime(dt, '%b %d, %Y')
+	elif format == 'date-short':
+		dt = datetime.strftime(dt, '%b %d')
 	elif format == 'datetime pretty':
 		dt = datetime.strftime(dt, '%-I:%M %p, %b %d, %Y')
 	else:

@@ -39,11 +39,11 @@ def load_trips():
 		tz_name = geocoder.timezone(destination).timeZoneId
 		
 		start_dt = datetime.strptime(start_raw, "%Y, %m, %d")
-		start_local = convert_to_tz(start_dt, tz_name) # give it tzinfo=tz_name
+		start_local = declare_tz(start_dt, tz_name) # give it tzinfo=tz_name
 		start_utc = convert_to_tz(start_local, 'utc') # convert that time to UTC
 
 		end_dt = datetime.strptime(end_raw, "%Y, %m, %d")
-		end_local = convert_to_tz(end_dt, tz_name)
+		end_local = declare_tz(end_dt, tz_name)
 		end_utc = convert_to_tz(end_local, 'utc')
 
 		destination = geocoder.google(destination)

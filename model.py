@@ -308,7 +308,7 @@ class Event(db.Model):
 	latitude = db.Column(db.Float)
 	longitude = db.Column(db.Float)
 	address = db.Column(db.String(200))
-	city = db.Column(db.String(60), nullable=False)
+	city = db.Column(db.String(60))
 	country_code = db.Column(db.String(10))
 
 	# Relationships
