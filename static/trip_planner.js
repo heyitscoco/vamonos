@@ -171,11 +171,18 @@ function getEvents(evt) {
 		var categories_array = $('#categories').val() || [];
 		var categories_str = categories_array.join();
 
-		var price = $('#price').prop('checked');
-		if (price) {
-			price = 'free';
-		} else {
+		var free = $('#price-free').prop('checked');
+		var paid = $('#price-paid').prop('checked');
+		var price;
+
+		if (free && paid) {
 			price = ''; // returns free & paid events
+		} else if (free) {
+			price = 'free';
+		} else if (paid) {
+			price = 'paid';
+		} else {
+			price = '';
 		};
 
 		var filters = {
@@ -203,7 +210,6 @@ function getEvents(evt) {
 									.attr('class', 'draggable')
 									.text(event.name.text)
 									.attr('href', event.url)
-									// .attr('href', "/add_event/" + event.id + "/" + tripId)
 									.attr('target', "_blank")
 									.attr('style', 'display: inline-block');
 								$("#events-list").append(nameLink);

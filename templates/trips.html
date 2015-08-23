@@ -11,21 +11,21 @@
 			{% if trips %}
 				<table class="table table-hover">
 					<thead>
-						<th></th>
-						<th></th>
-						<th></th>
+						<th class="centered">Title</th>
+						<th class="centered">City</th>
+						<th class="centered">Dates</th>
 					</thead>
 					<tbody>
 						{% for trip in trips %}
 							<tr onclick="location.href='/trip{{ trip.trip_id }}'">
-								<td>
-									<span class="centered">{{ trip.title }}</span>
+								<td class="centered">
+									<span>{{ trip.title }}</span>
 								</td>
-								<td>
-									<span class="centered">{{ trip.city }}</span>
+								<td class="centered">
+									{{ trip.city }}
 								</td>
-								<td>
-									<span class="centered">{{ trip.start | datetime('date-short')}} - {{ trip.end | datetime('date')}}</span>
+								<td class="centered">
+									{{ trip.start | datetime('date-short')}} - {{ trip.end | datetime('date')}}
 								</td>
 							</tr>
 						{% endfor %}

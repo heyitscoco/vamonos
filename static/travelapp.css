@@ -17,11 +17,6 @@ td {
 	border: 1px solid white;
 }
 
-h4 {
-	text-align: center;
-	padding-bottom: 1em;
-}
-
 ul {
 	list-style-type: none;
 }
@@ -83,7 +78,6 @@ select {
 }
 
 .centered {
-	display: block;
 	text-align: center;
 }
 
@@ -103,10 +97,6 @@ select {
 
 .floater-box {
 	height: 200px;
-}
-
-.carousel-indicators {
-	float:
 }
 
 .my-modal {

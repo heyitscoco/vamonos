@@ -8,20 +8,25 @@
 		<!-- Nearby Events-->
 			<div id="nearby-events" class="content" data-latitude={{ trip.latitude }} data-longitude={{ trip.longitude }}>
 				{% if can_edit %}
-					<h4>Nearby Events</h4>
+					<div>
+						<h3>Events Near {{ trip.city }}</h3>
+						<h6><i>Powered by Eventbrite</i></h6>
+					</div>
 
 					<form id="event-filters">
 					<!-- Event Filters -->
-						<label class="form-group">Distance: 
-							<input id="distance" type="number" min="1" width="70px">mi.
+
+						<label class="form-group">Distance (miles): 
+							<input id="distance" type="number" min="1" width="70px" value="10" style="width: 40px" required>
+						</label>
+						<br>
+						<label class="form-group">
+							<input id="price-free" type="checkbox" name="price" value="free"> Free
+							<input id="price-paid" type="checkbox" name="price" value="paid"> Paid
 						</label>
 
-						<label>Free Events Only
-							<input id="price" type="checkbox" name="price" value="free">
-						</label>
-
-						<label>Category:
-							<select name="categories" id="categories" multiple="multiple">
+						<label class="form-group">Category:
+							<select class="multiselect" name="categories" id="categories" multiple="multiple">
 							    <option value="118">Auto, Boat & Air</option>
 								<option value="101">Business & Professional</option>
 								<option value="111">Charity & Causes</option>
@@ -44,6 +49,7 @@
 								<option value="199">Other</option>
 							</select>
 						</label>
+
 					<!-- 'Retrieve Events' button -->
 						<label>
 							<input type="submit" value="Retrieve Events" id="retrieve-events-btn" class="btn btn-default">
@@ -63,7 +69,7 @@
 <!-- Permissions -->
 			<div class="col-xs-12 col-sm-6">
 				<div class="content floater-box">
-					<h4>Permissions</h4>
+					<h3>Permissions</h3>
 					{% if admin %}
 						<form>
 							<label class="form-group">
@@ -120,7 +126,7 @@
 <!-- Details -->
 			<div class="col-xs-12 col-sm-6">
 				<div class="content floater-box scrollable" id="trip-date-details" data-start-date='{{ trip.start }}' data-end-date='{{ trip.end }}'>
-					<h4>Details</h4>
+					<h3>Details</h3>
 					<ul>
 						<li>
 							Destination: {{ trip.address }}
@@ -153,7 +159,7 @@
 				    	<div class="modal-content my-modal">
 				    		<div class="modal-header centered">
 				    			<button type="button" class="close" data-dismiss="modal">&times;</button>
-				        		<h4 class="modal-title">Edit Start Date</h4>
+				        		<h3 class="modal-title">Edit Start Date</h3>
 				      		</div>
 				      		<div class="modal-body centered">
 
@@ -183,7 +189,7 @@
 				    	<div class="modal-content my-modal">
 				    		<div class="modal-header centered">
 				    			<button type="button" class="close" data-dismiss="modal">&times;</button>
-				        		<h4 class="modal-title">Edit End Date</h4>
+				        		<h3 class="modal-title">Edit End Date</h3>
 				      		</div>
 
 				      		<div class="modal-body centered">
@@ -213,7 +219,7 @@
 				<div class="content" id="agenda" data-trip="{{ trip.trip_id }}"
 												 data-start="{{ trip.start | datetime }}"
 												 data-end="{{ trip.end | datetime(trip_end=True) }}">
-					<h4>Agenda</h4>
+					<h3>Agenda</h3>
 					<div class="scrollable">
 						<table>
 							<thead>
@@ -247,7 +253,7 @@
 													    	<div class="modal-content my-modal">
 													    		<div class="modal-header centered">
 													    			<button type="button" class="close" data-dismiss="modal">&times;</button>
-													        		<h4 class="modal-title">{{ event.title }}</h4>
+													        		<h3 class="modal-title">{{ event.title }}</h3>
 													        		{% if event.address %}
 													        		<h5>{{ event.address }}</h5>
 													        		{% endif %}
@@ -355,7 +361,7 @@
 					    	<div class="modal-content my-modal">
 					    		<div class="modal-header centered">
 					    			<button type="button" class="close" data-dismiss="modal">&times;</button>
-					        		<h4 class="modal-title">Create Event</h4>
+					        		<h3 class="modal-title">Create Event</h3>
 					      		</div>
 					      		<div class="modal-body centered">
 
@@ -407,6 +413,7 @@
 
 
 {% block scripts %}
+<script src="/static/jquery.sumoselect.min.js"></script>
 <script src="/static/trip_planner.js"></script>
 
 <script>
@@ -414,11 +421,12 @@
 
 $(document).ready(sendReminders);
 
+$('.multiselect').SumoSelect({ okCancelInMulti:true, selectAll:true });
 $('#submit-view').click(submitViewPermission);
 $("#submit-edit").click(submitEditPermission);
 $("#gen-pdf").click(generatePDF);
 $('.attending-btn').click(addAttendee);
-$('.not-attending-btn').click(rmAttendee)
-$('#retrieve-events-btn').click(getEvents);;
+$('.not-attending-btn').click(rmAttendee);
+$('#retrieve-events-btn').click(getEvents);
 </script>
 {% endblock %}
