@@ -133,7 +133,7 @@ class Trip(db.Model):
 
 		# Delete unnecessary days
 		for day in self.days:
-			if day.start < trip_start or day.start > trip_end:
+			if day.start < trip_start or day.start >= trip_end:
 				# delete all of that day's events first, for referential integrity
 				for event in day.events:
 					# delete all of that event's attendances first, for referential integrity
@@ -174,18 +174,22 @@ class Trip(db.Model):
 		# Add trip title
 		my_canvas.drawString(100, 100, self.title)
 
-		# Add events for each day
+		# Add events & attendees for each day
 		y = 140
 		for day in self.days:
 			if day.events:
-				day_start = datetime.strftime(day.start, "%b %d")
+				trip = day.trip
+				day_start = declare_tz(day.start, trip.tz_name)
+				day_start = datetime.strftime(day_start, "%b %d")
 				day_header = "%s (Day %d)" % (day_start, day.day_num)
 
 				my_canvas.drawString(100, y, day_header)
 				y += 20
 
 				for event in day.events:
-					event_start = datetime.strftime(event.start, "%-I:%M %p")
+					event_start = declare_tz(event.start, 'utc', result='aware')
+					event_start = convert_to_tz(event_start, trip.tz_name)
+					event_start = datetime.strftime(event_start, "%-I:%M %p")
 					event_header = "%s - %s" % (event_start, event.title)
 
 					my_canvas.drawString(100, y, event_header)

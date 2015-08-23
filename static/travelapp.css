@@ -1,5 +1,6 @@
 body {
-	background-color: rgba(100,200,255, 1);
+	/*background-color: rgba(100,200,255, 1);*/
+	background-image: url('/static/img/beach1.JPG');
 	font-family: 'Century Gothic';
 }
 
@@ -8,17 +9,17 @@ table {
 }
 
 
-td, th {
-	border: 1px solid white;
+.agenda-table {
+	/*border: 1px solid white;*/
 	width: 300px;
 }
 
 th {
-	background-color: rgba(255,255,255, 0.5);
+	background-color: rgba(255,255,255, 0.7);
 }
 
 td {
-	background-color: rgba(255,255,255, 0.3);
+	background-color: rgba(255,255,255, 0.5);
 }
 
 ul {
@@ -70,7 +71,7 @@ select {
 }
 
 .content {
-	background-color: rgba(255,255,255, 0.7);
+	background-color: rgba(255,255,255, 0.8);
 	border: solid 1px white;
 	padding: 1em;
 }
@@ -90,7 +91,7 @@ select {
 }
 
 .navbar {
-	background-color: rgba(255,255,255, 0.7);
+	background-color: rgba(255,255,255, 0.8);
 	opacity: 0.8;
 	border: 2px solid white;
 }

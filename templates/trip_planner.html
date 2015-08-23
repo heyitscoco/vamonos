@@ -224,15 +224,15 @@
 						<table>
 							<thead>
 								{% for day in trip.days %}
-								<th style="text-align: center">
-									<h5>Day {{ day.day_num }}</h5>
+								<th style="text-align: center" class="agenda-table">
+									<h5>{{ day.start | datetime('date-short') }}: Day {{ day.day_num }}</h5>
 								</th>
 								{% endfor %}
 							</thead>
 							<tbody>
 								<tr>
 								{% for day in trip.days %}
-									<td>
+									<td class="agenda-table">
 										<ul id='day{{ day.day_id }}-events'>
 											{% for event in day.events %}
 												<li class="event">

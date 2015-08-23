@@ -718,9 +718,9 @@ def _format_datetime(dt, format=None, trip_end=False):
 	if format == 'time':
 		dt = datetime.strftime(dt, '%-I:%M %p')
 	elif format == 'date':
-		dt = datetime.strftime(dt, '%b %d, %Y')
+		dt = datetime.strftime(dt, '%b %-d, %Y')
 	elif format == 'date-short':
-		dt = datetime.strftime(dt, '%b %d')
+		dt = datetime.strftime(dt, '%b %-d')
 	elif format == 'datetime pretty':
 		dt = datetime.strftime(dt, '%-I:%M %p, %b %d, %Y')
 	else:

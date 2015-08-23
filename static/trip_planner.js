@@ -1,4 +1,15 @@
 // Functions
+
+function formatDatetime(dtString, format) {
+	var dt = new Date(dtString);
+
+	if (format === 'date/time') {
+		dt.toLocaleString();
+		alert(dt);
+	}
+
+}
+
 function setupDraggables() {
 	$('.draggable').draggable({
 		helper: 'clone'
