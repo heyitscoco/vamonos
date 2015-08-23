@@ -16,6 +16,7 @@ function handleDropEvent(event, ui) {
 
 	var url = '/add_event/' + eventId + '/' + tripId;
 
+	// Add the event to the DB and the DOM
 	$.get(url, function(result) {
 
 		var eventObj = JSON.parse(result).event;
@@ -24,12 +25,11 @@ function handleDropEvent(event, ui) {
 		// Define the list item
 		var eventListItem = $('<li>')
 							.addClass('event')
-							.attr('id', 'list-item-' + eventObj.dayId)
+							.attr('id', 'event-list-item-' + eventObj.eventId)
 
 		// Create the list item
 		var selector = '#day' + eventObj.dayId + '-events';
-		$(selector).text(result.status)
-			.append(eventListItem);
+		$(selector).append(eventListItem);
 
 
 		// get the google API token
@@ -104,15 +104,12 @@ function handleDropEvent(event, ui) {
 													  		</div>\
 														</div>\
 													</div>\
-								<!-- End Modal -->'
-			console.log('It worked! Your event has been added.');
+								<!-- End Modal -->';
 
-			$('#list-item-' + eventObj.dayId).html(eventHTML);
+			$('#event-list-item-' + eventObj.eventId).html(eventHTML);
+			console.log('event added');
 		});
-
 	});
-	
-	// location.reload();
 }
 
 
@@ -200,24 +197,35 @@ function getEvents(evt) {
 
 			// request events
 			$.get(url, filters, function(result) {
-				var topEvents = result.events;
+				var events = result.events;
 
-				// add event names to the dom
-				if (topEvents){
-					topEvents.forEach(function(event) {
+				// add event names to the "Nearby Events" sidebar
+				if (events) {
+					events.forEach(function(event) {
+
+
+								var eventHTML = '<div>\
+													<h5>' + event.name.text + '</h5>\
+													<div>' + event.start.local + '</div>\
+												</div>'
+
+
 								var nameLink = $('<a>')
 									.attr('id', event.id)
-									.attr('class', 'draggable')
-									.text(event.name.text)
+									.addClass('draggable')
+									.addClass('event-listing')
 									.attr('href', event.url)
 									.attr('target', "_blank")
-									.attr('style', 'display: inline-block');
+									.attr('style', 'display:block')
 								$("#events-list").append(nameLink);
+
+								$('#' + event.id).html(eventHTML);
 					});
-				} else{
+				} else {
 					var notification = 
 					$("#events-list").append(notification);
-				}
+				};
+
 				setupDraggables();
 				$('#loading-img').addClass('hidden');
 				console.log('retrieved events');
