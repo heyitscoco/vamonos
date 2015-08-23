@@ -34,7 +34,7 @@ function handleDropEvent(event, ui) {
 		var userObj = JSON.parse(result).user;
 
 		// Define the list item
-		var eventListItem = $('<li>')
+		var eventListItem = $('<div>')
 							.addClass('event')
 							.attr('id', 'event-list-item-' + eventObj.eventId)
 
