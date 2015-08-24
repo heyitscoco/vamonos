@@ -56,8 +56,8 @@
 							<hr>
 							<label class="form-group">
 								<h4>Price</h4>
-								<input id="price-free" type="checkbox" name="price" value="free"> Free
-								<input id="price-paid" type="checkbox" name="price" value="paid"> Paid
+								<input id="price-free" type="checkbox" name="price" value="free" checked> Free
+								<input id="price-paid" type="checkbox" name="price" value="paid" checked> Paid
 							</label>
 							<hr>
 						<!-- 'Retrieve Events' button -->
@@ -462,6 +462,7 @@ $('.submit-description').click(submitDescription);
 $('.cancel-description').click(cancelDescription);
 $('#retrieve-events-btn').click(getEvents);
 $('.distance').on('input', syncDistanceValues);
+$('#toggle-events').click(toggleEvents);
 
 </script>
 {% endblock %}

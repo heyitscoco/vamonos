@@ -15,13 +15,10 @@ function toggleEvents() {
 	toggleText();
 }
 
-$('#toggle-events').click(toggleEvents);
-
 function toggleText() {
 	console.log('Toggling Text');
 	$('.toggle-text').toggle();
 }
-
 
 function syncDistanceValues(evt) {
 
