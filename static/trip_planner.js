@@ -9,8 +9,22 @@ function formatDatetime(dtString, format) {
 	}
 }
 
+function toggleEvents() {
+	$('#filters-div').toggle('fast');
+	$('#events-div').toggle('fast');
+	toggleText();
+}
+
+$('#toggle-events').click(toggleEvents);
+
+function toggleText() {
+	console.log('Toggling Text');
+	$('.toggle-text').toggle();
+}
+
+
 function syncDistanceValues(evt) {
-	
+
 	var value = evt.target.value;
 	$('.distance').val(value);
 }
@@ -265,6 +279,8 @@ function getEvents(evt) {
 	evt.preventDefault();
 
 	$('#loading-img').removeClass('hidden');
+	$('#events-list').addClass('hidden');
+	toggleEvents();
 
 	// Get my token from the server
 	$.get("/token", function (result) {
@@ -315,7 +331,7 @@ function getEvents(evt) {
 			// request events
 			$.get(url, filters, function(result) {
 				var events = result.events;
-
+				$('#toggle-events').removeClass('hidden');
 				// add event names to the "Nearby Events" sidebar
 				if (events) {
 					events.forEach(function(event) {
@@ -324,6 +340,7 @@ function getEvents(evt) {
 								var eventHTML = '<div>\
 													<h5>' + event.name.text + '</h5>\
 													<div>' + event.start.local + '</div>\
+													<hr>\
 												</div>'
 
 
@@ -347,6 +364,7 @@ function getEvents(evt) {
 
 				setupDraggables();
 				$('#loading-img').addClass('hidden');
+				$('#events-list').removeClass('hidden');
 			});
 
 	});

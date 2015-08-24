@@ -100,12 +100,6 @@ select {
 	border: 2px solid white;
 }
 
-.event-listing {
-	text-decoration: none;
-	border-top: 1px solid black;
-	margin: 0.5em;
-}
-
 .container-fluid {
 	padding: 0px;
 }

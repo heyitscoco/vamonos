@@ -13,57 +13,61 @@
 						<h6><i>Powered by Eventbrite</i></h6>
 					</div>
 
-					<form id="event-filters">
-					<!-- Event Filters -->
-
-						<label class="form-group">
-							<h4>Distance</h4>
-							<input id="distance-slider" class="distance" type="range" min="1" max="50" value="10" step="1" style="display:inline-block"/>
-							<input id="distance" class="distance" type="number" min="1" max="50" width="70px" value="10" style="display:inline-block; width: 40px" required>
-							</label>
-						<hr>
-						<label class="form-group">
-							<h4>Price</h4>
-							<input id="price-free" type="checkbox" name="price" value="free"> Free
-							<input id="price-paid" type="checkbox" name="price" value="paid"> Paid
-						</label>
-						<hr>
-						<label class="form-group">
-							<h4>Category</h4>
-							<select class="multiselect" name="categories" id="categories" multiple="multiple">
-							    <option value="118">Auto, Boat & Air</option>
-								<option value="101">Business & Professional</option>
-								<option value="111">Charity & Causes</option>
-								<option value="113">Community & Culture</option>
-								<option value="115">Family & Education</option>
-								<option value="106">Fashion & Beauty</option>
-								<option value="104">Film, Media & Entertainment</option>
-								<option value="110">Food & Drink</option>
-								<option value="112">Government & Politics</option>
-								<option value="107">Health & Wellness</option>
-								<option value="119">Hobbies & Special Interest</option>
-								<option value="117">Home & Lifestyle</option>
-								<option value="103">Music</option>
-								<option value="105">Performing & Visual Arts</option>
-								<option value="114">Religion & Spirituality</option>
-								<option value="102">Science & Technology</option>
-								<option value="116">Seasonal & Holiday</option>
-								<option value="108">Sports & Fitness</option>
-								<option value="109">Travel & Outdoor</option>
-								<option value="199">Other</option>
-							</select>
-						</label>
-
-					<!-- 'Retrieve Events' button -->
-						<label>
-							<input type="submit" value="Retrieve Events" id="retrieve-events-btn" class="btn btn-default">
-						</label>
-					</form>
-
-					<div class="scrollable" style="height: 400px">
-						<img id='loading-img' style="width: 30px" src="/static/img/loading.gif" class='hidden'>
+					<button id="toggle-events" class="btn btn-default btn-sm hidden">Show <span class="toggle-text">Events</span><span class="toggle-text" style="display: none">Filters</span></button>
+					<div id="events-div" class="scrollable" style="display: none; height: 400px">
+						<img id='loading-img' style="width: 60px; margin: 0 auto" src="/static/img/loading.gif" class='hidden'>
 						<div id="events-list"></div>
 					</div>
+					<div id="filters-div">
+						<!-- Event Filters -->
+						<form id="event-filters">
+						<hr>
+							<label class="form-group">
+								<h4>Category</h4>
+								<select class="multiselect" name="categories" id="categories" multiple="multiple">
+								    <option value="118">Auto, Boat & Air</option>
+									<option value="101">Business & Professional</option>
+									<option value="111">Charity & Causes</option>
+									<option value="113">Community & Culture</option>
+									<option value="115">Family & Education</option>
+									<option value="106">Fashion & Beauty</option>
+									<option value="104">Film, Media & Entertainment</option>
+									<option value="110">Food & Drink</option>
+									<option value="112">Government & Politics</option>
+									<option value="107">Health & Wellness</option>
+									<option value="119">Hobbies & Special Interest</option>
+									<option value="117">Home & Lifestyle</option>
+									<option value="103">Music</option>
+									<option value="105">Performing & Visual Arts</option>
+									<option value="114">Religion & Spirituality</option>
+									<option value="102">Science & Technology</option>
+									<option value="116">Seasonal & Holiday</option>
+									<option value="108">Sports & Fitness</option>
+									<option value="109">Travel & Outdoor</option>
+									<option value="199">Other</option>
+								</select>
+							</label>
+							<hr>
+							<label class="form-group">
+								<h4>Distance</h4>
+								<input id="distance-slider" class="distance" type="range" min="1" max="50" value="10" step="1" style="display:inline-block"/>
+								<input id="distance" class="distance form-control" type="number" min="1" max="50" value="10" style="display:inline-block; width: 60px" required>
+								</label>
+							<hr>
+							<label class="form-group">
+								<h4>Price</h4>
+								<input id="price-free" type="checkbox" name="price" value="free"> Free
+								<input id="price-paid" type="checkbox" name="price" value="paid"> Paid
+							</label>
+							<hr>
+						<!-- 'Retrieve Events' button -->
+							<label>
+								<input type="submit" value="Search" id="retrieve-events-btn" class="btn btn-default">
+							</label>
+						</form>
+					</div>
+
+
 				{% endif %}
 			</div>
 	</div>
