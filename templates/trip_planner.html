@@ -265,7 +265,7 @@
 													      			<div>
 																		{% if not event.url %}
 																		<button type="button"
-																				id={{ event.event_id }}
+																				data-event-id={{ event.event_id }}
 																				class="icon edit-btn btn btn-default btn-xs edit-description">
 																		</button>
 
@@ -273,12 +273,12 @@
 													      					<textarea id="new-description-{{ event.event_id }}" style="display:block; margin: 0 auto" rows="6" cols="50">{{ event.description }}</textarea>
 													      					<button type="button"
 													      							class="btn btn-info cancel-description"
-													      							data-id="{{ event.event_id }}">
+													      							data-event-id="{{ event.event_id }}">
 													      							Cancel
 													      					</button>
 													      					<button type="button"
 													      							class="btn btn-info submit-description"
-													      							data-id="{{ event.event_id }}">
+													      							data-event-id="{{ event.event_id }}">
 													      							Submit
 													      					</button>
 													      				</div>

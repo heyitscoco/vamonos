@@ -124,6 +124,7 @@ function handleDropEvent(event, ui) {
 
 
 function sendReminders() {
+	
 	var today = newDate();
 	var startDateString = $('#trip-date-details').data('start-date');
 	var startDate = newDate(startDateString);
@@ -158,6 +159,7 @@ function submitViewPermission(evt) {
 	var formInputs = { tripId: $("#agenda").data("trip"), friendId: $("#friend_id").val(), canEdit: 0 };
 
 	$.post("/add_permission", formInputs, function (result) {
+
 		var friendSelector = '#friend' + formInputs.friendId;
 		var friend = $(friendSelector);
 
@@ -168,6 +170,7 @@ function submitViewPermission(evt) {
 
 function submitEditPermission(evt) {
 	evt.preventDefault();
+
 	var formInputs = { tripId: $("#agenda").data("trip"), friendId: $("#friend_id").val(), canEdit: 1 };
 
 	$.post("/add_permission", formInputs, function() {
@@ -182,7 +185,9 @@ function submitEditPermission(evt) {
 
 
 function editDescription(evt) {
-	var eventId = evt.target.id;
+
+	var eventId = evt.target.dataset.'event-id';
+
 	$('#old-description-' + eventId).addClass('hidden');
 	$('#new-description-form-' + eventId).removeClass('hidden');
 	$('#' + eventId).addClass('hidden');
@@ -191,7 +196,7 @@ function editDescription(evt) {
 
 function submitDescription(evt) {
 
-	var eventId = evt.target.dataset.id;
+	var eventId = evt.target.dataset.'event-id';
 	var newDescription = $('#new-description-' + eventId).val();
 
 	// Eager update the DOM
@@ -213,7 +218,9 @@ function submitDescription(evt) {
 }
 
 function cancelDescription(evt) {
-	var eventId = evt.target.dataset.id;
+
+	var eventId = evt.target.dataset.'event-id';
+
 	$('#old-description-' + eventId).removeClass('hidden');
 	$('#new-description-form-' + eventId).addClass('hidden');
 	$('#' + eventId).removeClass('hidden');
