@@ -138,3 +138,9 @@ select {
 	color: #618dae;
 	background-color: #edfcd9;
 }
+
+.active-droppable {
+	outline: none;
+    border: solid #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+}

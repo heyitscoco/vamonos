@@ -22,16 +22,22 @@ function setupDraggables() {
 		helper: function(){
 		    return $("<div style='width: 100px;\
 		    					  height: 100px;\
-		    					  text-align: centered;\
+		    					  text-align: center;\
+		    					  display: flex;\
+								  justify-content: center;\
+								  align-items: center;\
 		    					  background-color: white;\
-		    					  border: solid 2px black;\
-		    					  border-radius: 7px'>\
+		    					  outline: none;\
+							      border: solid #9ecaed;\
+							      border-radius: 50px;\
+							      box-shadow: 0 0 10px #9ecaed'>\
 		    					  Drag onto the agenda to add!\
 		    		  </div>");
 		}
 	});
 	$('#agenda').droppable({
-		drop: handleDropEvent
+		drop: handleDropEvent,
+		activeClass: "active-droppable"
 	});
 }
 
