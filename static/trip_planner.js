@@ -7,7 +7,6 @@ function toggleEvents() {
 }
 
 function toggleText() {
-	console.log('Toggling Text');
 	$('.toggle-text').toggle();
 }
 
@@ -263,6 +262,11 @@ function generatePDF() {
 	})
 }
 
+function formatDatetime(dtString, fmt) {
+
+}
+
+
 function getEvents(evt) {
 	evt.preventDefault();
 
@@ -323,28 +327,65 @@ function getEvents(evt) {
 				// add event names to the "Nearby Events" sidebar
 				if (events) {
 					events.forEach(function(event) {
+
+								if (event.logo) {
+									var eventLogo = '<img src="' + event.logo.url + '" style="width: 100%">';
+								} else {
+									var eventLogo = '';
+								}
+
 								var eventHTML = '<div>\
+													'+ eventLogo + '\
 													<h5>' + event.name.text + '</h5>\
 													<div>' + new Date(event.start.local) + '</div>\
 													<hr>\
-												</div>'
+												</div>';
 
+								console.log(event);
+								// var eventHTML = '<button type="button"\
+								// 						class="info-btn icon btn btn-info btn-xs"\
+								// 						data-toggle="modal"\
+								// 						data-target="#event'+ event.id +'">\
+								// 				</button>' + event.name.text +
 
-								var nameLink = $('<a>')
-									.attr('id', event.id)
-									.addClass('draggable')
-									.addClass('event-listing')
-									.attr('href', event.url)
-									.attr('target', "_blank")
-									.attr('style', 'display:block')
-								$("#events-list").append(nameLink);
+								// 				'<!-- Event Details Modal -->\
+								// 				<div id="event' + event.id +'" class="modal fade" role="dialog">\
+								// 					<div class="modal-dialog">\
+								// 						<!-- Modal content-->\
+								// 				    	<div class="modal-content my-modal">\
+								// 				    		<div class="modal-header centered">\
+								// 				    			<button type="button" class="close" data-dismiss="modal">&times;</button>\
+								// 				        		<h4 class="modal-title">' + event.name.text + '</h4>\
+								// 				        		<h5>' + event.venue_id + '</h5>\
+								// 				        		<h5>' + event.start.local + '\
+								// 				      				- ' + event.end.local + '\
+								// 				      			</h5>\
+								// 				      		</div>\
+								// 				      		<div class="modal-body centered">\
+								// 			      			<!-- Event details -->\
+								// 				      			<div>\
+								// 				      				<p>'+ event.description.text +'</p>\
+								// 					      		</div>\
+								// 					  		</div>\
+								// 						</div>\
+								// 					</div>\
+								// 				</div>\
+								// <!-- End Modal -->';
 
-								$('#' + event.id).html(eventHTML);
+						var nameLink = $('<a>')
+							.attr('id', event.id)
+							.addClass('draggable')
+							.addClass('event-listing')
+							.attr('href', event.url)
+							.attr('target', "_blank")
+							.attr('style', 'display:block')
+						$("#events-list").append(nameLink);
+						$('#' + event.id).html(eventHTML);
 					});
 				} else {
 					// FIXME: WHAT DOES THIS DO?
 					var notification = $('div')
-										.text("No events could be found. Try using fewer filters!")
+										.text("No events could be found. Try using fewer filters!");
 					$("#events-list").append(notification);
 				};
 
