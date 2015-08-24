@@ -117,7 +117,6 @@ function handleDropEvent(event, ui) {
 								<!-- End Modal -->';
 
 			$('#event-list-item-' + eventObj.eventId).html(eventHTML);
-			console.log('event added');
 		});
 	});
 }
@@ -136,9 +135,7 @@ function sendReminders() {
 	if (today.valueOf() === dayBeforeStartDate.valueOf()) {
 		data = { 'tripId': tripId };
 
-		$.post("/send_text", data, function(result){
-			console.log(result);
-		});
+		$.post("/send_text", data);
 	};
 
 	function newDate(dateString) {
@@ -185,7 +182,6 @@ function submitEditPermission(evt) {
 
 
 function editDescription(evt) {
-	console.log('Editing description');
 	var eventId = evt.target.id;
 	$('#old-description-' + eventId).addClass('hidden');
 	$('#new-description-form-' + eventId).removeClass('hidden');
@@ -226,8 +222,6 @@ function cancelDescription(evt) {
 function addAttendee(evt) {
 	evt.preventDefault();
 
-	console.log('Adding attendee!')
-	
 	var eventId = $('#event-id').val()
 	var formInputs = { eventId: eventId };
 	$.post('/add_attendee', formInputs, function() {
@@ -340,7 +334,6 @@ function getEvents(evt) {
 
 				setupDraggables();
 				$('#loading-img').addClass('hidden');
-				console.log('retrieved events');
 			});
 
 	});
