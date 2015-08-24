@@ -121,10 +121,8 @@ function handleDropEvent(event, ui) {
 	});
 }
 
-
-
 function sendReminders() {
-	
+
 	var today = newDate();
 	var startDateString = $('#trip-date-details').data('start-date');
 	var startDate = newDate(startDateString);
@@ -335,7 +333,9 @@ function getEvents(evt) {
 								$('#' + event.id).html(eventHTML);
 					});
 				} else {
-					var notification = 
+					// FIXME: WHAT DOES THIS DO?
+					var notification = $('div')
+										.text("No events could be found. Try using fewer filters!")
 					$("#events-list").append(notification);
 				};
 
