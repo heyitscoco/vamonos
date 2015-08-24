@@ -7,7 +7,12 @@ function formatDatetime(dtString, format) {
 		dt.toLocaleString();
 		alert(dt);
 	}
+}
 
+function syncDistanceValues(evt) {
+	
+	var value = evt.target.value;
+	$('.distance').val(value);
 }
 
 function setupDraggables() {
@@ -184,7 +189,8 @@ function submitEditPermission(evt) {
 
 function editDescription(evt) {
 
-	var eventId = evt.target.dataset.'event-id';
+	console.log(evt.target.dataset);
+	var eventId = evt.target.dataset.id;
 
 	$('#old-description-' + eventId).addClass('hidden');
 	$('#new-description-form-' + eventId).removeClass('hidden');
@@ -194,7 +200,7 @@ function editDescription(evt) {
 
 function submitDescription(evt) {
 
-	var eventId = evt.target.dataset.'event-id';
+	var eventId = evt.target.dataset.id;
 	var newDescription = $('#new-description-' + eventId).val();
 
 	// Eager update the DOM
@@ -217,7 +223,7 @@ function submitDescription(evt) {
 
 function cancelDescription(evt) {
 
-	var eventId = evt.target.dataset.'event-id';
+	var eventId = evt.target.dataset.id;
 
 	$('#old-description-' + eventId).removeClass('hidden');
 	$('#new-description-form-' + eventId).addClass('hidden');

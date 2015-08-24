@@ -8,6 +8,10 @@ table {
 	table-layout: fixed;
 }
 
+hr {
+	color: black;
+	background-color: gray;
+}
 
 .agenda-table {
 	/*border: 1px solid white;*/

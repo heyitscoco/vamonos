@@ -16,16 +16,20 @@
 					<form id="event-filters">
 					<!-- Event Filters -->
 
-						<label class="form-group">Distance (miles): 
-							<input id="distance" type="number" min="1" width="70px" value="10" style="width: 40px" required>
-						</label>
-						<br>
 						<label class="form-group">
+							<h4>Distance</h4>
+							<input id="distance-slider" class="distance" type="range" min="1" max="50" value="10" step="1" style="display:inline-block"/>
+							<input id="distance" class="distance" type="number" min="1" max="50" width="70px" value="10" style="display:inline-block; width: 40px" required>
+							</label>
+						<hr>
+						<label class="form-group">
+							<h4>Price</h4>
 							<input id="price-free" type="checkbox" name="price" value="free"> Free
 							<input id="price-paid" type="checkbox" name="price" value="paid"> Paid
 						</label>
-
-						<label class="form-group">Category:
+						<hr>
+						<label class="form-group">
+							<h4>Category</h4>
 							<select class="multiselect" name="categories" id="categories" multiple="multiple">
 							    <option value="118">Auto, Boat & Air</option>
 								<option value="101">Business & Professional</option>
@@ -265,7 +269,7 @@
 													      			<div>
 																		{% if not event.url %}
 																		<button type="button"
-																				data-event-id={{ event.event_id }}
+																				data-id={{ event.event_id }}
 																				class="icon edit-btn btn btn-default btn-xs edit-description">
 																		</button>
 
@@ -273,12 +277,12 @@
 													      					<textarea id="new-description-{{ event.event_id }}" style="display:block; margin: 0 auto" rows="6" cols="50">{{ event.description }}</textarea>
 													      					<button type="button"
 													      							class="btn btn-info cancel-description"
-													      							data-event-id="{{ event.event_id }}">
+													      							data-id="{{ event.event_id }}">
 													      							Cancel
 													      					</button>
 													      					<button type="button"
 													      							class="btn btn-info submit-description"
-													      							data-event-id="{{ event.event_id }}">
+													      							data-id="{{ event.event_id }}">
 													      							Submit
 													      					</button>
 													      				</div>
@@ -453,5 +457,7 @@ $('.edit-description').click(editDescription);
 $('.submit-description').click(submitDescription);
 $('.cancel-description').click(cancelDescription);
 $('#retrieve-events-btn').click(getEvents);
+$('.distance').on('input', syncDistanceValues);
+
 </script>
 {% endblock %}
