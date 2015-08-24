@@ -18,7 +18,17 @@ function syncDistanceValues(evt) {
 
 function setupDraggables() {
 	$('.draggable').draggable({
-		helper: 'clone'
+		appendTo: "body",
+		helper: function(){
+		    return $("<div style='width: 100px;\
+		    					  height: 100px;\
+		    					  text-align: centered;\
+		    					  background-color: white;\
+		    					  border: solid 2px black;\
+		    					  border-radius: 7px'>\
+		    					  Drag onto the agenda to add!\
+		    		  </div>");
+		}
 	});
 	$('#agenda').droppable({
 		drop: handleDropEvent
