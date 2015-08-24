@@ -74,8 +74,7 @@ function handleDropEvent(event, ui) {
 			
 
 			var eventHTML = '<button type="button"\
-									style="width: 24px; height: 24px;"\
-									class="info-btn icon btn btn-info"\
+									class="info-btn icon btn btn-info btn-xs"\
 									data-toggle="modal"\
 									data-target="#event'+ eventObj.eventId +'">\
 							</button>' + eventObj.title +
@@ -153,6 +152,108 @@ function sendReminders() {
 		date.setHours(0, 0, 0, 0);
 		return date;
 	}
+}
+
+function submitViewPermission(evt) {
+	evt.preventDefault();
+
+	var tripId = $("#agenda").data("trip");
+	var formInputs = { tripId: $("#agenda").data("trip"), friendId: $("#friend_id").val(), canEdit: 0 };
+
+	$.post("/add_permission", formInputs, function (result) {
+		var friendSelector = '#friend' + formInputs.friendId;
+		var friend = $(friendSelector);
+
+		friend.addClass('hidden');
+
+	});	
+}
+
+function submitEditPermission(evt) {
+	evt.preventDefault();
+	var formInputs = { tripId: $("#agenda").data("trip"), friendId: $("#friend_id").val(), canEdit: 1 };
+
+	$.post("/add_permission", formInputs, function() {
+		var friendSelector = '#friend' + formInputs.friendId;
+		var friend = $(friendSelector);
+
+		if (friend.is(':hidden')) {
+			friend.text('(editor)').removeClass('hidden');
+		};
+	});
+}
+
+
+function editDescription(evt) {
+	console.log('Editing description');
+	var eventId = evt.target.id;
+	$('#old-description-' + eventId).addClass('hidden');
+	$('#new-description-form-' + eventId).removeClass('hidden');
+	$('#' + eventId).addClass('hidden');
+
+}
+
+function submitDescription(evt) {
+
+	var eventId = evt.target.dataset.id;
+	var newDescription = $('#new-description-' + eventId).val();
+
+	// Eager update the DOM
+	if (newDescription == '') { // not using strict equality, incase this is Null, etc.
+		newDescription = "No description available.";
+	};
+	
+	$('#old-description-' + eventId).text(newDescription);
+	$('#old-description-' + eventId).removeClass('hidden');
+	$('#new-description-form-' + eventId).addClass('hidden');
+	$('#' + eventId).removeClass('hidden');
+
+	var formInputs = {
+		eventId: eventId,
+		newDescription: newDescription
+	};
+
+	$.post('/new_description', formInputs);
+}
+
+function cancelDescription(evt) {
+	var eventId = evt.target.dataset.id;
+	$('#old-description-' + eventId).removeClass('hidden');
+	$('#new-description-form-' + eventId).addClass('hidden');
+	$('#' + eventId).removeClass('hidden');
+}
+
+function addAttendee(evt) {
+	evt.preventDefault();
+
+	console.log('Adding attendee!')
+	
+	var eventId = $('#event-id').val()
+	var formInputs = { eventId: eventId };
+	$.post('/add_attendee', formInputs, function() {
+		$('#fname-' + eventId).removeClass('hidden');
+	});
+}
+
+function rmAttendee(evt) {
+	evt.preventDefault();
+	var eventId = $('#event-id').val()
+	var formInputs = { eventId: eventId };
+	$.post('/rm_attendee', formInputs, function() {
+		$('#fname-' + eventId).addClass('hidden');
+	});
+}
+
+function generatePDF() {
+	var tripId = $("#agenda").data("trip");
+	var formInputs = { tripId: tripId };
+
+	$.post("/pdf", formInputs, function (result) {
+		result = JSON.parse(result);
+		var filename = result.filename;
+		var url = "/itinerary" + tripId;
+		window.open(url, "_blank");
+	})
 }
 
 function getEvents(evt) {
@@ -243,66 +344,4 @@ function getEvents(evt) {
 			});
 
 	});
-};
-
-function submitViewPermission(evt) {
-	evt.preventDefault();
-
-	var tripId = $("#agenda").data("trip");
-	var formInputs = { tripId: $("#agenda").data("trip"), friendId: $("#friend_id").val(), canEdit: 0 };
-
-	$.post("/add_permission", formInputs, function (result) {
-		var friendSelector = '#friend' + formInputs.friendId;
-		var friend = $(friendSelector);
-
-		friend.addClass('hidden');
-
-	});	
-}
-
-function submitEditPermission(evt) {
-	evt.preventDefault();
-	var formInputs = { tripId: $("#agenda").data("trip"), friendId: $("#friend_id").val(), canEdit: 1 };
-
-	$.post("/add_permission", formInputs, function() {
-		var friendSelector = '#friend' + formInputs.friendId;
-		var friend = $(friendSelector);
-
-		if (friend.is(':hidden')) {
-			friend.text('(editor)').removeClass('hidden');
-		};
-	});
-}
-
-function addAttendee(evt) {
-	evt.preventDefault();
-
-	console.log('Adding attendee!')
-	
-	var eventId = $('#event-id').val()
-	var formInputs = { eventId: eventId };
-	$.post('/add_attendee', formInputs, function() {
-		$('#fname-' + eventId).removeClass('hidden');
-	});
-}
-
-function rmAttendee(evt) {
-	evt.preventDefault();
-	var eventId = $('#event-id').val()
-	var formInputs = { eventId: eventId };
-	$.post('/rm_attendee', formInputs, function() {
-		$('#fname-' + eventId).addClass('hidden');
-	});
-}
-
-function generatePDF() {
-	var tripId = $("#agenda").data("trip");
-	var formInputs = { tripId: tripId };
-
-	$.post("/pdf", formInputs, function (result) {
-		result = JSON.parse(result);
-		var filename = result.filename;
-		var url = "/itinerary" + tripId;
-		window.open(url, "_blank");
-	})
 }

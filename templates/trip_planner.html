@@ -263,15 +263,30 @@
 													      		<div class="modal-body centered">
 												      			<!-- Event details -->
 													      			<div>
-																		<label class="form-group">
-																			<input type="submit" value="" id="submit-view" class="icon view-btn btn-xs">
-																		</label>
-																		<label class="form-group">
-																			<span class="edit-span">
-																				<input type="submit" value="" id="submit-edit" class="icon edit-btn btn-xs">
-																			</span>
-																		</label>
-													      				<p>{{ event.description }}</p>
+																		{% if not event.url %}
+																		<button type="button"
+																				id={{ event.event_id }}
+																				class="icon edit-btn btn btn-default btn-xs edit-description">
+																		</button>
+
+																		<div id="new-description-form-{{ event.event_id }}" class="hidden">
+													      					<textarea id="new-description-{{ event.event_id }}" style="display:block; margin: 0 auto" rows="6" cols="50">{{ event.description }}</textarea>
+													      					<button type="button"
+													      							class="btn btn-info cancel-description"
+													      							data-id="{{ event.event_id }}">
+													      							Cancel
+													      					</button>
+													      					<button type="button"
+													      							class="btn btn-info submit-description"
+													      							data-id="{{ event.event_id }}">
+													      							Submit
+													      					</button>
+													      				</div>
+
+													      				{% endif %}
+													      				<p id="old-description-{{ event.event_id }}">
+													      					{{ event.description }}
+													      				</p>
 														      		</div>
 														      	<!-- Google Map -->
 														      	{% if event.address %}
@@ -430,10 +445,13 @@ $(document).ready(sendReminders);
 
 $('.multiselect').SumoSelect({ okCancelInMulti:true, selectAll:true });
 $('#submit-view').click(submitViewPermission);
-$("#submit-edit").click(submitEditPermission);
-$("#gen-pdf").click(generatePDF);
+$('#submit-edit').click(submitEditPermission);
+$('#gen-pdf').click(generatePDF);
 $('.attending-btn').click(addAttendee);
 $('.not-attending-btn').click(rmAttendee);
+$('.edit-description').click(editDescription);
+$('.submit-description').click(submitDescription);
+$('.cancel-description').click(cancelDescription);
 $('#retrieve-events-btn').click(getEvents);
 </script>
 {% endblock %}

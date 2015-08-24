@@ -537,6 +537,20 @@ def create_event():
 
 
 
+@app.route('/new_description', methods=['POST'])
+def update_description():
+	"""Updates the description of a given event"""
+
+	event_id = request.form.get('eventId')
+	new_description = request.form.get('newDescription')
+
+	event = Event.query.get(event_id)
+	event.description = new_description
+	db.session.commit()
+
+	return 'response'
+
+
 @app.route("/add_event/<string:event_id>/<string:trip_id>")
 def add_event(event_id, trip_id):
 	"""Given an eventbrite event resource_uri, adds the event to the agenda"""
