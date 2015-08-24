@@ -315,9 +315,11 @@ function getEvents(evt) {
 			"location.longitude": longitude,
 			"location.within": distance + 'mi',
 			"categories": categories_str,
-			"price": price 
+			"price": price,
+			"sort_by": 'date'
 		};		
 
+		console.log(filters);
 			url = "https://www.eventbriteapi.com/v3/events/search/"
 
 			// request events
@@ -334,14 +336,11 @@ function getEvents(evt) {
 									var eventLogo = '';
 								}
 
-								var eventHTML = '<div>\
-													'+ eventLogo + '\
-													<h5>' + event.name.text + '</h5>\
+								var eventHTML = '<div>' + eventLogo +
+													'<h5>' + event.name.text + '</h5>\
 													<div>' + new Date(event.start.local) + '</div>\
 													<hr>\
 												</div>';
-
-								console.log(event);
 								// var eventHTML = '<button type="button"\
 								// 						class="info-btn icon btn btn-info btn-xs"\
 								// 						data-toggle="modal"\
