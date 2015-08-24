@@ -273,7 +273,7 @@
 													      			<div>
 																		{% if not event.url %}
 																		<button type="button"
-																				data-id={{ event.event_id }}
+																				data-id="{{ event.event_id }}"
 																				class="icon edit-btn btn btn-default btn-xs edit-description">
 																		</button>
 
@@ -354,7 +354,7 @@
 
 																	{% if event.url %}
 																<!-- 'View On Eventbrite' Button -->
-																	<a href={{ event.url }} target="_blank"data-toggle="tooltip" title="View on Eventbrite">
+																	<a href="{{ event.url }}" target="_blank" data-toggle="tooltip" title="View on Eventbrite">
 																		<img src="/static/img/eventbrite.png" class="icon">
 																	</a>
 																	{% endif %}

@@ -1,14 +1,5 @@
 // Functions
 
-function formatDatetime(dtString, format) {
-	var dt = new Date(dtString);
-
-	if (format === 'date/time') {
-		dt.toLocaleString();
-		alert(dt);
-	}
-}
-
 function toggleEvents() {
 	$('#filters-div').toggle('fast');
 	$('#events-div').toggle('fast');
@@ -67,10 +58,10 @@ function handleDropEvent(event, ui) {
 			if (userObj.admin) {
 				var deleteEventHTML = '<form action="/rm_event" method="POST" style="display: inline-block">\
 											<label>\
-												<input type="hidden" name="event_id" value="{{ event.event_id }}">\
+												<input type="hidden" name="event_id" value="' + eventObj.eventId + '">\
 											</label>\
 											<label>\
-												<input type="hidden" name="trip_id" value="{{ trip.trip_id }}">\
+												<input type="hidden" name="trip_id" value="' + tripId +'">\
 											</label>\
 											<label>\
 												<input type="submit" value="" class="icon delete-btn edit-perms btn btn-default btn-xs">\
@@ -104,8 +95,8 @@ function handleDropEvent(event, ui) {
 							    			<button type="button" class="close" data-dismiss="modal">&times;</button>\
 							        		<h4 class="modal-title">' + eventObj.title + '</h4>\
 							        		<h5>' + eventObj.address + '</h5>\
-							        		<h5>{{ ' + eventObj.start + ' | datetime("time") }}\
-							      				- {{ ' + eventObj.end + ' | datetime("time")  }}\
+							        		<h5>' + eventObj.start + '\
+							      				- ' + eventObj.end + '\
 							      			</h5>\
 							      		</div>\
 							      		<div class="modal-body centered">\
@@ -332,11 +323,9 @@ function getEvents(evt) {
 				// add event names to the "Nearby Events" sidebar
 				if (events) {
 					events.forEach(function(event) {
-
-
 								var eventHTML = '<div>\
 													<h5>' + event.name.text + '</h5>\
-													<div>' + event.start.local + '</div>\
+													<div>' + new Date(event.start.local) + '</div>\
 													<hr>\
 												</div>'
 
