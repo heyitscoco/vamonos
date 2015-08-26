@@ -56,6 +56,7 @@ def show_pdf(trip_id):
 
 	filename = 'itinerary%r.pdf' % (trip_id)
 	itinerary = open(filename, 'rb')
+
 	return send_file(itinerary)
 
 
@@ -64,8 +65,9 @@ def show_pdf(trip_id):
 def home():
 	"""Displays homepage"""
 
-	cities = ['Boston', 'Seoul', 'London', 'Paris', 'Berlin', 'Venice', 'Stockholm']
-	cities_sample = random.sample(cities, 4)
+	cities = ['Dubai', 'Madrid', 'Amsterdam', 'London', 'Paris', 'Berlin', 'Venice', 'Stockholm']
+	random.shuffle(cities)
+	cities_sample = random.sample(cities, 8)
 
 
 	cities_dict = {}
@@ -250,7 +252,24 @@ def trip_planner(trip_id):
 		admin_id = trip.admin_id
 		permissions = Permission.query.filter(Permission.trip_id == trip_id, Permission.user_id != admin_id).all()
 		friendships = Friendship.query.filter_by(admin_id = viewer_id).all()
-		friends = [(friendship.friend.fname, friendship.friend_id) for friendship in friendships]
+
+		friends = []
+		for fs in friendships:
+			try:
+				perm = Permission.query.filter_by(user_id=fs.friend_id, trip_id=trip_id).one()
+				can_view = True
+
+				if perm.can_edit:
+					can_edit = True
+				else:
+					can_edit = False
+
+			except NoResultFound:
+				can_view = False
+				can_edit = False
+
+			friends.append((fs.friend.fname, fs.friend_id, can_view, can_edit))
+
 		friend_ids = [friendship.friend_id for friendship in friendships]
 
 		trip = Trip.query.get(trip_id)
@@ -289,8 +308,8 @@ def trip_planner(trip_id):
 
 
 
-@app.route("/add_permission", methods=["POST"])
-def add_permission():
+@app.route("/edit_permission", methods=["POST"])
+def edit_permission():
 	"""Adds a new permission to the DB"""
 
 	# Get info from form
@@ -318,16 +337,7 @@ def add_permission():
 		db.session.add(perm)
 	db.session.commit()
 
-	# Confirm submission
-	if can_edit:
-		ability = "view & edit"
-	else:
-		ability = "view"
-
-	friend = User.query.get(friend_id)
-	msg = "%s is now allowed to %s this trip!" % (friend.fname, ability)
-
-	return msg # FIXME Don't return this!
+	return 'hello' # FIXME Don't return this!
 
 
 
@@ -336,8 +346,8 @@ def rm_permission():
 	"""Deletes a permission from the DB"""
 
 	# Get info from form
-	friend_id = request.form.get("friend_id")
-	trip_id = int(request.form.get("trip_id"))
+	friend_id = request.form.get("friendId")
+	trip_id = int(request.form.get("tripId"))
 
 	# Remove permission based on info
 	perm = Permission.query.filter(Permission.user_id == friend_id, Permission.trip_id == trip_id).one()
@@ -346,11 +356,8 @@ def rm_permission():
 	db.session.commit()
 
 	friend = User.query.get(friend_id)
-	msg = "%s is no longer allowed to view this trip." % (friend.fname)
-	flash(msg)
-
-	url = "/trip%d" % (trip_id)
-	return redirect(url)
+	
+	return 'hello' # FIXME Don't return this!
 
 
 

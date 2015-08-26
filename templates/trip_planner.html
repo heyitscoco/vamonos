@@ -78,11 +78,14 @@
 			<div class="col-xs-12 col-sm-6">
 				<div class="content floater-box">
 					<h3>Permissions</h3>
+
 					{% if admin %}
+					<div class="row">
+					<div class="hidden"> <!-- FIXME FIXME FIXME -->
 						<form>
 							<label class="form-group">
 								<select id="friend_id" data-friend-ids="{{ friend_ids }}">
-									{% for name, friend_id in friends %}
+									{% for name, friend_id, can_view, can_edit in friends %}
 										<option value="{{ friend_id }}">
 											{{ name }}
 										</option>
@@ -101,9 +104,37 @@
 								</span>
 							</label>
 						</form>
+					</div>
 					{% endif %}
-					<div class="scrollable" style="height: 70px">
-						<ul id="perms-list">
+					
+					{% if admin %}
+					<div class="scrollable col-xs-12" style="height: 100px">
+					{% endif %}
+						<table class="table-striped" style="width: 100%">
+							<thead>
+								<th>Name</th>
+								<th>View</th>
+								<th>Edit</th>
+							</thead>
+							<tbody>
+								{% for fname, friend_id, can_view, can_edit in friends %}
+								<tr>
+									<td>{{ fname }}</td>
+									<td>
+										<img id="view-img-{{ friend_id }}" class="toggle-view icon" data-view="{{ can_view }}" data-friend="{{ friend_id }}" src="/static/img/{{ can_view }}.png">
+									</td>
+									<td>
+										<img id="edit-img-{{ friend_id }}" class="toggle-edit icon" data-view="{{ can_view }}" data-edit="{{ can_edit }}" data-friend="{{ friend_id }}" src="/static/img/{{ can_edit }}.png">
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+
+
+
+						<!-- <ul id="perms-list">
+
 							{% for perm in permissions %}
 								<li>
 									{% if admin %}
@@ -127,10 +158,15 @@
 									{% endif %}
 								</li>
 							{% endfor %}
-						</ul>
+
+						</ul> -->
+
+					{% if admin %}
+					</div>
+					</div>
+					{% endif %}
 					</div>
 				</div>
-			</div>
 <!-- Details -->
 			<div class="col-xs-12 col-sm-6">
 				<div class="content floater-box scrollable" id="trip-date-details" data-start-date='{{ trip.start }}' data-end-date='{{ trip.end }}'>
@@ -157,6 +193,7 @@
 						</li>
 					</ul>
 				</div>
+			</div>
 
 <!-- Edit Start Modal -->
 				<!-- Modal Window-->
@@ -220,7 +257,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
 <!-- Agenda -->
 		<div class="row">	
 			<div class="col-xs-12">
@@ -302,13 +338,15 @@
 													      				class=""
 																	    width="90%"
 																	    height="300px"
-																	    frameborder="0" style="border:0"
+																	    frameborder="0"
+																	    style="border:0"
 																	    src="https://www.google.com/maps/embed/v1/place?key={{ gg_browser_key }}
-																	    	&q={{ event.address }}
+																	    	&q={{ event.address }}+{{ event.city }}
 																	    	&zoom=8
 																	    	&attribution_source=Google+Maps+Embed+API
 																	    	&attribution_web_url=http://www.butchartgardens.com/
-																	    	&attribution_ios_deep_link_id=comgooglemaps://?daddr=Butchart+Gardens+Victoria+BC" allowfullscreen>
+																	    	&attribution_ios_deep_link_id=comgooglemaps://?daddr=Butchart+Gardens+Victoria+BC"
+																	    allowfullscreen>
 																	</iframe>
 																{% endif %}
 
@@ -429,7 +467,7 @@
 							        		<input class="form-control btn btn-info" type="submit" value="Submit">
 							        	</label>
 							        </form>
-
+							        </div>
 							    </div>
 					  		</div>
 						</div>
@@ -445,14 +483,14 @@
 {% block scripts %}
 <script src="/static/jquery.sumoselect.min.js"></script>
 <script src="/static/trip_planner.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
 <script>
 // Event listeners
 $(document).ready(sendReminders);
 
 $('.multiselect').SumoSelect({ selectAll:true });
-$('#submit-view').click(submitViewPermission);
-$('#submit-edit').click(submitEditPermission);
+$('.toggle-view').click(toggleViewPermission);
+$('.toggle-edit').click(toggleEditPermission);
 $('#gen-pdf').click(generatePDF);
 $('.attending-btn').click(addAttendee);
 $('.not-attending-btn').click(rmAttendee);

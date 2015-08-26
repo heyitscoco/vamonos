@@ -1,6 +1,6 @@
 body {
-	/*background-color: rgba(100,200,255, 1);*/
-	background-image: url('/static/img/beach1.JPG');
+	background-image: url('/static/img/wood.jpg');
+	background-size: 100%;
 	font-family: 'Century Gothic';
 }
 
@@ -36,7 +36,9 @@ select {
 }
 
 .pro-pic {
-	width: 50px;
+	width: 200px;
+	display: inline-block;
+	background-size: 100%;
 }
 
 .edit-btn {
@@ -122,9 +124,21 @@ select {
 	height: 700px;
 }
 
-#welcome-box {
-	width: 100%;
-	margin: 0 auto;
+.no-div {
+	color: white;
+}
+
+.city-div {
+	width: 280px;
+	height: 280px;
+	display: inline-block;
+	/*background-image: url('/static/img/blank.png');*/
+	background-size: 100%;
+	border: 5px solid white;
+}
+
+h1 {
+	font-size: 80px;
 }
 
 .day {
@@ -132,6 +146,11 @@ select {
 	display: inline-block;
 	padding: 1em;
 	height: 400px;
+}
+
+.friend-name {
+	margin-top: 0;
+	color: black;
 }
 
 .alert-warning {

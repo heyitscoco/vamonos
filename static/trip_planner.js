@@ -47,7 +47,7 @@ function handleDropEvent(event, ui) {
 	var eventId = draggable.attr('id');
 	var tripId = $("#agenda").data("trip");
 
-	var url = '/add_event/' + eventId + '/' + tripId;
+	var url = '/event/' + eventId + '/' + tripId;
 
 	// Add the event to the DB and the DOM
 	$.get(url, function(result) {
@@ -172,20 +172,60 @@ function sendReminders() {
 	}
 }
 
-function submitViewPermission(evt) {
-	evt.preventDefault();
 
+
+function toggleViewPermission(evt) {
+	var canView = evt.target.dataset.view;
+	var friendId = evt.target.dataset.friend;
 	var tripId = $("#agenda").data("trip");
-	var formInputs = { tripId: $("#agenda").data("trip"), friendId: $("#friend_id").val(), canEdit: 0 };
+	var data = {
+		friendId: friendId,
+		tripId: tripId,
+		canEdit: 0
+	};
 
-	$.post("/add_permission", formInputs, function (result) {
+	if (canView === "True") {
+		$.post('/rm_permission', data, function(result) {
+			// AJAX the DOM
+			evt.target.src = '/static/img/False.png';
+			evt.target.dataset.view = 'False';
+		});
+	} else {
+		$.post('/edit_permission', data, function(result) {
+			// AJAX the DOM
+			evt.target.src = '/static/img/True.png';
+			evt.target.dataset.view = 'True';
+		});
+	};
 
-		var friendSelector = '#friend' + formInputs.friendId;
-		var friend = $(friendSelector);
+}
 
-		friend.addClass('hidden');
+function toggleEditPermission(evt) {
+	var canView = evt.target.dataset.view;
+	var canEdit = evt.target.dataset.edit;
+	var friendId = evt.target.dataset.friend;
+	var tripId = $("#agenda").data("trip");
 
-	});	
+	if (canEdit === 'False') {
+		canEdit = 0;
+		$('#view-img-' + friendId).attr('src', '/static/img/True.png')
+		evt.target.src = '/static/img/True.png';
+		evt.target.dataset.view = 'True';
+		evt.target.dataset.edit = 'True';
+	} else {
+		canEdit = 1;
+		evt.target.src = '/static/img/False.png'
+		evt.target.dataset.edit = 'False';
+	}
+
+	var data = {
+		friendId: friendId,
+		tripId: tripId,
+		canEdit: canEdit
+	}
+
+	$.post('/edit_permission', data);
+
 }
 
 function submitEditPermission(evt) {
@@ -206,7 +246,6 @@ function submitEditPermission(evt) {
 
 function editDescription(evt) {
 
-	console.log(evt.target.dataset);
 	var eventId = evt.target.dataset.id;
 
 	$('#old-description-' + eventId).addClass('hidden');
@@ -335,7 +374,6 @@ function getEvents(evt) {
 			"sort_by": 'date'
 		};		
 
-		console.log(filters);
 			url = "https://www.eventbriteapi.com/v3/events/search/"
 
 			// request events
@@ -351,42 +389,11 @@ function getEvents(evt) {
 								} else {
 									var eventLogo = '';
 								}
-
 								var eventHTML = '<div>' + eventLogo +
 													'<h5>' + event.name.text + '</h5>\
-													<div>' + new Date(event.start.local) + '</div>\
+													<div>' + moment(new Date(event.start.local)).format('dddd M/D, h:mm a') + '</div>\
 													<hr>\
 												</div>';
-								// var eventHTML = '<button type="button"\
-								// 						class="info-btn icon btn btn-info btn-xs"\
-								// 						data-toggle="modal"\
-								// 						data-target="#event'+ event.id +'">\
-								// 				</button>' + event.name.text +
-
-								// 				'<!-- Event Details Modal -->\
-								// 				<div id="event' + event.id +'" class="modal fade" role="dialog">\
-								// 					<div class="modal-dialog">\
-								// 						<!-- Modal content-->\
-								// 				    	<div class="modal-content my-modal">\
-								// 				    		<div class="modal-header centered">\
-								// 				    			<button type="button" class="close" data-dismiss="modal">&times;</button>\
-								// 				        		<h4 class="modal-title">' + event.name.text + '</h4>\
-								// 				        		<h5>' + event.venue_id + '</h5>\
-								// 				        		<h5>' + event.start.local + '\
-								// 				      				- ' + event.end.local + '\
-								// 				      			</h5>\
-								// 				      		</div>\
-								// 				      		<div class="modal-body centered">\
-								// 			      			<!-- Event details -->\
-								// 				      			<div>\
-								// 				      				<p>'+ event.description.text +'</p>\
-								// 					      		</div>\
-								// 					  		</div>\
-								// 						</div>\
-								// 					</div>\
-								// 				</div>\
-								// <!-- End Modal -->';
-
 						var nameLink = $('<a>')
 							.attr('id', event.id)
 							.addClass('draggable')
