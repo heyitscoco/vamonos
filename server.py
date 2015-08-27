@@ -175,7 +175,7 @@ def profile(user_id):
 
 	user = User.query.get(user_id)
 	friends = [(friendship.friend_id, friendship.friend.fname, friendship.friend.img_url) for friendship in user.friendships]
-	print '\n\n',user.friendships,'\n\n'
+	
 	return render_template("profile.html", user=user, friends=friends)
 
 
@@ -320,17 +320,14 @@ def edit_permission():
 	
 	if can_edit: # can_edit was 1
 		can_edit = True
-		print '\n\n', can_edit, '\n\n'
 
 	else: # can_edit was 0
 		can_edit = False
-		print '\n\n', can_edit, '\n\n'
 	
 	try:
 		# Check for existing permissions, update if found
 		perm = Permission.query.filter(Permission.user_id == friend_id, Permission.trip_id == trip_id).one()
 		perm.can_edit = can_edit
-		print '\n\nLine333:', perm.can_edit
 
 	except NoResultFound:
 		# Add new permission to DB
