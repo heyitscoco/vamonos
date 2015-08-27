@@ -354,7 +354,6 @@ function getEvents(evt) {
 		
 		var categories_array = $('#categories').val() || [];
 		var categories_str = categories_array.join();
-
 		var free = $('#price-free').prop('checked');
 		var paid = $('#price-paid').prop('checked');
 		var price;
@@ -379,7 +378,7 @@ function getEvents(evt) {
 			"categories": categories_str,
 			"price": price,
 			"sort_by": 'date'
-		};		
+		};
 
 			url = "https://www.eventbriteapi.com/v3/events/search/"
 
@@ -391,25 +390,56 @@ function getEvents(evt) {
 				if (events) {
 					events.forEach(function(event) {
 
-								if (event.logo) {
-									var eventLogo = '<img src="' + event.logo.url + '" style="width: 100%">';
-								} else {
-									var eventLogo = '';
-								}
-								var eventHTML = '<div>' + eventLogo +
-													'<h5>' + event.name.text + '</h5>\
-													<div>' + moment(new Date(event.start.local)).format('dddd M/D, h:mm a') + '</div>\
-													<hr>\
-												</div>';
-						var nameLink = $('<a>')
+						if (event.logo) {
+							var eventLogo = '<img src="' + event.logo.url + '" style="width: 100%">';
+						} else {
+							var eventLogo = '';
+						}
+
+						var eventHTML = '<div>'
+											+ eventLogo +
+											'<h5>' + event.name.text + '</h5>\
+											<div>' + moment(new Date(event.start.local)).format('dddd M/D, h:mm a') + '</div>\
+											<button type="button"\
+												class="info-btn icon btn btn-info btn-xs"\
+												data-toggle="modal"\
+												data-target="#EB-event-' + event.id + '"\
+											</button>\
+											<hr>';
+											
+						var eventModalHTML = '<!-- Event Details Modal -->\
+											<div id="EB-event-' + event.id + '" class="modal fade" role="dialog">\
+												<div class="modal-dialog">\
+													<!-- Modal content-->\
+											    	<div class="modal-content my-modal">\
+											    		<div class="modal-header centered">\
+											    			<button type="button" class="close" data-dismiss="modal">&times;</button>\
+											        		<h4 class="modal-title">' + event.name.text + '</h4>\
+											        		<h5>' + event.start.local + '\
+											      				- ' + event.end.local + '\
+											      			</h5>\
+											      		</div>\
+											      		<div class="modal-body centered">\
+										      			<!-- Event details -->\
+											      			<div>\
+											      				<p>'+ event.description.text +'</p>\
+												      		</div>\
+												  		</div>\
+													</div>\
+												</div>\
+											</div>\
+											<!-- End Modal -->';
+
+						var nameBlock = $('<p>')
 							.attr('id', event.id)
-							.addClass('draggable')
-							.addClass('event-listing')
-							.attr('href', event.url)
-							.attr('target', "_blank")
-							.attr('style', 'display:block')
-						$("#events-list").append(nameLink);
+							.addClass('draggable event-listing')
+
+						$('#event-modals').append(eventModalHTML);
+						// Add the link
+						$("#events-div").append(nameBlock);
+						// Display info inside the link
 						$('#' + event.id).html(eventHTML);
+
 					});
 				} else {
 					// FIXME: WHAT DOES THIS DO?

@@ -7,6 +7,7 @@
 	<div class="col-xs-3">		
 		<!-- Nearby Events-->
 			<div id="nearby-events" class="content" data-latitude={{ trip.latitude }} data-longitude={{ trip.longitude }}>
+				<div id="event-modals"></div>
 				{% if can_edit %}
 					<div>
 						<h3>Events Near {{ trip.city }}</h3>
@@ -16,7 +17,6 @@
 					<button id="toggle-events" class="btn btn-default btn-sm hidden">Show <span class="toggle-text">Events</span><span class="toggle-text" style="display: none">Filters</span></button>
 					<div id="events-div" class="scrollable" style="display: none; height: 500px">
 						<img id='loading-img' style="width: 60px; margin: 0 auto" src="/static/img/loading.gif" class='hidden'>
-						<div id="events-list"></div>
 					</div>
 					<div id="filters-div">
 						<!-- Event Filters -->
