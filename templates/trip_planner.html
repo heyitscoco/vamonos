@@ -433,6 +433,7 @@
 $(document).ready(sendReminders);
 
 $('.multiselect').SumoSelect({ selectAll:true });
+$('.multiselect')[0].sumo.selectAll();
 $('.toggle-view').click(toggleViewPermission);
 $('.toggle-edit').click(toggleEditPermission);
 $('#gen-pdf').click(generatePDF);
