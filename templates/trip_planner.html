@@ -75,105 +75,43 @@
 	<div class="col-xs-9">
 		<div class="row">
 <!-- Permissions -->
-			<div class="col-xs-12 col-sm-6">
+			<div class="col-xs-12 col-sm-8">
 				<div class="content floater-box">
 					<h3>Permissions</h3>
 
-					{% if admin %}
 					<div class="row">
-					<div class="hidden"> <!-- FIXME FIXME FIXME -->
-						<form>
-							<label class="form-group">
-								<select id="friend_id" data-friend-ids="{{ friend_ids }}">
-									{% for name, friend_id, can_view, can_edit in friends %}
-										<option value="{{ friend_id }}">
-											{{ name }}
-										</option>
+						<div class="scrollable col-xs-12" style="height: 100px">
+							<table class="table-striped" style="width: 100%">
+								<thead>
+									<th>Name</th>
+									<th>View</th>
+									<th>Edit</th>
+								</thead>
+								<tbody>
+									{% for fname, friend_id, can_view, can_edit in friends %}
+									<tr>
+										<td>{{ fname }}</td>
+										<td>
+											<img id="view-img-{{ friend_id }}" class="toggle-view icon" data-view="{{ can_view }}" data-friend="{{ friend_id }}" src="/static/img/{{ can_view }}.png">
+										</td>
+										<td>
+											<img id="edit-img-{{ friend_id }}" class="toggle-edit icon" data-edit="{{ can_edit }}" data-friend="{{ friend_id }}" src="/static/img/{{ can_edit }}.png">
+										</td>
+									</tr>
 									{% endfor %}
-								</select>
-							</label>
-							<label class="form-group">
-								<input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
-							</label>
-							<label class="form-group">
-								<input type="submit" value="" id="submit-view" class="icon view-btn btn-xs">
-							</label>
-							<label class="form-group">
-								<span class="edit-span">
-									<input type="submit" value="" id="submit-edit" class="icon edit-btn btn-xs">
-								</span>
-							</label>
-						</form>
-					</div>
-					{% endif %}
-					
-					{% if admin %}
-					<div class="scrollable col-xs-12" style="height: 100px">
-					{% endif %}
-						<table class="table-striped" style="width: 100%">
-							<thead>
-								<th>Name</th>
-								<th>View</th>
-								<th>Edit</th>
-							</thead>
-							<tbody>
-								{% for fname, friend_id, can_view, can_edit in friends %}
-								<tr>
-									<td>{{ fname }}</td>
-									<td>
-										<img id="view-img-{{ friend_id }}" class="toggle-view icon" data-view="{{ can_view }}" data-friend="{{ friend_id }}" src="/static/img/{{ can_view }}.png">
-									</td>
-									<td>
-										<img id="edit-img-{{ friend_id }}" class="toggle-edit icon" data-view="{{ can_view }}" data-edit="{{ can_edit }}" data-friend="{{ friend_id }}" src="/static/img/{{ can_edit }}.png">
-									</td>
-								</tr>
-								{% endfor %}
-							</tbody>
-						</table>
-
-
-
-						<!-- <ul id="perms-list">
-
-							{% for perm in permissions %}
-								<li>
-									{% if admin %}
-										<form action="/rm_permission" method="POST" style="display: inline-block">
-											<label>
-												<input type="hidden" name="friend_id" value="{{ perm.user_id }}">
-											</label>
-											<label>
-												<input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
-											</label>
-											<label>
-												<input type="submit" value="" class="icon delete-btn edit-perms btn btn-default btn-xs">
-											</label>
-										</form>
-									{% endif %}
-									<a href="/user{{ perm.user_id }}/profile">{{ perm.user.fname }}</a>
-									{% if perm.can_edit %}
-										<span id="friend{{ perm.user_id }}">(editor)</span>
-									{% else %}
-										<span class="hidden" id="friend{{ perm.user_id }}"></span>
-									{% endif %}
-								</li>
-							{% endfor %}
-
-						</ul> -->
-
-					{% if admin %}
-					</div>
-					</div>
-					{% endif %}
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
+			</div>
 <!-- Details -->
-			<div class="col-xs-12 col-sm-6">
+			<div class="col-xs-12 col-sm-4">
 				<div class="content floater-box scrollable" id="trip-date-details" data-start-date='{{ trip.start }}' data-end-date='{{ trip.end }}'>
 					<h3>Details</h3>
 					<ul>
 						<li>
-							Destination: {{ trip.address }}
+							{{ trip.address }}
 						</li>
 						<li>
 							{% if admin %}

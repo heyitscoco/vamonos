@@ -183,17 +183,23 @@ function toggleViewPermission(evt) {
 		tripId: tripId,
 		canEdit: 0
 	};
-
-	if (canView === "True") {
+	console.log(evt);
+	if (canView === "True") { // If user was able to view, switch to not viewing & not editing
 		$.post('/rm_permission', data, function(result) {
-			// AJAX the DOM
+			// Update DOM images for view & edit
+			$('#edit-img-' + friendId).attr('src', '/static/img/False.png');
 			evt.target.src = '/static/img/False.png';
+
+			// Update data- attributes for view & edit
+			$('#edit-img-' + friendId).attr('data-edit', 'False');
 			evt.target.dataset.view = 'False';
 		});
-	} else {
+	} else { // If user was unable to view, switch to viewing
 		$.post('/edit_permission', data, function(result) {
-			// AJAX the DOM
+			// Update the DOM image for viewing
 			evt.target.src = '/static/img/True.png';
+
+			// Update the data- attribute for viewing
 			evt.target.dataset.view = 'True';
 		});
 	};
@@ -208,9 +214,10 @@ function toggleEditPermission(evt) {
 
 	if (canEdit === 'False') {
 		canEdit = 0;
-		$('#view-img-' + friendId).attr('src', '/static/img/True.png')
+		// Update DOM images for view & edit
+		$('#view-img-' + friendId).attr('src', '/static/img/True.png');
+		$('#view-img-' + friendId).attr('data-view', 'True');
 		evt.target.src = '/static/img/True.png';
-		evt.target.dataset.view = 'True';
 		evt.target.dataset.edit = 'True';
 	} else {
 		canEdit = 1;
