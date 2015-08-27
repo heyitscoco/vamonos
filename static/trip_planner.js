@@ -213,14 +213,14 @@ function toggleEditPermission(evt) {
 	var tripId = $("#agenda").data("trip");
 
 	if (canEdit === 'False') {
-		canEdit = 0;
+		canEdit = 1;
 		// Update DOM images for view & edit
 		$('#view-img-' + friendId).attr('src', '/static/img/True.png');
 		$('#view-img-' + friendId).attr('data-view', 'True');
 		evt.target.src = '/static/img/True.png';
 		evt.target.dataset.edit = 'True';
 	} else {
-		canEdit = 1;
+		canEdit = 0;
 		evt.target.src = '/static/img/False.png'
 		evt.target.dataset.edit = 'False';
 	}
@@ -231,7 +231,9 @@ function toggleEditPermission(evt) {
 		canEdit: canEdit
 	}
 
-	$.post('/edit_permission', data);
+	$.post('/edit_permission', data, function() {
+		console.log('did it!');
+	});
 
 }
 

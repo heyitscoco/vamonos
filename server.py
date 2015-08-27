@@ -317,16 +317,20 @@ def edit_permission():
 	friend_id = int(request.form.get("friendId"))
 	can_edit = int(request.form.get("canEdit"))
 
+	
 	if can_edit: # can_edit was 1
 		can_edit = True
+		print '\n\n', can_edit, '\n\n'
+
 	else: # can_edit was 0
 		can_edit = False
+		print '\n\n', can_edit, '\n\n'
 	
 	try:
 		# Check for existing permissions, update if found
 		perm = Permission.query.filter(Permission.user_id == friend_id, Permission.trip_id == trip_id).one()
 		perm.can_edit = can_edit
-		db.session.flush()
+		print '\n\nLine333:', perm.can_edit
 
 	except NoResultFound:
 		# Add new permission to DB
