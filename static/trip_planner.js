@@ -415,8 +415,8 @@ function getEvents(evt) {
 											    		<div class="modal-header centered">\
 											    			<button type="button" class="close" data-dismiss="modal">&times;</button>\
 											        		<h4 class="modal-title">' + event.name.text + '</h4>\
-											        		<h5>' + event.start.local + '\
-											      				- ' + event.end.local + '\
+											        		<h5>' + moment(new Date(event.start.local)).format('dddd M/D, h:mm a') + '\
+											      				- ' + moment(new Date(event.end.local)).format('dddd M/D, h:mm a') + '\
 											      			</h5>\
 											      		</div>\
 											      		<div class="modal-body centered">\
@@ -434,8 +434,9 @@ function getEvents(evt) {
 							.attr('id', event.id)
 							.addClass('draggable event-listing')
 
+						// Add the modal to the DOM
 						$('#event-modals').append(eventModalHTML);
-						// Add the link
+						// Add the link to the DOM
 						$("#events-div").append(nameBlock);
 						// Display info inside the link
 						$('#' + event.id).html(eventHTML);
