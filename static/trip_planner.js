@@ -183,7 +183,7 @@ function toggleViewPermission(evt) {
 		tripId: tripId,
 		canEdit: 0
 	};
-	console.log(evt);
+	
 	if (canView === "True") { // If user was able to view, switch to not viewing & not editing
 		$.post('/rm_permission', data, function(result) {
 			// Update DOM images for view & edit
@@ -231,9 +231,7 @@ function toggleEditPermission(evt) {
 		canEdit: canEdit
 	}
 
-	$.post('/edit_permission', data, function() {
-		console.log('did it!');
-	});
+	$.post('/edit_permission', data);
 
 }
 

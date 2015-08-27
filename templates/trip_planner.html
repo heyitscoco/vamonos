@@ -80,27 +80,32 @@
 					<h3>Permissions</h3>
 
 					<div class="row">
-						<div class="scrollable col-xs-12" style="height: 100px">
+						<div class="col-xs-12">
+							<!-- Separate tables are used for thead and tbody, so that the body is scrollable -->
 							<table class="table-striped" style="width: 100%">
 								<thead>
 									<th>Name</th>
 									<th>View</th>
 									<th>Edit</th>
 								</thead>
-								<tbody>
-									{% for fname, friend_id, can_view, can_edit in friends %}
-									<tr>
-										<td>{{ fname }}</td>
-										<td>
-											<img id="view-img-{{ friend_id }}" class="toggle-view icon" data-view="{{ can_view }}" data-friend="{{ friend_id }}" src="/static/img/{{ can_view }}.png">
-										</td>
-										<td>
-											<img id="edit-img-{{ friend_id }}" class="toggle-edit icon" data-edit="{{ can_edit }}" data-friend="{{ friend_id }}" src="/static/img/{{ can_edit }}.png">
-										</td>
-									</tr>
-									{% endfor %}
-								</tbody>
 							</table>
+							<div class="scrollable" style="height: 100px">
+								<table class="table-striped" style="width: 100%">
+									<tbody>
+										{% for fname, friend_id, can_view, can_edit in friends %}
+										<tr>
+											<td>{{ fname }}</td>
+											<td>
+												<img id="view-img-{{ friend_id }}" class="toggle-view icon" data-view="{{ can_view }}" data-friend="{{ friend_id }}" src="/static/img/{{ can_view }}.png">
+											</td>
+											<td>
+												<img id="edit-img-{{ friend_id }}" class="toggle-edit icon" data-edit="{{ can_edit }}" data-friend="{{ friend_id }}" src="/static/img/{{ can_edit }}.png">
+											</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
