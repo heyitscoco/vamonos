@@ -658,19 +658,17 @@ def add_event(event_id, trip_id):
 def rm_event():
 	"""Removes an event from the trip"""
 	
-	event_id = request.form.get("event_id")
-	trip_id = int(request.form.get("trip_id"))
+	event_id = int(request.form.get("eventId"))
 
-	event = Event.query.filter(Event.event_id == event_id, Day.trip_id == trip_id).first()
+	event = Event.query.get(event_id)
+
+	for att in event.attendances:
+		db.session.delete(att)
 
 	db.session.delete(event)
 	db.session.commit()
 
-	msg = "You have successfully removed this event."
-	flash(msg)
-
-	url = "/trip%d" % (trip_id)
-	return redirect(url)
+	return "hello" # FIXME: Don't return this!
 
 
 

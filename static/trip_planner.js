@@ -332,15 +332,29 @@ function generatePDF() {
 	var formInputs = { tripId: tripId };
 
 	$.post("/pdf", formInputs, function (result) {
-		result = JSON.parse(result);
+		var result = JSON.parse(result);
 		var filename = result.filename;
 		var url = "/itinerary" + tripId;
 		window.open(url, "_blank");
 	})
 }
 
-function formatDatetime(dtString, fmt) {
+function rmEvent(evt) {
+	evt.preventDefault();
 
+	var eventId = evt.target.dataset.event;
+	console.log(evt);
+	var eventInfo = {
+		eventId: eventId
+	};
+
+	$('.modal-backdrop').removeClass('in')
+						.addClass('out');
+
+	$("#event-div-" + eventId).addClass('hidden');
+
+
+	$.post("/rm_event", eventInfo);
 }
 
 

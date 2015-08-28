@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Trip Planner{% endblock %}
+{% block title %}Friends{% endblock %}
 
 {% block content %}
 
@@ -31,6 +31,8 @@
 				</a>
 			{% endfor %}
 		{% endif %}
+
+		{% if user.user_id == session['user_id'] %}
 		<form action="/add_friend" method="POST">
 			<h2>Add a friend:</h2>
 			<label>
@@ -40,6 +42,7 @@
 				<input type="submit" value="+" class="btn btn-info btn-sm">
 			</label>
 		</form>
+		{% endif %}
 	</div>
 <!-- Edit Phone Modal -->
 	<!-- Modal Window-->

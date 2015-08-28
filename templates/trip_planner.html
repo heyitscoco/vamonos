@@ -222,16 +222,16 @@
 									<td class="day-column">
 										<div id='day{{ day.day_id }}-events' class="scrollable" style="height: 270px">
 											{% for event in day.events %}
-												<div class="event-div">
+												<div class="event-div" id="event-div-{{ event.event_id }}">
 													<p data-toggle="modal"
-													   data-target="#event{{ event.event_id }}"
+													   data-target="#event-{{ event.event_id }}-modal"
 													   style="display: inline-block; width: 80%">
 													   {{ event.title }}
 													</p>
     												
 								<!-- Event Details Modal -->
 													<!-- Modal Window-->
-													<div id="event{{ event.event_id }}" class="modal fade" role="dialog">
+													<div id="event-{{ event.event_id }}-modal" class="modal fade" role="dialog">
 														<div class="modal-dialog">
 
 															<!-- Modal content-->
@@ -323,7 +323,7 @@
 																				<input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
 																			</label>
 																			<label>
-																				<input type="submit" value="" class="icon delete-btn edit-perms btn btn-default btn-xs">
+																				<input type="submit" data-event="{{ event.event_id}}" value="" class="delete-event icon delete-btn edit-perms btn btn-default btn-xs">
 																			</label>
 																		</form>
 																	{% endif %}
@@ -430,6 +430,7 @@ $(document).ready(sendReminders);
 $('.toggle-view').click(toggleViewPermission);
 $('.toggle-edit').click(toggleEditPermission);
 $('#gen-pdf').click(generatePDF);
+$('.delete-event').click(rmEvent);
 $('.attending-btn').click(addAttendee);
 $('.not-attending-btn').click(rmAttendee);
 $('.edit-description').click(editDescription);
