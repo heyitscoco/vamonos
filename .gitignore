@@ -5,4 +5,7 @@ secrets.sh
 static/img/
 itinerary*
 plans/
+static/jquery-*
 static/data/
+static/sumoselect/
+static/temp*
