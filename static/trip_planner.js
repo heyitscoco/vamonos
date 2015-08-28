@@ -411,6 +411,14 @@ function getEvents(evt) {
 							var eventLogo = '';
 						}
 
+						if (event.url) {
+							var eventbriteButtonHTML = '<a href=' + event.url + ' target="_blank"data-toggle="tooltip" title="View on Eventbrite">\
+																						<img src="/static/img/eventbrite.png" class="icon">\
+																					</a>'
+						} else {
+							var eventbriteButtonHTML = ''
+						};
+
 						var eventHTML = '<div>'
 											+ eventLogo +
 											'<h5>' + event.name.text + '</h5>\
@@ -430,15 +438,16 @@ function getEvents(evt) {
 											    	<div class="modal-content my-modal">\
 											    		<div class="modal-header centered">\
 											    			<button type="button" class="close" data-dismiss="modal">&times;</button>\
-											        		<h4 class="modal-title">' + event.name.text + '</h4>\
+											    			<h3>' + event.name.text + '</h3>\
 											        		<h5>' + moment(new Date(event.start.local)).format('dddd M/D, h:mm a') + '\
-											      				- ' + moment(new Date(event.end.local)).format('dddd M/D, h:mm a') + '\
+											      				- ' + moment(new Date(event.end.local)).format('dddd M/D, h:mm a') + ''
+											      					+ eventbriteButtonHTML + '\
 											      			</h5>\
 											      		</div>\
 											      		<div class="modal-body centered">\
 										      			<!-- Event details -->\
 											      			<div>\
-											      				<p class="scrollable" style="height: 140px">'+ event.description.text +'</p>\
+											      				<p class="scrollable" style="height: 240px">'+ event.description.text +'</p>\
 												      		</div>\
 												  		</div>\
 													</div>\

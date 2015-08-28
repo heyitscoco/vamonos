@@ -5,47 +5,42 @@
 {% block content %}
 
 <div class="row">
-	<div class="col-xs-12 centered no-div">
-		<!-- Main Content -->
-		<h1><b><i>¡Vamonos!</i></b></h1>
+	<div class="col-xs-12 centered no-div" style="padding: 2%">
+		<h1><b><i>¡Vámonos!</i></b></h1>
 		<h3>Plan your travel. Together.</h3>
 	</div>
 </div>
 
 <div class="row">
-	<div class="col-xs-12 centered" id="event-streams" data-cities="{{ citiesJSON }}" style="margin-top: 5em">
-		<h3 class="no-div">Browse Cities</h3>
+	<div class="col-xs-12 centered" id="event-streams" data-cities="{{ citiesJSON }}" style="display:inline-block; margin-top: 5em">
+		<!-- <h3 class="no-div">Browse Cities</h3> -->
 		{% for city in cities %}
-			<div class="city-img" data-target="#modal-{{ city }}">
-				<img src="/static/img/{{ city }}.jpg" data-city="{{ city }}" style="max-width: 100%">
+			<div class="city-div" style="display:inline-block; background-color: white">
+				<div class="city-img" data-target="#modal-{{ city }}">
+					<img src="/static/img/{{ city }}.jpg" data-city="{{ city }}" style="max-width: 100%">
+				</div>
+				<h3 class="">{{ city }}</h3>
 			</div>
-
-			<div id="{{ city }}-events-div" class="row city-events-div" style="display: none">
-				<div class="col-xs-12">
-					<table class="table">
-						<thead>
-							<th>Event</th>
-							<th>Description</th>
-						</thead>
-						<tbody id="{{ city }}-events">
-							<tr>
-								<td>hello</td>
-								<td>hello</td>
-							</tr>
-							<tr>
-								<td>hello</td>
-								<td>hello</td>
-							</tr>
-							<tr>
-								<td>hello</td>
-								<td>hello</td>
-							</tr>
-						</tbody>
+		{% endfor %}
+	</div>
+</div>
+<div class="row" style="height: 500px">
+	<div class="col-xs-12 centered">
+		{% for city in cities %}
+			<div id="{{ city }}-events-div" class="city-events-div" style="width: 60%; margin: 20px auto 0; display: none">
+				<table class="table" style="margin-bottom: 0">
+					<thead>
+						<th>Event</th>
+						<th>Description</th>
+					</thead>
+				</table>
+				<div class="scrollable" style="height: 380px">
+					<table class="table" style="margin: 0">
+						<tbody id="{{ city }}-events"></tbody>
 					</table>
 				</div>
 			</div>
 		{% endfor %}
-
 	</div>
 </div>
 
@@ -92,18 +87,21 @@ function getEvents() {
 
 function toggleEventsDiv(evt) {
 	var city = evt.target.dataset.city;
+	
+	$('.city-div').removeClass('active-droppable');
 	$('.city-events-div').hide('fast');
-	// console.dir($('#' + city + '-events-div'));
 
-	console.log($('#' + city + '-events-div'));
-	if (true) {
-		$('#' + city + '-events-div').toggle('fast');
+	var eventsElement = $('#' + city + '-events-div');
+
+	if (! eventsElement.is(":visible")) {
+		$(this).addClass('active-droppable');
+		$('#' + city + '-events-div').show();
 	};
 }
 
 // Event listeners
-// $(document).ready(getEvents);
-$('.city-img').click(toggleEventsDiv);
+$(document).ready(getEvents);
+$('.city-div').click(toggleEventsDiv);
 
 </script>
 {% endblock %}

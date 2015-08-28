@@ -207,7 +207,7 @@
 												 data-start="{{ trip.start | datetime }}"
 												 data-end="{{ trip.end | datetime(trip_end=True) }}">
 					<h3>Agenda</h3>
-					<div style="height: 380px">
+					<div>
 						<table id="agenda-table">
 							<thead>
 								{% for day in trip.days %}
@@ -220,7 +220,7 @@
 								<tr>
 								{% for day in trip.days %}
 									<td class="day-column">
-										<div id='day{{ day.day_id }}-events' class="scrollable" style="height: 300px">
+										<div id='day{{ day.day_id }}-events' class="scrollable" style="height: 270px">
 											{% for event in day.events %}
 												<div class="event-div">
 													<p data-toggle="modal"
@@ -427,8 +427,6 @@
 // Event listeners
 $(document).ready(sendReminders);
 
-$('.multiselect').SumoSelect({ selectAll:true });
-$('.multiselect')[0].sumo.selectAll();
 $('.toggle-view').click(toggleViewPermission);
 $('.toggle-edit').click(toggleEditPermission);
 $('#gen-pdf').click(generatePDF);
@@ -440,6 +438,8 @@ $('.cancel-description').click(cancelDescription);
 $('#retrieve-events-btn').click(getEvents);
 $('.distance').on('input', syncDistanceValues);
 $('#toggle-events').click(toggleEvents);
+$('.multiselect').SumoSelect({ selectAll:true });
+$('.multiselect')[0].sumo.selectAll();
 
 </script>
 {% endblock %}

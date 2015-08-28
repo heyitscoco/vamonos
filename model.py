@@ -181,7 +181,7 @@ class Trip(db.Model):
 				trip = day.trip
 				day_start = declare_tz(day.start, trip.tz_name)
 				day_start = datetime.strftime(day_start, "%b %d")
-				day_header = "%s (Day %d)" % (day_start, day.day_num)
+				day_header = "%s (Day %d):" % (day_start, day.day_num)
 
 				my_canvas.drawString(100, y, day_header)
 				y += 20
@@ -204,6 +204,7 @@ class Trip(db.Model):
 						friend_names = 'Attending: ' + ' '.join(friend_names)
 						my_canvas.drawString(100, y, friend_names)
 						y += 20
+					y += 20
 				y += 20
 
 		my_canvas.showPage

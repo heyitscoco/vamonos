@@ -65,9 +65,9 @@ def show_pdf(trip_id):
 def home():
 	"""Displays homepage"""
 
-	cities = ['Dubai', 'Madrid', 'Amsterdam', 'London', 'Paris', 'Berlin', 'Venice', 'Stockholm']
+	cities = ['Dubai', 'Madrid', 'Amsterdam', 'London' , 'Paris', 'Berlin', 'Venice', 'Stockholm']
 	random.shuffle(cities)
-	cities_sample = random.sample(cities, 8)
+	cities_sample = random.sample(cities, 5)
 
 
 	cities_dict = {}

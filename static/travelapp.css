@@ -2,10 +2,16 @@ body {
 	background-image: url('/static/img/wood.jpg');
 	background-size: 100%;
 	font-family: 'Century Gothic';
+	color: #5A5A5B;
 }
 
 table {
 	table-layout: fixed;
+	background-color: rgba(255,255,255,0.8);
+}
+
+a {
+	color: #5A5A5B;
 }
 
 hr {
@@ -13,8 +19,9 @@ hr {
 	background-color: gray;
 }
 
-#agenda-table {
-	min-height: 380px;
+#agenda {
+	margin-top: 30px;
+	height: 470px;
 }
 
 #agenda-table th {
@@ -24,23 +31,6 @@ hr {
 #agenda-table th, #agenda-table td {
 	max-width: 260px;
 	min-width: 260px;
-}
-
-th {
-	background-color: rgba(255,255,255, 0.7);
-}
-
-td {
-	background-color: rgba(255,255,255, 0.5);
-}
-
-ul {
-	list-style-type: none;
-}
-
-select {
-    border: 1px solid white;
-    background-color: rgba(0,0,0,0);
 }
 
 .day-column {
@@ -59,6 +49,15 @@ select {
 	border-bottom: 1px dotted gray;
 }
 
+ul {
+	list-style-type: none;
+}
+
+select {
+    border: 1px solid white;
+    background-color: rgba(0,0,0,0);
+}
+
 .pro-pic {
 	width: 200px;
 	display: inline-block;
@@ -75,7 +74,6 @@ select {
 
 .view-btn {
 	background-image: url("/static/img/view.png");
-
 }
 
 .delete-btn {
@@ -101,7 +99,7 @@ select {
 }
 
 .content {
-	background-color: rgba(255,255,255, 0.8);
+	background-color: rgba(255,255,255, 0.9);
 	border: solid 1px white;
 	padding: 1em;
 }
@@ -121,8 +119,7 @@ select {
 }
 
 .navbar {
-	background-color: rgba(255,255,255, 0.8);
-	opacity: 0.8;
+	background-color: white;
 	border: 2px solid white;
 }
 
@@ -140,10 +137,6 @@ select {
 	padding: 1em;
 }
 
-#agenda {
-	height: 500px;
-}
-
 #nearby-events {
 	height: 700px;
 }
@@ -156,20 +149,12 @@ select {
 	width: 280px;
 	height: 280px;
 	display: inline-block;
-	/*background-image: url('/static/img/blank.png');*/
 	background-size: 100%;
 	border: 5px solid white;
 }
 
 h1 {
 	font-size: 80px;
-}
-
-.day {
-	border-right: solid 1px white;
-	display: inline-block;
-	padding: 1em;
-	height: 400px;
 }
 
 .friend-name {
