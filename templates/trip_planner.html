@@ -223,13 +223,11 @@
 										<div id='day{{ day.day_id }}-events'>
 											{% for event in day.events %}
 												<div class="event-div">
-													<p style="display: inline-block; width: 80%">{{ event.title }}</p>
-													<button type="button"
-															style="display: inline-block"
-															class="icon info-btn btn btn-default btn-xs"
-															data-toggle="modal"
-															data-target="#event{{ event.event_id }}">
-													</button>
+													<p data-toggle="modal"
+													   data-target="#event{{ event.event_id }}"
+													   style="display: inline-block; width: 80%">
+													   {{ event.title }}
+													</p>
     												
 								<!-- Event Details Modal -->
 													<!-- Modal Window-->

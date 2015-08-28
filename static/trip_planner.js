@@ -111,12 +111,11 @@ function handleDropEvent(event, ui) {
 				var mapHTML = '';
 			}
 			console.log(eventObj.address);
-			var eventHTML = '<button type="button"\
-									class="info-btn icon btn btn-info btn-xs"\
-									data-toggle="modal"\
-									data-target="#event'+ eventObj.eventId +'">\
-							</button>' + eventObj.title +
-
+			var eventHTML = '<p style="display: inline-block; width: 80%"\
+								data-toggle="modal"\
+								data-target="#event'+ eventObj.eventId +'">'
+								+ eventObj.title +
+							'</p>' +
 							'<!-- Event Details Modal -->\
 							<div id="event' + eventObj.eventId +'" class="modal fade" role="dialog">\
 								<div class="modal-dialog">\
