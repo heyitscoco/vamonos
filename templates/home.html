@@ -49,55 +49,8 @@
 
 
 {% block scripts %}
+<script src="/static/home.js"></script>
 <script>
-
-// Functions
-function getEvents() {
-
-	// iterate thru cities
-	var citiesJSON = $("#event-streams").data("cities");
-	var cities = Object.keys(citiesJSON);
-
-	cities.forEach(function (city) {
-		var data = { "venue.city": city,
-					 "token": "6OLY723AIVYNJBX63FFX",
-					 "sort_by": "best",
-					 "popular": 1
-					};
-		url = "https://www.eventbriteapi.com/v3/events/search/"
-
-		// request events for that city
-		$.get(url, data, function(result) {
-
-			var events = result.events;
-
-			events.forEach(function(event) {
-				var eventHTML = '<tr>\
-									<td>' + event.name.text + '</td>\
-									<td>\
-										<div style="height: 100px" class="scrollable">' + event.description.text + '</div>\
-									</td>\
-								</tr>';
-
-				$("#" + city + "-events").append(eventHTML);
-			})
-		})
-	});
-}
-
-function toggleEventsDiv(evt) {
-	var city = evt.target.dataset.city;
-	
-	$('.city-div').removeClass('active-droppable');
-	$('.city-events-div').hide('fast');
-
-	var eventsElement = $('#' + city + '-events-div');
-
-	if (! eventsElement.is(":visible")) {
-		$(this).addClass('active-droppable');
-		$('#' + city + '-events-div').show();
-	};
-}
 
 // Event listeners
 $(document).ready(getEvents);

@@ -172,7 +172,7 @@ def logout():
 @app.route("/user<int:user_id>/profile")
 def profile(user_id):
 	"""Displays a user's profile"""
-	
+
 	user = User.query.get(user_id)
 	friends = [(friendship.friend_id, friendship.friend.fname, friendship.friend.img_url) for friendship in user.friendships]
 	
@@ -725,8 +725,9 @@ def rm_attendee():
 	return 'It worked' # FIXME: return status code 200.
 
 
+
 #############################################################
-# Jinja2 Filters
+# Jinja2 Filter
 
 @app.template_filter('datetime')
 def _format_datetime(dt, format=None, trip_end=False):
