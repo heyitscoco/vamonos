@@ -10,8 +10,6 @@ from reportlab.pdfgen import canvas
 from twilio.rest import TwilioRestClient
 from os import environ
 
-import unittest, server
-
 
 eb_token = environ['EB_PERSONAL_OAUTH']
 tw_token = environ['TW_AUTH_TOKEN']
@@ -533,30 +531,12 @@ def connect_to_db(app):
     db.init_app(app)
 
 ########################################################################
-# Testing
-
-class IntegrationTestCase(unittest.TestCase):
-    def test_home(self):
-        test_client = server.app.test_client()
-        result = test_client.get('/')
-        self.assertEqual(result.status_code, 200)
-        self.assertIn('text/html', result.headers['Content-Type'])
-        self.assertIn('<h3>Plan your travel. Together.</h3>', result.data)
-
-    def test_login(self):
-    	test_client = server.app.test_client()
-    	result = test_client.get('/login')
-    	print result
-    	self.assertIn('Login', result.data)
-
 
 if __name__ == "__main__":
-	unittest.main()
 	from server import app
 	connect_to_db(app)
 	print "Connected to DB."
     
-
     # db.create_all()
     # print "DB tables built."
 
