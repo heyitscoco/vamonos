@@ -348,12 +348,9 @@ function rmEvent(evt) {
 		eventId: eventId
 	};
 
-	$('.modal-backdrop').removeClass('in')
-						.addClass('out');
-
+	$('.modal-backdrop').removeClass('modal-backdrop fade in');
 	$("#event-div-" + eventId).addClass('hidden');
-
-
+	
 	$.post("/rm_event", eventInfo);
 }
 
