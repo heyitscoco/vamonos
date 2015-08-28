@@ -311,7 +311,7 @@ function cancelDescription(evt) {
 function addAttendee(evt) {
 	evt.preventDefault();
 
-	var eventId = $('#event-id').val()
+	var eventId = evt.target.dataset.event;
 	var formInputs = { eventId: eventId };
 	$.post('/add_attendee', formInputs, function() {
 		$('#fname-' + eventId).removeClass('hidden');
@@ -320,7 +320,7 @@ function addAttendee(evt) {
 
 function rmAttendee(evt) {
 	evt.preventDefault();
-	var eventId = $('#event-id').val()
+	var eventId = evt.target.dataset.event;
 	var formInputs = { eventId: eventId };
 	$.post('/rm_attendee', formInputs, function() {
 		$('#fname-' + eventId).addClass('hidden');
