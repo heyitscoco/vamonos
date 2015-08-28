@@ -172,7 +172,7 @@ def logout():
 @app.route("/user<int:user_id>/profile")
 def profile(user_id):
 	"""Displays a user's profile"""
-
+	
 	user = User.query.get(user_id)
 	friends = [(friendship.friend_id, friendship.friend.fname, friendship.friend.img_url) for friendship in user.friendships]
 	
