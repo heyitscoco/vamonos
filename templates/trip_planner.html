@@ -208,7 +208,7 @@
 												 data-end="{{ trip.end | datetime(trip_end=True) }}">
 					<h3>Agenda</h3>
 					<div class="scrollable">
-						<table>
+						<table id="agenda-table" style="height: 380px">
 							<thead>
 								{% for day in trip.days %}
 								<th style="text-align: center" class="agenda-table">
@@ -219,17 +219,18 @@
 							<tbody>
 								<tr>
 								{% for day in trip.days %}
-									<td class="agenda-table">
+									<td class="day-column">
 										<div id='day{{ day.day_id }}-events'>
 											{% for event in day.events %}
-												<div class="event">
+												<div class="event-div">
+													<p style="display: inline-block; width: 80%">{{ event.title }}</p>
 													<button type="button"
+															style="display: inline-block"
 															class="icon info-btn btn btn-default btn-xs"
 															data-toggle="modal"
 															data-target="#event{{ event.event_id }}">
 													</button>
-    												{{ event.title }}
-
+    												
 								<!-- Event Details Modal -->
 													<!-- Modal Window-->
 													<div id="event{{ event.event_id }}" class="modal fade" role="dialog">

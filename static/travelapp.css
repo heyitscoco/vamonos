@@ -35,6 +35,22 @@ select {
     background-color: rgba(0,0,0,0);
 }
 
+.day-column {
+	padding: 1.25em;
+	border-top: 1px dotted gray;
+	border-right: 1px dotted gray;
+}
+
+#agenda-table tr td:last-child {
+	border-right: none;
+}
+
+.event-div {
+	padding: 0.5em 0;
+	border-top: 1px dotted gray;
+	border-bottom: 1px dotted gray;
+}
+
 .pro-pic {
 	width: 200px;
 	display: inline-block;
