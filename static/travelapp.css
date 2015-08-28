@@ -15,8 +15,6 @@ hr {
 
 #agenda-table {
 	min-height: 380px;
-	max-height: 380px;
-	overflow: scroll;
 }
 
 #agenda-table th {
