@@ -13,9 +13,19 @@ hr {
 	background-color: gray;
 }
 
-.agenda-table {
-	/*border: 1px solid white;*/
-	width: 300px;
+#agenda-table {
+	min-height: 380px;
+	max-height: 380px;
+	overflow: scroll;
+}
+
+#agenda-table th {
+	text-align: center;
+}
+
+#agenda-table th, #agenda-table td {
+	max-width: 260px;
+	min-width: 260px;
 }
 
 th {

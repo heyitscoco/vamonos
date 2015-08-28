@@ -207,11 +207,11 @@
 												 data-start="{{ trip.start | datetime }}"
 												 data-end="{{ trip.end | datetime(trip_end=True) }}">
 					<h3>Agenda</h3>
-					<div class="scrollable">
-						<table id="agenda-table" style="height: 380px">
+					<div class="scrollable" style="height: 380px">
+						<table id="agenda-table">
 							<thead>
 								{% for day in trip.days %}
-								<th style="text-align: center" class="agenda-table">
+								<th>
 									<h5>{{ day.start | datetime('date-short') }}: Day {{ day.day_num }}</h5>
 								</th>
 								{% endfor %}
