@@ -47,9 +47,8 @@ function handleDropEvent(event, ui) {
 	var eventId = draggable.attr('id');
 	var tripId = $("#agenda").data("trip");
 
+	// Add the event to the DB and update the DOM
 	var url = '/add_event/' + eventId + '/' + tripId;
-
-	// Add the event to the DB and the DOM
 	$.get(url, function(result) {
 
 		var eventObj = JSON.parse(result).event;
@@ -63,10 +62,10 @@ function handleDropEvent(event, ui) {
 		// Create the list item
 		var selector = '#day' + eventObj.dayId + '-events';
 		$(selector).append(eventListItem);
-
+		
 
 		// get the google API token
-		$.get('/google_token', function(result) {
+		$.post('/google_token', function(result) {
 
 			var googleToken = JSON.parse(result).googleToken;
 			
@@ -110,7 +109,6 @@ function handleDropEvent(event, ui) {
 			} else {
 				var mapHTML = '';
 			}
-			console.log(eventObj.address);
 			var eventHTML = '<p style="display: inline-block; width: 80%"\
 								data-toggle="modal"\
 								data-target="#event'+ eventObj.eventId +'">'
@@ -343,7 +341,6 @@ function rmEvent(evt) {
 	evt.preventDefault();
 
 	var eventId = evt.target.dataset.event;
-	console.log(evt);
 	var eventInfo = {
 		eventId: eventId
 	};
@@ -365,8 +362,7 @@ function getEvents(evt) {
 	$("#events-div").html('');
 	// Get my token from the server
 	$.get("/token", function (result) {
-		var parsedJSON = JSON.parse(result);
-		var token = parsedJSON.token
+		var token = JSON.parse(result).token;
 
 		// Get filter info from data- attributes
 		var tripId = $("#agenda").data("trip");
@@ -407,88 +403,88 @@ function getEvents(evt) {
 			"sort_by": 'date'
 		};
 
-			url = "https://www.eventbriteapi.com/v3/events/search/"
+		url = "https://www.eventbriteapi.com/v3/events/search/"
 
-			// request events
-			$.get(url, filters, function(result) {
-				var events = result.events;
-				$('#toggle-events').removeClass('hidden');
+		// request events
+		$.get(url, filters, function(result) {
+			var events = result.events;
+			$('#toggle-events').removeClass('hidden');
 
-				// add event names to the "Nearby Events" sidebar
-				if (events[0]) {
-					events.forEach(function(event) {
+			// add event names to the "Nearby Events" sidebar
+			if (events[0]) {
+				events.forEach(function(event) {
 
-						if (event.logo) {
-							var eventLogo = '<img src="' + event.logo.url + '" style="width: 100%">';
-						} else {
-							var eventLogo = '';
-						}
+					if (event.logo) {
+						var eventLogo = '<img src="' + event.logo.url + '" style="width: 100%">';
+					} else {
+						var eventLogo = '';
+					}
 
-						if (event.url) {
-							var eventbriteButtonHTML = '<a href=' + event.url + ' target="_blank"data-toggle="tooltip" title="View on Eventbrite">\
-																						<img src="/static/img/eventbrite.png" class="icon">\
-																					</a>'
-						} else {
-							var eventbriteButtonHTML = ''
-						};
+					if (event.url) {
+						var eventbriteButtonHTML = '<a href=' + event.url + ' target="_blank"data-toggle="tooltip" title="View on Eventbrite">\
+																					<img src="/static/img/eventbrite.png" class="icon">\
+																				</a>'
+					} else {
+						var eventbriteButtonHTML = ''
+					};
 
-						var eventHTML = '<div>'
-											+ eventLogo +
-											'<h5>' + event.name.text + '</h5>\
-											<div style="display: inline-block">' + moment(new Date(event.start.local)).format('dddd M/D, h:mm a') + '</div>\
-											<button type="button"\
-												style="display: inline-block"\
-												class="info-btn icon btn btn-info btn-xs"\
-												data-toggle="modal"\
-												data-target="#EB-event-' + event.id + '"\
-											</button>\
-											<hr>';
-											
-						var eventModalHTML = '<!-- Event Details Modal -->\
-											<div id="EB-event-' + event.id + '" class="modal fade" role="dialog">\
-												<div class="modal-dialog">\
-													<!-- Modal content-->\
-											    	<div class="modal-content my-modal">\
-											    		<div class="modal-header centered">\
-											    			<button type="button" class="close" data-dismiss="modal">&times;</button>\
-											    			<h3>' + event.name.text + '</h3>\
-											        		<h5>' + moment(new Date(event.start.local)).format('dddd M/D, h:mm a') + '\
-											      				- ' + moment(new Date(event.end.local)).format('dddd M/D, h:mm a') + ''
-											      					+ eventbriteButtonHTML + '\
-											      			</h5>\
+					var eventHTML = '<div>'
+										+ eventLogo +
+										'<h5>' + event.name.text + '</h5>\
+										<div style="display: inline-block">' + moment(new Date(event.start.local)).format('dddd M/D, h:mm a') + '</div>\
+										<button type="button"\
+											style="display: inline-block"\
+											class="info-btn icon btn btn-info btn-xs"\
+											data-toggle="modal"\
+											data-target="#EB-event-' + event.id + '"\
+										</button>\
+										<hr>';
+										
+					var eventModalHTML = '<!-- Event Details Modal -->\
+										<div id="EB-event-' + event.id + '" class="modal fade" role="dialog">\
+											<div class="modal-dialog">\
+												<!-- Modal content-->\
+										    	<div class="modal-content my-modal">\
+										    		<div class="modal-header centered">\
+										    			<button type="button" class="close" data-dismiss="modal">&times;</button>\
+										    			<h3>' + event.name.text + '</h3>\
+										        		<h5>' + moment(new Date(event.start.local)).format('dddd M/D, h:mm a') + '\
+										      				- ' + moment(new Date(event.end.local)).format('dddd M/D, h:mm a') + ''
+										      					+ eventbriteButtonHTML + '\
+										      			</h5>\
+										      		</div>\
+										      		<div class="modal-body centered">\
+									      			<!-- Event details -->\
+										      			<div>\
+										      				<p class="scrollable" style="height: 240px">'+ event.description.text +'</p>\
 											      		</div>\
-											      		<div class="modal-body centered">\
-										      			<!-- Event details -->\
-											      			<div>\
-											      				<p class="scrollable" style="height: 240px">'+ event.description.text +'</p>\
-												      		</div>\
-												  		</div>\
-													</div>\
+											  		</div>\
 												</div>\
 											</div>\
-											<!-- End Modal -->';
+										</div>\
+										<!-- End Modal -->';
 
-						var nameBlock = $('<p>')
-							.attr('id', event.id)
-							.addClass('draggable event-listing')
+					var nameBlock = $('<p>')
+						.attr('id', event.id)
+						.addClass('draggable event-listing')
 
-						// Add the modal to the DOM
-						$('#event-modals').append(eventModalHTML);
-						// Add the link to the DOM
-						$("#events-div").append(nameBlock);
-						// Display info inside the link
-						$('#' + event.id).html(eventHTML);
+					// Add the modal to the DOM
+					$('#event-modals').append(eventModalHTML);
+					// Add the link to the DOM
+					$("#events-div").append(nameBlock);
+					// Display info inside the link
+					$('#' + event.id).html(eventHTML);
 
-					});
-				} else {
-					var notification = '<h4>No events could be found. Try using fewer filters!</h4>';
-					$("#events-div").append(notification);
-				};
+				});
+			} else {
+				var notification = '<h4>No events could be found. Try using fewer filters!</h4>';
+				$("#events-div").append(notification);
+			};
 
-				setupDraggables();
-				$('#loading-img').addClass('hidden');
-				$('#events-list').removeClass('hidden');
-			});
+			setupDraggables();
+			$('#loading-img').addClass('hidden');
+			$('#events-list').removeClass('hidden');
+		});
 
 	});
 }

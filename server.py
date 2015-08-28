@@ -13,13 +13,24 @@ app.secret_key = "most_secret_key_EVER!!!!!!!"
 #############################################################
 # Routes
 
-@app.route("/google_token", methods=['POST', 'GET'])
-def return_events():
+@app.route('/eventbrite_token', methods=['POST'])
+def return_eventbrite_token():
+	"""Returns the eventbrite api token"""
+
+	token_dict = { 'eventbriteToken': eb_token }
+
+	return json.dumps(token_dict)
+
+
+
+@app.route("/google_token", methods=['GET','POST'])
+def return_google_token():
 	"""Returns the google api token"""
 
 	token_dict = { 'googleToken': gg_browser_key }
 
 	return json.dumps(token_dict)
+
 
 
 @app.route("/send_text", methods=["POST", "GET"])
