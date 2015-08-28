@@ -362,6 +362,7 @@ function getEvents(evt) {
 	$('#events-list').addClass('hidden');
 	toggleEvents();
 
+	$("#events-div").html('');
 	// Get my token from the server
 	$.get("/token", function (result) {
 		var parsedJSON = JSON.parse(result);
@@ -412,8 +413,8 @@ function getEvents(evt) {
 			$.get(url, filters, function(result) {
 				var events = result.events;
 				$('#toggle-events').removeClass('hidden');
-				// add event names to the "Nearby Events" sidebar
 
+				// add event names to the "Nearby Events" sidebar
 				if (events[0]) {
 					events.forEach(function(event) {
 
