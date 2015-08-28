@@ -637,6 +637,7 @@ def add_event(event_id, trip_id):
 			'url':event.url,
 			'title':event.title,
 			'address':event.address,
+			'city':event.city,
 			'start':start,
 			'end':end,
 			'description':event.description,

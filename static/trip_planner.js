@@ -47,7 +47,7 @@ function handleDropEvent(event, ui) {
 	var eventId = draggable.attr('id');
 	var tripId = $("#agenda").data("trip");
 
-	var url = '/event/' + eventId + '/' + tripId;
+	var url = '/add_event/' + eventId + '/' + tripId;
 
 	// Add the event to the DB and the DOM
 	$.get(url, function(result) {
@@ -94,7 +94,23 @@ function handleDropEvent(event, ui) {
 				var eventbriteButtonHTML = ''
 			};
 			
-
+			if (eventObj.address) {
+				var mapHTML = '<iframe\
+				      				class=""\
+								    width="90%"\
+								    height="300px"\
+								    frameborder="0"\
+								    style="border:0"\
+								    src="https://www.google.com/maps/embed/v1/place?key=' + googleToken +
+								    	'&q=' + eventObj.address + '+' + eventObj.city +
+								    	'&zoom=8\
+								    	&attribution_source=Google+Maps+Embed+API"\
+								    allowfullscreen>\
+								</iframe>';
+			} else {
+				var mapHTML = '';
+			}
+			console.log(eventObj.address);
 			var eventHTML = '<button type="button"\
 									class="info-btn icon btn btn-info btn-xs"\
 									data-toggle="modal"\
@@ -123,18 +139,18 @@ function handleDropEvent(event, ui) {
 								      		<div>\
 									      		<h5>Attending: </h5>\
 									      		<span id="fname-' + eventObj.eventId + '" class="hidden">' + userObj.fname + '</span>\
-											</div>\
-											<form method="POST" style="display: inline-block">\
-						<!-- FIXME: this creates multiple identical IDs -->\
-																		<input id="event-id" value="' + eventObj.eventId + '" type="hidden">\
-						<!-- FIXME: Only one of these buttons should appear at one time-->\
-																	<!-- "Attend" button -->\
-																		<input id="attending-btn" type="submit" class="btn btn-info btn-sm" value="Attend">\
-																	<!-- "Not Attending" button -->\
-																		<input id="not-attending-btn" type="submit" class="btn btn-info btn-sm" value="Not Attending">\
-																	</form>' + deleteEventHTML + eventbriteButtonHTML + '</div>\
-													  		</div>\
-														</div>\
+											</div>' + mapHTML + 
+											'<form method="POST" style="display: inline-block">\
+												<!-- FIXME: this creates multiple identical IDs -->\
+												<input id="event-id" value="' + eventObj.eventId + '" type="hidden">\
+												<!-- FIXME: Only one of these buttons should appear at one time-->\
+												<!-- "Attend" button -->\
+												<input id="attending-btn" type="submit" class="btn btn-info btn-sm" value="Attend">\
+												<!-- "Not Attending" button -->\
+												<input id="not-attending-btn" type="submit" class="btn btn-info btn-sm" value="Not Attending">\
+											</form>' + deleteEventHTML + eventbriteButtonHTML + '</div>\
+							  		</div>\
+								</div>\
 													</div>\
 								<!-- End Modal -->';
 
@@ -399,8 +415,9 @@ function getEvents(evt) {
 						var eventHTML = '<div>'
 											+ eventLogo +
 											'<h5>' + event.name.text + '</h5>\
-											<div>' + moment(new Date(event.start.local)).format('dddd M/D, h:mm a') + '</div>\
+											<div style="display: inline-block">' + moment(new Date(event.start.local)).format('dddd M/D, h:mm a') + '</div>\
 											<button type="button"\
+												style="display: inline-block"\
 												class="info-btn icon btn btn-info btn-xs"\
 												data-toggle="modal"\
 												data-target="#EB-event-' + event.id + '"\
