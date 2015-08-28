@@ -133,7 +133,7 @@ function handleDropEvent(event, ui) {
 							      		<div class="modal-body centered">\
 						      			<!-- Event details -->\
 							      			<div>\
-							      				<p>'+ eventObj.description +'</p>\
+							      				<p class="scrollable" style="height: 140px">'+ eventObj.description +'</p>\
 								      		</div>\
 								      		<div class="modal-footer centered">\
 								      		<div>\
@@ -439,7 +439,7 @@ function getEvents(evt) {
 											      		<div class="modal-body centered">\
 										      			<!-- Event details -->\
 											      			<div>\
-											      				<p>'+ event.description.text +'</p>\
+											      				<p class="scrollable" style="height: 140px">'+ event.description.text +'</p>\
 												      		</div>\
 												  		</div>\
 													</div>\
