@@ -22,14 +22,12 @@
 			<h2>Friends:</h2>
 			{% for friend_id, fname, img_url in friends %}
 				<a href="/user{{ friend_id }}/profile">
-					<div class="pro-pic">
-						<img src="{{ img_url }}" style="max-width:100%; min-width: 100%;">
+					<div class="pro-pic" style="display:inline-block; background-color: white">
 						<div>
-							<h3 class="friend-name" style="color: white">{{ fname }}</h3>
+							<img src="{{ img_url }}" style="width: 100%;">
 						</div>
+						<h3 class="friend-name">{{ fname }}</h3>
 					</div>
-					
-
 				</a>
 			{% endfor %}
 		{% endif %}

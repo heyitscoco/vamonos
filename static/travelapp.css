@@ -61,7 +61,6 @@ select {
 .pro-pic {
 	width: 200px;
 	display: inline-block;
-	background-size: 100%;
 }
 
 .edit-btn {
@@ -150,6 +149,10 @@ select {
 	height: 280px;
 	display: inline-block;
 	background-size: 100%;
+	border: 5px solid white;
+}
+
+.pro-pic div {
 	border: 5px solid white;
 }
 
