@@ -413,7 +413,8 @@ function getEvents(evt) {
 				var events = result.events;
 				$('#toggle-events').removeClass('hidden');
 				// add event names to the "Nearby Events" sidebar
-				if (events) {
+
+				if (events[0]) {
 					events.forEach(function(event) {
 
 						if (event.logo) {
@@ -479,10 +480,8 @@ function getEvents(evt) {
 
 					});
 				} else {
-					// FIXME: WHAT DOES THIS DO?
-					var notification = $('div')
-										.text("No events could be found. Try using fewer filters!");
-					$("#events-list").append(notification);
+					var notification = '<h4>No events could be found. Try using fewer filters!</h4>';
+					$("#events-div").append(notification);
 				};
 
 				setupDraggables();
