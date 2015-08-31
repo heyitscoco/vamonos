@@ -249,12 +249,10 @@
 													      		<div class="modal-body centered">
 												      			<!-- Event details -->
 													      			<div>
+													      				<p id="old-description-{{ event.event_id }}" class="scrollable" style="max-height: 140px;">
+													      					{{ event.description }}
+													      				</p>
 																		{% if not event.url %}
-																		<button type="button"
-																				data-id="{{ event.event_id }}"
-																				class="icon edit-btn btn btn-default btn-xs edit-description">
-																		</button>
-
 																		<div id="new-description-form-{{ event.event_id }}" class="hidden">
 													      					<textarea id="new-description-{{ event.event_id }}" style="display:block; margin: 0 auto" rows="6" cols="50">{{ event.description }}</textarea>
 													      					<button type="button"
@@ -269,10 +267,13 @@
 													      					</button>
 													      				</div>
 
+																		<button type="button"
+																				data-id="{{ event.event_id }}"
+																				class="icon edit-btn btn btn-default btn-xs edit-description">
+																		</button>
+
 													      				{% endif %}
-													      				<p id="old-description-{{ event.event_id }}" class="scrollable" style="max-height: 140px">
-													      					{{ event.description }}
-													      				</p>
+													      				
 														      		</div>
 														      	<!-- Google Map -->
 														      	{% if event.address %}
@@ -281,7 +282,7 @@
 																	    width="90%"
 																	    height="300px"
 																	    frameborder="0"
-																	    style="border:0"
+																	    zoom="18"
 																	    src="https://www.google.com/maps/embed/v1/place?key={{ gg_browser_key }}
 																	    	&q={{ event.address }}+{{ event.city }}
 																	    	&zoom=8

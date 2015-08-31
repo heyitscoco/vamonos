@@ -13,10 +13,8 @@
 	</head>
 	<body>
 		<div class="container-fluid">
-
 			<!-- Navigation Bar -->
 			<nav class="navbar navbar-static-top">
-				<div class="container">
 					<div class="navbar-header">
 						<button type="button"
 								class="navbar-toggle collapsed"
@@ -28,7 +26,7 @@
 					       <span class="icon-bar"></span>
 					       <span class="icon-bar"></span>
 					    </button>
-					    <a class="navbar-brand" href="/">Home</a>
+					    <a class="navbar-brand btn" href="/">Home</a>
 					</div>
 					<div class="collapse navbar-collapse" id="navbar-collapse-1">
 
@@ -45,19 +43,17 @@
 									</a>
 								</li>
 								<li>
-									<a href="/logout" type="button" class="btn">Log Out</a>
+									<a href="/logout" type="button">Log Out</a>
 								</li>
 							{% else %}
 								<li>
-									<a href="/signup" type="button" class="btn">Sign Up</a>
+									<a href="/signup" type="button">Sign Up</a>
 								</li>
 								<li>
-									<a href="/login" type="button" class="btn">Log In</a>
+									<a href="/login" type="button">Log In</a>
 								</li>
 							{% endif %}
 						</ul>
-						
-					</div>
 				</div>
 			</nav>
 			  <!-- Show flashed messages -->
@@ -71,7 +67,6 @@
 			{% block content %}
 
 			{% endblock %}
-		</div>
 
 		<script src="/static/jquery-2.1.4.min.js"></script>
 		<script src="/static/bootstrap/js/bootstrap.min.js"></script>

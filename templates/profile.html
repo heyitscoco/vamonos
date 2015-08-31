@@ -5,8 +5,8 @@
 {% block content %}
 
 <div class="col-xs-12">
-	<div class="centered no-div">
-		<h2 style="font-size: 60px; display:inline-block">{{ user.fname }} {{ user.lname }}</h2>
+	<div class="centered">
+		<h1 style="display: inline-block;">{{ user.fname }} {{ user.lname }}</h1>
 		{% if user.user_id == session['user_id'] %}
 		<span data-toggle="tooltip"
 			{% if user.phone %}
@@ -14,7 +14,7 @@
 			{% else %}
 				title="Add phone"
 			{% endif %}>
-			<button style="display:inline-block" type="button" class="icon phone-btn btn btn-default btn-xs" data-toggle="modal" data-target="#edit-phone"></button>
+			<button type="button" class="icon phone-btn btn btn-default btn-xs" data-toggle="modal" data-target="#edit-phone" style="display: inline-block;"></button>
 		</span>
 		{% endif %}
 
@@ -53,7 +53,11 @@
 	    	<div class="modal-content my-modal">
 	    		<div class="modal-header centered">
 	    			<button type="button" class="close" data-dismiss="modal">&times;</button>
-	        		<h3 class="modal-title">Add Phone Number</h3>
+	    			{% if user.phone %}
+						<h3 class="modal-title">Change Phone Number</h3>
+					{% else %}
+						<h3 class="modal-title">Add Phone Number</h3>
+					{% endif %}
 	      		</div>
 	      		<div class="modal-body centered">
 

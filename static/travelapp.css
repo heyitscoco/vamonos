@@ -1,17 +1,28 @@
 body {
-	background-image: url('/static/img/wood.jpg');
-	background-size: 100%;
+	background-image: url('/static/img/nycityscape.jpg');
+	background-size: cover;
 	font-family: 'Century Gothic';
-	color: #5A5A5B;
+	color: #312D2C;
+/*	background-color: #C8BEB3;*/
 }
 
 table {
 	table-layout: fixed;
-	background-color: rgba(255,255,255,0.8);
+	background-color: rgba(255,255,255,0.9);
+}
+
+.navbar {
+	background-color: rgba(122,116,110,0.8);
+	border-bottom: 1px solid #312D2C;
+	padding-right: 2em;
+}
+
+#event-streams {
+	display:inline-block;
 }
 
 a {
-	color: #5A5A5B;
+	color: white;
 }
 
 hr {
@@ -54,13 +65,23 @@ ul {
 }
 
 select {
-    border: 1px solid white;
+    border: 1px solid rgba(255,255,255,0.9);
     background-color: rgba(0,0,0,0);
 }
 
 .pro-pic {
 	width: 200px;
 	display: inline-block;
+}
+
+.icon {
+	width: 15px;
+	height: 15px;
+
+	background-size: 100%;
+	background-repeat: no-repeat;
+	background-color: rgba(0,0,0,0);
+	border: none;
 }
 
 .edit-btn {
@@ -81,25 +102,19 @@ select {
 
 .phone-btn {
 	background-image: url("/static/img/phone.png");
+	width: 25px;
+	height: 25px;
 }
 
 .info-btn {
 	background-image: url("/static/img/info.png");
 }
 
-.icon {
-	width: 15px;
-	height: 15px;
 
-	background-size: 100%;
-	background-repeat: no-repeat;
-	background-color: rgba(0,0,0,0);
-	border: none;
-}
 
 .content {
-	background-color: rgba(255,255,255, 0.9);
-	border: solid 1px white;
+	background-color: rgba(255,255,255,0.9);
+	border: solid 1px #312D2C;
 	padding: 1em;
 }
 
@@ -117,11 +132,6 @@ select {
 	overflow: scroll;
 }
 
-.navbar {
-	background-color: white;
-	border: 2px solid white;
-}
-
 .container-fluid {
 	padding: 0px;
 }
@@ -131,33 +141,44 @@ select {
 }
 
 .my-modal {
-	background-color: rgba(255,255,255, .9);
-	border: solid 1px white;
+	background-color: rgba(255,255,255, .95);
+	border: solid 1px black;
 	padding: 1em;
+}
+
+iframe {
+	border: solid 1px black;
 }
 
 #nearby-events {
 	height: 700px;
 }
 
-.no-div {
-	color: white;
+.city-div {
+	display:inline-block;
+	background-color: rgba(255,255,255,0.9);
+	width: 280px;
+	padding: 7px;
 }
 
 .city-img {
-	width: 280px;
+	max-width: 100%;
 	height: 280px;
 	display: inline-block;
 	background-size: 100%;
-	border: 5px solid white;
 }
 
 .pro-pic div {
-	border: 5px solid white;
+	border: 5px solid rgba(255,255,255,0.9);
 }
 
 h1 {
 	font-size: 80px;
+}
+
+.headline {
+	color: white;
+	text-shadow: 2px 2px 0 #312D2C, -1px -1px 0 #312D2C, -1px 1px 0 #312D2C, 1px 1px 0 #312D2C;
 }
 
 .friend-name {
@@ -165,10 +186,10 @@ h1 {
 	color: black;
 }
 
-.alert-warning {
+/*.alert-warning {
 	color: #618dae;
 	background-color: #edfcd9;
-}
+}*/
 
 .active-droppable {
 	outline: none;

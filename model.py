@@ -11,7 +11,7 @@ from twilio.rest import TwilioRestClient
 from os import environ
 
 
-eb_token = environ['EB_PERSONAL_OAUTH']
+eb_token = environ['EB_ANON_OAUTH']
 tw_token = environ['TW_AUTH_TOKEN']
 tw_sid = environ['TW_ACCOUNT_SID']
 TWILIO_NUMBER = environ['TWILIO_NUMBER']

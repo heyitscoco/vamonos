@@ -5,21 +5,20 @@
 {% block content %}
 
 <div class="row">
-	<div class="col-xs-12 centered no-div" style="padding: 2%">
-		<h1><b><i>¡Vámonos!</i></b></h1>
+	<div class="col-xs-12 centered" style="padding: 2%">
+		<h1 class="headline"><b><i>¡Vámonos!</i></b></h1>
 		<h3>Plan your travel. Together.</h3>
+		<h6><i>Powered by Eventbrite</i></h6>
 	</div>
 </div>
 
 <div class="row">
-	<div class="col-xs-12 centered" id="event-streams" data-cities="{{ citiesJSON }}" style="display:inline-block; margin-top: 5em">
-		<!-- <h3 class="no-div">Browse Cities</h3> -->
+	<div class="col-xs-12 centered" id="event-streams" data-cities="{{ citiesJSON }}">
+		<!-- <h3>Browse Cities</h3> -->
 		{% for city in cities %}
-			<div class="city-div" style="display:inline-block; background-color: white">
-				<div class="city-img" data-target="#modal-{{ city }}">
-					<img src="/static/img/{{ city }}.jpg" data-city="{{ city }}" style="max-width: 100%">
-				</div>
-				<h3 class="">{{ city }}</h3>
+			<div class="city-div" data-toggle="tooltip" title="Browse events in {{ city }}">
+				<img src="/static/img/{{ city }}.jpg" class="city-img" data-target="#modal-{{ city }}" data-city="{{ city }}">
+				<h3>{{ city }}</h3>
 			</div>
 		{% endfor %}
 	</div>
@@ -30,11 +29,10 @@
 			<div id="{{ city }}-events-div" class="city-events-div" style="width: 60%; margin: 20px auto 0; display: none">
 				<table class="table" style="margin-bottom: 0">
 					<thead>
-						<th>Event</th>
-						<th>Description</th>
+						<th class="centered">Events in {{ city }}</th>
 					</thead>
 				</table>
-				<div class="scrollable" style="height: 380px">
+				<div class="scrollable" style="height: 340px">
 					<table class="table" style="margin: 0">
 						<tbody id="{{ city }}-events"></tbody>
 					</table>

@@ -69,7 +69,7 @@ def home():
 
 	cities = ['Dubai', 'Madrid', 'Amsterdam', 'London' , 'Paris', 'Berlin', 'Venice', 'Stockholm']
 	random.shuffle(cities)
-	cities_sample = random.sample(cities, 5)
+	cities_sample = random.sample(cities, 4)
 
 
 	cities_dict = {}
