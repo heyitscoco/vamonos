@@ -583,6 +583,7 @@ def add_event(event_id, trip_id):
 	venue_uri = "https://www.eventbriteapi.com/v3/venues/%s/?token=%s" % (venue_id, eb_token)
 	venue = requests.get(venue_uri).json()
 
+	print venue
 	place_name = venue.get('address',{}).get('name')
 	address = venue['address'].get('address_1')
 	city = venue['address'].get('city')
