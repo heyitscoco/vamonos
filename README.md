@@ -2,16 +2,16 @@
 ===========
 Learn more about the developer: www.linkedin.com/in/carolynjoneslee/
 
-*¡Vámonos!* is a fullstack web application designed for planning an itinerary of events for groups of people travelling together. Integration of the Eventbrite API allows users to browse events happening across the globe, or find activities happening at their destination, during their travel dates. Users can add their friends, and automatically keep track of who wants to attend each event. Using the Twilio SMS API *¡Vámonos!* sends out text message reminders before the trip begins.
+*¡Vámonos!* is a fullstack web application designed for planning an itinerary of events for groups of people travelling together. Integration of the Eventbrite API allows users to browse events happening across the globe, or find activities happening at their destination, during their travel dates. Users can add their friends, and automatically keep track of who wants to attend each event. *¡Vámonos!* uses Google Maps to dynamically display the location of each event, and the Twilio SMS API to send out text message reminders before the trip begins! Lastly, the app automatically generates a PDF version of the itinerary, containing information for each day about the events planned, and who is attending each event.
 
 ![Homepage](https://raw.githubusercontent.com/carolynjoneslee/vamonos/master/static/img/screenshot-tripplanner.png)
 ![EventDetails](https://raw.githubusercontent.com/carolynjoneslee/vamonos/master/static/img/screenshot-eventdetails.png)
 
 #### Technologies
-Python, Flask, SQLite3, SQLAlchemy\
-HTML/CSS, Twitter Bootstrap\
-Javascript, jQuery, jQuery UI, Moment.js, AJAX\
-Twilio API, Eventbrite API, Google Maps API
+Python, Flask, SQLite3, SQLAlchemy,
+HTML/CSS, Twitter Bootstrap,
+Javascript, jQuery, jQuery UI, Moment.js, AJAX,
+Eventbrite API, Google Maps API, Twilio API
 
 #### Version 2.0
 
