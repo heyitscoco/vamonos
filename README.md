@@ -15,9 +15,6 @@ Twilio API, Eventbrite API, Google Maps API
 
 #### Version 2.0
 
-###### Quick-Add Events
-Currently, when an Eventbrite event is added to the agenda, an AJAX call sends the relevant information to the server, and uses the response to update the DOM. In a future version, I would like to improve the user experience by updating the DOM immediately, without waiting for the server's response.
-
 ###### Custom Notifications
 I'd like to allow users to customize notification options, such that individualized text messages are sent out before certain events begin, or when trip details change, etc.
 
