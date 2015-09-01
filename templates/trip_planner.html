@@ -207,7 +207,7 @@
 												 data-start="{{ trip.start | datetime }}"
 												 data-end="{{ trip.end | datetime(trip_end=True) }}">
 					<h3>Agenda</h3>
-					<div>
+					<div id="agenda-div" class="scrollable">
 						<table id="agenda-table">
 							<thead>
 								{% for day in trip.days %}

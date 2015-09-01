@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="col-xs-12">
-	<div class="centered">
+	<div class="centered content main">
 		<h1 style="display: inline-block;">{{ user.fname }} {{ user.lname }}</h1>
 		{% if user.user_id == session['user_id'] %}
 		<span data-toggle="tooltip"

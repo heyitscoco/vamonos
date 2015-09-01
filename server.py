@@ -33,7 +33,7 @@ def send_reminders():
 
 	trip.send_SMS(tw_sid, tw_token)
 
-	return "Checked for text message" # FIXME: What should I return here?
+	return "Success"
 
 
 @app.route("/pdf", methods=["POST"])
@@ -45,7 +45,6 @@ def generate_pdf():
 	filename = "itinerary%d.pdf" % (trip_id)
 	trip.generate_itinerary(filename)
 
-	# response_dict = {'msg': 'File generated.'}
 	response_dict = {'filename': filename}
 	response = json.dumps(response_dict)
 
@@ -340,7 +339,7 @@ def edit_permission():
 		db.session.add(perm)
 	db.session.commit()
 
-	return 'hello' # FIXME Don't return this!
+	return "Success"
 
 
 
@@ -360,7 +359,7 @@ def rm_permission():
 
 	friend = User.query.get(friend_id)
 	
-	return 'hello' # FIXME Don't return this!
+	return "Success"
 
 
 
@@ -558,7 +557,7 @@ def update_description():
 	event.description = new_description
 	db.session.commit()
 
-	return 'response'
+	return "Success"
 
 
 @app.route("/add_event/<string:event_id>/<string:trip_id>")
@@ -670,7 +669,7 @@ def rm_event():
 	db.session.delete(event)
 	db.session.commit()
 
-	return "hello" # FIXME: Don't return this!
+	return "Success"
 
 
 
@@ -706,7 +705,7 @@ def add_attendee():
 		db.session.add(att)
 		db.session.commit()
 
-	return 'It worked' # FIXME: return status code 200.
+	return "Success"
 
 
 
@@ -724,7 +723,7 @@ def rm_attendee():
 	except NoResultFound:
 		pass
 
-	return 'It worked' # FIXME: return status code 200.
+	return "Success"
 
 
 
