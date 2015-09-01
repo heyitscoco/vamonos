@@ -14,7 +14,7 @@
 						<h6><i>Powered by Eventbrite</i></h6>
 					</div>
 
-					<button id="toggle-events" class="btn btn-default btn-sm hidden">Show <span class="toggle-text">Events</span><span class="toggle-text" style="display: none">Filters</span></button>
+					<button id="toggle-events" class="btn btn-info btn-sm hidden">Show <span class="toggle-text">Events</span><span class="toggle-text" style="display: none">Filters</span></button>
 					<div id="events-div" class="scrollable" style="display: none; height: 500px">
 						<img id='loading-img' style="width: 60px; margin: 0 auto" src="/static/img/loading.gif" class='hidden'>
 					</div>
@@ -62,7 +62,7 @@
 							<hr>
 						<!-- 'Retrieve Events' button -->
 							<label>
-								<input type="submit" value="Search" id="retrieve-events-btn" class="btn btn-default">
+								<input type="submit" value="Search" id="retrieve-events-btn" class="btn btn-info">
 							</label>
 						</form>
 					</div>
@@ -121,7 +121,7 @@
 						<li>
 							{% if admin %}
 							<span class="edit-span">
-								<button type="button" class="icon edit-btn btn btn-default btn-xs" data-toggle="modal" data-target="#edit-start"></button>
+								<button type="button" class="icon edit-btn btn btn-info btn-xs" data-toggle="modal" data-target="#edit-start"></button>
 							</span>
 							{% endif %}
 							Start: {{ declare_tz(trip.start, trip.tz_name) | datetime('date') }}
@@ -129,7 +129,7 @@
 						<li>
 							{% if admin %}
 							<span class="edit-span">
-								<button type="button" class="icon edit-btn btn btn-default btn-xs" data-toggle="modal" data-target="#edit-end"></button>
+								<button type="button" class="icon edit-btn btn btn-info btn-xs" data-toggle="modal" data-target="#edit-end"></button>
 							</span>
 							{% endif %}
 							End: {{ declare_tz(trip.end, trip.tz_name) | datetime('date', trip_end=True) }}
@@ -269,7 +269,7 @@
 
 																		<button type="button"
 																				data-id="{{ event.event_id }}"
-																				class="icon edit-btn btn btn-default btn-xs edit-description">
+																				class="icon edit-btn btn btn-info btn-xs edit-description">
 																		</button>
 
 													      				{% endif %}
@@ -319,7 +319,7 @@
 																			<input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
 																		</label>
 																		<label>
-																			<input type="submit" data-event="{{ event.event_id}}" value="" class="delete-event icon delete-btn edit-perms btn btn-default btn-xs">
+																			<input type="submit" data-event="{{ event.event_id}}" value="" class="delete-event icon delete-btn edit-perms btn btn-info btn-xs">
 																		</label>
 																	</form>
 																{% endif %}
@@ -351,7 +351,7 @@
 					{% if can_edit %}
 						<button type="button" class="btn btn-info" data-toggle="modal" data-target="#my-modal">Create Event</button>
 					{% endif %}
-					<button type="button" class="btn btn-default" id="gen-pdf">
+					<button type="button" class="btn btn-info" id="gen-pdf">
 						PDF
 					</button>
 <!-- Create Event Modal -->

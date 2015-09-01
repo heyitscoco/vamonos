@@ -56,7 +56,7 @@ function handleDropEvent(event, ui) {
 
 		// Define the list item
 		var eventListItem = $('<div>')
-							.addClass('event')
+							.addClass('event-div')
 							.attr('id', 'event-list-item-' + eventObj.eventId)
 
 		// Create the list item

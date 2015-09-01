@@ -11,6 +11,18 @@ table {
 	background-color: rgba(255,255,255,0.9);
 }
 
+.btn-info {
+	color: #312D2C;
+    background-color: rgba(122,116,110,0.4);
+    border-color: #312D2C;
+}
+
+.btn-info:hover {
+    color: #fff;
+    background-color: rgba(122,116,110,0.8);
+    border-color: #312D2C;
+}
+
 .navbar {
 	background-color: rgba(122,116,110,0.8);
 	border-bottom: 1px solid #312D2C;
