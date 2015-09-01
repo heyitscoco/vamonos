@@ -454,7 +454,7 @@ def edit_start():
 	trip = Trip.query.get(trip_id)
 
 	trip.start = start
-	trip.notification_sent = False # FIXME: Will notifications still happen at the correct time?
+	trip.notification_sent = False
 	
 	db.session.commit()
 	trip.update_days()
@@ -515,7 +515,7 @@ def create_event():
 	end = convert_to_tz(end_local, 'utc')
 
 	# Determine correct day
-	day = Day.query.filter(Day.trip_id == trip_id, Day.start <= start, Day.end >= start).all() # FIXME: Day.trip_id == trip_id
+	day = Day.query.filter(Day.trip_id == trip_id, Day.start <= start, Day.end >= start).all()
 
 	# Add event to DB
 	if day:
