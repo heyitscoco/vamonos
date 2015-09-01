@@ -134,22 +134,18 @@ function handleDropEvent(event, ui) {
 								      		</div>\
 								      		<div class="modal-footer centered">\
 								      		<div>\
-									      		<h5>Attending: </h5>\
+									      		<h5>Attending:</h5>\
 									      		<span id="fname-' + eventObj.eventId + '" class="hidden">' + userObj.fname + '</span>\
 											</div>' + mapHTML + 
-											'<form method="POST" style="display: inline-block">\
-												<!-- FIXME: this creates multiple identical IDs -->\
-												<input id="event-id" value="' + eventObj.eventId + '" type="hidden">\
-												<!-- FIXME: Only one of these buttons should appear at one time-->\
-												<!-- "Attend" button -->\
-												<input id="attending-btn" type="submit" class="btn btn-info btn-sm" value="Attend">\
-												<!-- "Not Attending" button -->\
-												<input id="not-attending-btn" type="submit" class="btn btn-info btn-sm" value="Not Attending">\
-											</form>' + deleteEventHTML + eventbriteButtonHTML + '</div>\
+											'<button class="attending-btn btn btn-info btn-sm" data-event=' + eventObj.eventId + '>Attend</button>\
+											<button class="not-attending-btn btn btn-info btn-sm" data-event=' + eventObj.eventId + '>Not Attending</button>'
+											+ deleteEventHTML
+											+ eventbriteButtonHTML
+									 + '</div>\
 							  		</div>\
 								</div>\
-													</div>\
-								<!-- End Modal -->';
+							</div>\
+							<!-- End Modal -->';
 
 			$('#event-list-item-' + eventObj.eventId).html(eventHTML);
 		});
@@ -308,6 +304,7 @@ function cancelDescription(evt) {
 
 function addAttendee(evt) {
 	evt.preventDefault();
+	console.log('adding attendee');
 
 	var eventId = evt.target.dataset.event;
 	var formInputs = { eventId: eventId };

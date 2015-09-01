@@ -305,38 +305,33 @@
 															      		</p>
 														      		</div>
 																</div>
-																
-																	<form method='POST' style="display: inline-block">
-				<!-- FIXME: Only one of these buttons should appear at one time-->
-																	<!-- 'Attend' button -->
-																		<input class="attending-btn btn btn-info btn-sm" data-event="{{ event.event_id }}" type="submit" value="Attend">
-																	<!-- 'Not Attending' button -->
-																		<input class="not-attending-btn btn btn-info btn-sm" data-event="{{ event.event_id }}" type="submit" value="Not Attending">
+															<!-- Attending/Not Attending Buttons -->
+																<button class="attending-btn btn btn-info btn-sm" data-event="{{ event.event_id }}">Attend</button>
+																<button class="not-attending-btn btn btn-info btn-sm" data-event="{{ event.event_id }}">Not Attending</button>
+
+																{% if admin %}
+															<!-- 'Delete Event' Button -->
+																	<form action="/rm_event" method="POST" style="display: inline-block">
+																		<label>
+																			<input type="hidden" name="event_id" value="{{ event.event_id }}">
+																		</label>
+																		<label>
+																			<input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
+																		</label>
+																		<label>
+																			<input type="submit" data-event="{{ event.event_id}}" value="" class="delete-event icon delete-btn edit-perms btn btn-default btn-xs">
+																		</label>
 																	</form>
+																{% endif %}
 
-																	{% if admin %}
-																<!-- 'Delete Event' Button -->
-																		<form action="/rm_event" method="POST" style="display: inline-block">
-																			<label>
-																				<input type="hidden" name="event_id" value="{{ event.event_id }}">
-																			</label>
-																			<label>
-																				<input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
-																			</label>
-																			<label>
-																				<input type="submit" data-event="{{ event.event_id}}" value="" class="delete-event icon delete-btn edit-perms btn btn-default btn-xs">
-																			</label>
-																		</form>
-																	{% endif %}
-
-																	{% if event.url %}
-																<!-- 'View On Eventbrite' Button -->
-																	<a href="{{ event.url }}" target="_blank" data-toggle="tooltip" title="View on Eventbrite">
-																		<img src="/static/img/eventbrite.png" class="icon">
-																	</a>
-																	{% endif %}
-
+																{% if event.url %}
+															<!-- 'View On Eventbrite' Button -->
+																<a href="{{ event.url }}" target="_blank" data-toggle="tooltip" title="View on Eventbrite">
+																	<img src="/static/img/eventbrite.png" class="icon">
+																</a>
+																{% endif %}
 															    </div>
+														    <!-- End Modal Body -->
 													  		</div>
 														</div>
 													</div>
