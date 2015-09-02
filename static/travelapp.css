@@ -22,10 +22,42 @@ table {
     border-color: #312D2C;
 }
 
+.btn-info.active, .btn-info:active, .open>.dropdown-toggle.btn-info {
+    color: #fff;
+    background-color: rgba(122,116,110,1);
+    border-color: #312D2C;
+}
+
+.btn-info.active.focus {
+	color: #fff;
+    background-color: rgba(122,116,110,1);
+    border-color: #312D2C;
+}
+
+.btn-info.focus, .btn-info:focus {
+    color: #fff;
+    background-color: rgba(122,116,110,1);
+    border-color: #312D2C;
+}
+
+.btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
+    outline: thin dotted;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+}
+
 .navbar {
 	background-color: rgba(122,116,110,0.8);
-	border-bottom: 1px solid #312D2C;
+	box-shadow: 0 1px rgba(49,45,44,0.6);
 	padding-right: 2em;
+}
+
+.navbar * {
+	text-shadow: 1px 1px #312D2C;
+}
+.navbar *:active, .navbar *:hover {
+	text-shadow: none;
+	color: #312D2C;
 }
 
 #event-streams {

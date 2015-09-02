@@ -431,7 +431,10 @@ $('.not-attending-btn').click(rmAttendee);
 $('.edit-description').click(editDescription);
 $('.submit-description').click(submitDescription);
 $('.cancel-description').click(cancelDescription);
-$('#retrieve-events-btn').click(getEvents);
+// $('#retrieve-events-btn').click(getEvents);
+$('#retrieve-events-btn').click(function(evt){
+	evt.preventDefault();
+});
 $('.distance').on('input', syncDistanceValues);
 $('#toggle-events').click(toggleEvents);
 $('.multiselect').SumoSelect({ selectAll:true });
