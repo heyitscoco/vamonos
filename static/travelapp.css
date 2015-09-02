@@ -190,7 +190,7 @@ h1 {
 
 .headline {
 	color: white;
-	text-shadow: 1px 1px 0 #312D2C, -1px -1px 0 #312D2C, -1px 1px 0 #312D2C, 1px 1px 0 #312D2C;
+	text-shadow: 2px 2px 0 #312D2C, -1px -1px 0 #312D2C, -1px 1px 0 #312D2C, 1px 1px 0 #312D2C;
 }
 
 .friend-name {

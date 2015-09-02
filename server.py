@@ -752,8 +752,6 @@ def _format_datetime(dt, format=None, trip_end=False):
 	return dt
 
 
-
-
 #############################################################
 # Main
 
