@@ -8,11 +8,9 @@ function toggleEvents() {
 
 function toggleText() {
 	$('.toggle-text').toggle();
-}	var value = evt.target.value;
-
+}
 
 function syncDistanceValues(evt) {
-
 	$('.distance').val(value);
 }
 
@@ -55,13 +53,13 @@ function handleDropEvent(event, ui) {
 		var userObj = JSON.parse(result).user;
 
 		// Define the list item
-		var eventListItem = $('<div>')
+		var eventDiv = $('<div>')
 							.addClass('event-div')
-							.attr('id', 'event-list-item-' + eventObj.eventId)
+							.attr('id', 'event-div-' + eventObj.eventId);
 
 		// Create the list item
 		var selector = '#day' + eventObj.dayId + '-events';
-		$(selector).append(eventListItem);
+		$(selector).append(eventDiv);
 		
 
 		// get the google API token
@@ -70,17 +68,7 @@ function handleDropEvent(event, ui) {
 			var googleToken = JSON.parse(result).googleToken;
 			
 			if (userObj.admin) {
-				var deleteEventHTML = '<form action="/rm_event" method="POST" style="display: inline-block">\
-											<label>\
-												<input type="hidden" name="event_id" value="' + eventObj.eventId + '">\
-											</label>\
-											<label>\
-												<input type="hidden" name="trip_id" value="' + tripId +'">\
-											</label>\
-											<label>\
-												<input type="submit" value="" class="icon delete-btn edit-perms btn btn-default btn-xs">\
-											</label>\
-										</form>';
+				var deleteEventHTML = '<button class="delete-event icon delete-btn btn btn-info btn-xs" data-event="' + eventObj.eventId + '"></button>';
 			} else {
 				var deleteEventHTML = '';
 			};
@@ -109,13 +97,13 @@ function handleDropEvent(event, ui) {
 			} else {
 				var mapHTML = '';
 			}
-			var eventHTML = '<p style="display: inline-block; width: 80%"\
-								data-toggle="modal"\
-								data-target="#event'+ eventObj.eventId +'">'
-								+ eventObj.title +
-							'</p>' +
-							'<!-- Event Details Modal -->\
-							<div id="event' + eventObj.eventId +'" class="modal fade" role="dialog">\
+			var eventHTML = '<p data-toggle="modal"\
+							    data-target="#event-' + eventObj.eventId +'-modal"\
+							    style="display: inline-block; width: 80%">'
+							    + eventObj.title +
+							'</p>\
+							<!-- Event Details Modal -->\
+							<div id="event-' + eventObj.eventId +'-modal" class="modal fade" role="dialog">\
 								<div class="modal-dialog">\
 									<!-- Modal content-->\
 							    	<div class="modal-content my-modal">\
@@ -134,10 +122,10 @@ function handleDropEvent(event, ui) {
 								      		</div>\
 								      		<div class="modal-footer centered">\
 								      		<div>\
-									      		<h5>Attending:</h5>\
 									      		<span id="fname-' + eventObj.eventId + '" class="hidden">' + userObj.fname + '</span>\
 											</div>' + mapHTML + 
-											'<button class="attending-btn btn btn-info btn-sm" data-event=' + eventObj.eventId + '>Attend</button>\
+											'<h5>Attending:</h5>\
+											<button class="attending-btn btn btn-info btn-sm" data-event=' + eventObj.eventId + '>Attend</button>\
 											<button class="not-attending-btn btn btn-info btn-sm" data-event=' + eventObj.eventId + '>Not Attending</button>'
 											+ deleteEventHTML
 											+ eventbriteButtonHTML
@@ -147,7 +135,7 @@ function handleDropEvent(event, ui) {
 							</div>\
 							<!-- End Modal -->';
 
-			$('#event-list-item-' + eventObj.eventId).html(eventHTML);
+			$('#event-div-' + eventObj.eventId).append(eventHTML);
 		});
 	});
 }
@@ -304,7 +292,6 @@ function cancelDescription(evt) {
 
 function addAttendee(evt) {
 	evt.preventDefault();
-	console.log('adding attendee');
 
 	var eventId = evt.target.dataset.event;
 	var formInputs = { eventId: eventId };
@@ -335,7 +322,6 @@ function generatePDF() {
 }
 
 function rmEvent(evt) {
-	evt.preventDefault();
 
 	var eventId = evt.target.dataset.event;
 	var eventInfo = {

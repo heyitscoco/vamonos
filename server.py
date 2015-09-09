@@ -616,7 +616,7 @@ def add_event(event_id, trip_id):
 					  )
 		db.session.add(event)
 		db.session.commit()
-
+		print "\n\n", Event.query.all(), "\n\n"
 	start = convert_to_tz(declare_tz(start, 'utc', result='aware'), trip.tz_name)
 	end = convert_to_tz(declare_tz(end, 'utc', result='aware'), trip.tz_name)
 
