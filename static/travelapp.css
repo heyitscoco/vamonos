@@ -238,7 +238,7 @@ h1 {
 
 .active-droppable {
 	outline: none;
-    border: solid #9ecaed;
+    border: 1px solid #9ecaed;
     box-shadow: 0 0 10px #9ecaed;
 }
 

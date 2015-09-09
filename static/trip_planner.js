@@ -8,11 +8,11 @@ function toggleEvents() {
 
 function toggleText() {
 	$('.toggle-text').toggle();
-}
+}	var value = evt.target.value;
+
 
 function syncDistanceValues(evt) {
 
-	var value = evt.target.value;
 	$('.distance').val(value);
 }
 
@@ -123,8 +123,8 @@ function handleDropEvent(event, ui) {
 							    			<button type="button" class="close" data-dismiss="modal">&times;</button>\
 							        		<h4 class="modal-title">' + eventObj.title + '</h4>\
 							        		<h5>' + eventObj.address + '</h5>\
-							        		<h5>' + eventObj.start + '\
-							      				- ' + eventObj.end + '\
+							        		<h5>' + moment(new Date(eventObj.start)).format('dddd M/D, h:mm a') + '\
+							      				- ' + moment(new Date(eventObj.end)).format('dddd M/D, h:mm a') + '\
 							      			</h5>\
 							      		</div>\
 							      		<div class="modal-body centered">\
