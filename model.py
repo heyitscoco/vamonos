@@ -376,7 +376,8 @@ class Friendship(db.Model):
 						   backref=db.backref("friendships")
 						   )
 	
-	friend = db.relationship('User', primaryjoin="User.user_id == Friendship.friend_id")
+	friend = db.relationship('User',
+							  primaryjoin="User.user_id == Friendship.friend_id")
 
 	def __repr__(self):
 		return "< Friendship ID: %d AdminID: %d FriendID: %d >" % (self.friendship_id, self.admin_id, self.friend_id)

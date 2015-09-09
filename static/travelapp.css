@@ -55,6 +55,7 @@ table {
 .navbar * {
 	text-shadow: 1px 1px #312D2C;
 }
+
 .navbar *:active, .navbar *:hover {
 	text-shadow: none;
 	color: #312D2C;
@@ -215,10 +216,6 @@ iframe {
 	display: inline-block;
 	background-size: 100%;
 }
-
-/*.pro-pic div {
-	border: 5px solid rgba(255,255,255,0.9);
-}*/
 
 h1 {
 	font-size: 80px;
