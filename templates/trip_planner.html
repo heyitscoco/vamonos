@@ -410,7 +410,7 @@
 
 <script>
 // Event listeners
-$(document).ready(sendReminders);
+// $(document).ready(sendReminders); // FIXME: Uncomment this to send text message reminders
 
 $('div').on('click', '.delete-event', rmEvent); // This syntax is used instead of the depricated .live(), so that this code will also be run on new DOM elements
 $('.toggle-view').click(toggleViewPermission);

@@ -248,62 +248,72 @@ def trip_planner(trip_id):
 	"""Displays trip planning page"""
 
 	if 'user_id' in session:
-		viewer_id = session['user_id']
-		trip = Trip.query.get(trip_id)
-		admin_id = trip.admin_id
-		permissions = Permission.query.filter(Permission.trip_id == trip_id, Permission.user_id != admin_id).all()
-		friendships = Friendship.query.filter_by(admin_id = viewer_id).all()
 
-		friends = []
-		for fs in friendships:
-			try:
-				perm = Permission.query.filter_by(user_id=fs.friend_id, trip_id=trip_id).one()
-				can_view = True
+		try:
+			permission = Permission.query.filter_by(trip_id=trip_id, user_id=session['user_id']).one()
+		except NoResultFound:
+			permission = None
 
-				if perm.can_edit:
-					can_edit = True
-				else:
+		if permission:
+			viewer_id = session['user_id']
+			trip = Trip.query.get(trip_id)
+			admin_id = trip.admin_id
+			permissions = Permission.query.filter(Permission.trip_id == trip_id, Permission.user_id != admin_id).all()
+			friendships = Friendship.query.filter_by(admin_id = viewer_id).all()
+
+			friends = []
+			for fs in friendships:
+				try:
+					perm = Permission.query.filter_by(user_id=fs.friend_id, trip_id=trip_id).one()
+					can_view = True
+
+					if perm.can_edit:
+						can_edit = True
+					else:
+						can_edit = False
+
+				except NoResultFound:
+					can_view = False
 					can_edit = False
 
-			except NoResultFound:
-				can_view = False
+				friends.append((fs.friend.fname, fs.friend_id, can_view, can_edit))
+
+			friend_ids = [friendship.friend_id for friendship in friendships]
+
+			trip = Trip.query.get(trip_id)
+
+			# Pass 'can_edit' boolean into template
+			user_perm = Permission.query.filter(Permission.trip_id == trip_id,
+												Permission.user_id == viewer_id
+												).one()
+
+			if user_perm.can_edit:
+				can_edit = True
+			else:
 				can_edit = False
 
-			friends.append((fs.friend.fname, fs.friend_id, can_view, can_edit))
+			# Pass 'admin' boolean into template
+			if viewer_id == admin_id:
+				admin = True
+			else:
+				admin = False
 
-		friend_ids = [friendship.friend_id for friendship in friendships]
+			return render_template("trip_planner.html",
+									trip=trip,
+									permissions=permissions,
+									friends=friends,
+									friend_ids=friend_ids,
+									can_edit=can_edit,
+									admin=admin,
+									gg_browser_key=gg_browser_key,
+									convert_to_tz=convert_to_tz,
+									declare_tz=declare_tz
+									)
+		elif not permission:
+			flash("Sorry, you don't have access to that trip!")
+			return redirect("/trips")
 
-		trip = Trip.query.get(trip_id)
-
-		# Pass 'can_edit' boolean into template
-		user_perm = Permission.query.filter(Permission.trip_id == trip_id,
-											Permission.user_id == viewer_id
-											).one()
-
-		if user_perm.can_edit:
-			can_edit = True
-		else:
-			can_edit = False
-
-		# Pass 'admin' boolean into template
-		if viewer_id == admin_id:
-			admin = True
-		else:
-			admin = False
-
-		return render_template("trip_planner.html",
-								trip=trip,
-								permissions=permissions,
-								friends=friends,
-								friend_ids=friend_ids,
-								can_edit=can_edit,
-								admin=admin,
-								gg_browser_key=gg_browser_key,
-								convert_to_tz=convert_to_tz,
-								declare_tz=declare_tz
-								)
-
-	else:
+	elif 'user_id' not in session:
 		flash("Sorry, you need to be logged in to do that!")
 		return redirect("/login")
 
