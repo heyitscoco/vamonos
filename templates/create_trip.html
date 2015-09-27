@@ -15,7 +15,7 @@
 			<br>
 			<label>
 				Where will you go?
-				<input class="form-control location" type="text" name="destination" placeholder="e.g. Miami">
+				<input class="form-control location" id="trip-address" type="text" name="destination" placeholder="e.g. Miami">
 			</label>
 			<br>
 			<label class="form-group">
@@ -35,4 +35,21 @@
 	</div>
 </div>
 <div class="col-xs-0 col-sm-3"></div>	
+{% endblock %}
+
+
+{% block scripts %}
+<script src="/static/googlemaps.js"></script>
+<script>
+// Goople Maps Autocomplete
+$(document).ready(autocomplete);
+function autocomplete() {
+    var address = document.getElementById('trip-address');
+    var options = {
+        types: ['address'] 
+    };
+    // Add autocomplete to the text boxes
+    var autocomplete_address = new google.maps.places.Autocomplete(address, options);
+}
+</script>
 {% endblock %}
