@@ -8,3 +8,8 @@ static/jquery-*
 static/data/
 static/sumoselect/
 static/temp*
+static/img/*.png
+static/img/*.jpg
+static/img/*.gif
+.coverage
+htmlcov/
