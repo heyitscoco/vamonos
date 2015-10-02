@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
-
 from datetime import datetime, timedelta
 import pytz
 
@@ -10,6 +9,7 @@ from reportlab.pdfgen import canvas
 from twilio.rest import TwilioRestClient
 from os import environ
 
+PORT = environ.get('PORT', 5000)
 
 eb_token = environ['EB_PERSONAL_OAUTH']
 tw_token = environ['TW_AUTH_TOKEN']
@@ -25,7 +25,7 @@ db = SQLAlchemy()
 class User(db.Model):
 	""" A class for users in the sqlite3 database"""
 
-	__tablename__ = "Users"
+	__tablename__ = 'Users'
 
 	user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	fname = db.Column(db.String(30), nullable=False)
@@ -525,9 +525,9 @@ def find_next_day(date):
 def connect_to_db(app):
     """Connects the database to our Flask app."""
 
-    # Configure to use our SQLite database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///travelapp.db'
-    # app.config['SQLALCHEMY_ECHO'] = True
+    # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://carolynlee@localhost:{}/vamonos.db'.format(PORT)
+    app.config['SQLALCHEMY_ECHO'] = True
     db.app = app
     db.init_app(app)
 
@@ -537,7 +537,4 @@ if __name__ == "__main__":
 	from server import app
 	connect_to_db(app)
 	print "Connected to DB."
-    
-    # db.create_all()
-    # print "DB tables built."
 

@@ -9,7 +9,6 @@ import pytz
 app = Flask(__name__)
 app.secret_key = "most_secret_key_EVER!!!!!!!"
 
-
 #############################################################
 # Routes
 
@@ -36,6 +35,7 @@ def send_reminders():
 	return "Success"
 
 
+
 @app.route("/pdf", methods=["POST"])
 def generate_pdf():
 	"""Generates a PDF of the itinerary"""
@@ -49,6 +49,7 @@ def generate_pdf():
 	response = json.dumps(response_dict)
 
 	return response
+
 
 
 @app.route("/itinerary<int:trip_id>", methods=['GET', 'POST'])
@@ -143,7 +144,7 @@ def signup():
 		fname = request.form.get("fname")
 		lname = request.form.get("lname")
 		password = request.form.get("password")
-
+		
 		# Add user to DB
 		user = User(fname=fname,
 				   lname=lname,
@@ -154,7 +155,7 @@ def signup():
 		db.session.commit()
 
 		msg = "Welcome, %s! You're now signed up. Log in to get started!" % (fname)
-	
+
 	flash(msg)
 	return redirect("/login")
 
@@ -241,6 +242,7 @@ def trips():
 	else:
 		flash("Sorry, you need to be logged in to do that!")
 		return redirect("/login")
+
 
 
 @app.route("/trip<int:trip_id>")
@@ -570,6 +572,7 @@ def update_description():
 	return "Success"
 
 
+
 @app.route("/add_event/<string:event_id>/<string:trip_id>")
 def add_event(event_id, trip_id):
 	"""Given an eventbrite event resource_uri, adds the event to the agenda"""
@@ -664,7 +667,6 @@ def add_event(event_id, trip_id):
 
 
 
-
 @app.route("/rm_event", methods=["POST"])
 def rm_event():
 	"""Removes an event from the trip"""
@@ -747,7 +749,6 @@ def _format_datetime(dt, format=None, trip_end=False):
 	if trip_end:
 		dt = dt - timedelta(1)
 
-
 	if format == 'time':
 		dt = datetime.strftime(dt, '%-I:%M %p')
 	elif format == 'date':
@@ -767,4 +768,4 @@ def _format_datetime(dt, format=None, trip_end=False):
 
 if __name__ == "__main__":
 	connect_to_db(app)
-	app.run(debug=True)
+	app.run(debug=True, host="0.0.0.0", port=PORT)

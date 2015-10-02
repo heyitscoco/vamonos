@@ -18,11 +18,11 @@
 			</label>
 			<br>
 			<label class="form-group">
-				<input class="form-control" type="text" name="fname" placeholder="first name">
+				<input class="form-control" id="fname-field" type="text" name="fname" placeholder="first name">
 			</label>
 			<br>
 			<label class="form-group">
-				<input class="form-control" type="text" name="lname" placeholder="last name">
+				<input class="form-control" id="lname-field" type="text" name="lname" placeholder="last name">
 			</label>
 			<br>
 			<label class="form-group" id="login-submission">
@@ -52,6 +52,7 @@ function validatePassword() {
 // Event Listeners
 
 $('#password-field').on('change', validatePassword);
+
 
 </script>
 {% endblock %}
