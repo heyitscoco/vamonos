@@ -13,56 +13,6 @@ app.secret_key = "most_secret_key_EVER!!!!!!!"
 # Routes
 
 
-@app.route("/google_token", methods=['GET','POST'])
-def return_google_token():
-	"""Returns the google api token"""
-
-	token_dict = { 'googleToken': gg_browser_key }
-
-	return json.dumps(token_dict)
-
-
-
-@app.route("/send_text", methods=["POST", "GET"])
-def send_reminders():
-	"""Sends reminders to trip viewers"""
-
-	trip_id = int(request.form['tripId'])
-	trip = Trip.query.get(trip_id)
-
-	trip.send_SMS(tw_sid, tw_token)
-
-	return "Success"
-
-
-
-@app.route("/pdf", methods=["POST"])
-def generate_pdf():
-	"""Generates a PDF of the itinerary"""
-
-	trip_id = int(request.form['tripId'])
-	trip = Trip.query.get(trip_id)
-	filename = "itinerary%d.pdf" % (trip_id)
-	trip.generate_itinerary(filename)
-
-	response_dict = {'filename': filename}
-	response = json.dumps(response_dict)
-
-	return response
-
-
-
-@app.route("/itinerary<int:trip_id>", methods=['GET', 'POST'])
-def show_pdf(trip_id):
-	"""Displays the PDF itinerary"""
-
-	filename = 'itinerary%r.pdf' % (trip_id)
-	itinerary = open(filename, 'rb')
-
-	return send_file(itinerary)
-
-
-
 @app.route("/")
 def home():
 	"""Displays homepage"""
@@ -738,9 +688,57 @@ def rm_attendee():
 	return "Success"
 
 
+@app.route("/google_token", methods=['GET','POST'])
+def return_google_token():
+	"""Returns the google api token"""
+
+	token_dict = { 'googleToken': gg_browser_key }
+
+	return json.dumps(token_dict)
+
+
+
+@app.route("/send_text", methods=["POST", "GET"])
+def send_reminders():
+	"""Sends reminders to trip viewers"""
+
+	trip_id = int(request.form['tripId'])
+	trip = Trip.query.get(trip_id)
+
+	trip.send_SMS(tw_sid, tw_token)
+
+	return "Success"
+
+
+
+@app.route("/pdf", methods=["POST"])
+def generate_pdf():
+	"""Generates a PDF of the itinerary"""
+
+	trip_id = int(request.form['tripId'])
+	trip = Trip.query.get(trip_id)
+	filename = "itinerary%d.pdf" % (trip_id)
+	trip.generate_itinerary(filename)
+
+	response_dict = {'filename': filename}
+	response = json.dumps(response_dict)
+
+	return response
+
+
+
+@app.route("/itinerary<int:trip_id>", methods=['GET', 'POST'])
+def show_pdf(trip_id):
+	"""Displays the PDF itinerary"""
+
+	filename = 'itinerary%r.pdf' % (trip_id)
+	itinerary = open(filename, 'rb')
+
+	return send_file(itinerary)
+
 
 #############################################################
-# Jinja2 Filter
+# Jinja Filter
 
 @app.template_filter('datetime')
 def _format_datetime(dt, format=None, trip_end=False):
