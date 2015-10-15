@@ -227,6 +227,9 @@
 													   data-target="#event-{{ event.event_id }}-modal"
 													   style="display: inline-block; width: 80%">
 													   {{ event.title }}
+										      			{% for att in event.attendances %}
+															{{ att.user.fname }}
+														{% endfor %}
 													</p>
     												
 								<!-- Event Details Modal -->

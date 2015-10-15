@@ -390,12 +390,38 @@ function getEvents(evt) {
 
 		// request events
 		$.get(url, filters, function(result) {
-			var events = result.events;
+			var ebEvents = result.events;
 			$('#toggle-events').removeClass('hidden');
 
 			// add event names to the "Nearby Events" sidebar
-			if (events[0]) {
-				events.forEach(function(event) {
+			if (ebEvents[0]) {
+				ebEvents.forEach(function(ebEvent) {
+
+
+					var myEvents = $('.event-div');
+					console.log(myEvents);
+					for (var i=0; i < myEvents.length; i++) {
+
+						var myEvent = myEvents[i];
+						var eventStart = myEvent.dataset.start;
+						var eventEnd = myEvent.dataset.end;
+
+						console.log("ebEventStart: " + ebEvent.start.local);
+						console.log("ebEventEnd: " + ebEvent.end.local);
+						console.log("myEventStart: " + eventStart);
+						console.log("myEventEnd: " + eventEnd);
+						if (ebEvent.start.local > eventStart && ebEvent.start.local < eventEnd) {
+							// Conflict
+							alert("Conflicting start date: " + myEvent.text());
+						} else if (ebEvent.end.local > eventStart && ebEvent.end.local < eventEnd) {
+							// Conflict
+							alert("Conflicting end date" + myEvent.text());
+						}
+
+					}
+
+
+
 
 					if (event.logo) {
 						var eventLogo = '<img src="' + event.logo.url + '" style="width: 100%">';

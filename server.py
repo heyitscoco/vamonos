@@ -7,41 +7,10 @@ import random
 import pytz
 
 app = Flask(__name__)
-app.secret_key = "most_secret_key_EVER!!!!!!!"
+app.secret_key = environ.get('FLASK_SECRET_KEY', "SuperSecretUnguessableKey")
 
 #############################################################
 # Routes
-
-
-@app.route("/")
-def home():
-	"""Displays homepage"""
-
-	cities = ['Dubai', 'Madrid', 'Amsterdam', 'London' , 'Paris', 'Berlin', 'Venice', 'Stockholm']
-	random.shuffle(cities)
-	cities_sample = random.sample(cities, 4)
-
-
-	cities_dict = {}
-	for city in cities_sample:
-		cities_dict[city] = city
-
-	cities_json = json.dumps(cities_dict)
-	
-	return render_template('home.html',
-							cities=cities_sample,
-							citiesJSON=cities_json)
-
-
-
-@app.route("/token")
-def return_token():
-	"""Returns a jsonified version of my token"""
-
-	token_dict = {'token': eb_token}
-	return json.dumps(token_dict)
-
-
 
 @app.route("/login", methods=['GET'])
 def login_page():
@@ -736,6 +705,34 @@ def show_pdf(trip_id):
 
 	return send_file(itinerary)
 
+
+@app.route("/")
+def home():
+	"""Displays homepage"""
+
+	cities = ['Dubai', 'Madrid', 'Amsterdam', 'London' , 'Paris', 'Berlin', 'Venice', 'Stockholm']
+	random.shuffle(cities)
+	cities_sample = random.sample(cities, 4)
+
+
+	cities_dict = {}
+	for city in cities_sample:
+		cities_dict[city] = city
+
+	cities_json = json.dumps(cities_dict)
+	
+	return render_template('home.html',
+							cities=cities_sample,
+							citiesJSON=cities_json)
+
+
+
+@app.route("/token")
+def return_token():
+	"""Returns a jsonified version of my eventbrite token"""
+
+	token_dict = {'token': eb_token}
+	return json.dumps(token_dict)
 
 #############################################################
 # Jinja Filter

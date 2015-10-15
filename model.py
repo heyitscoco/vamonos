@@ -527,7 +527,7 @@ def connect_to_db(app):
 
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///travelapp.db'
     # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://carolynlee@localhost:{}/vamonos.db'.format(PORT)
-    app.config['SQLALCHEMY_ECHO'] = True
+    # app.config['SQLALCHEMY_ECHO'] = True
     db.app = app
     db.init_app(app)
 
