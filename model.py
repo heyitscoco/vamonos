@@ -10,6 +10,8 @@ from reportlab.pdfgen import canvas
 from twilio.rest import TwilioRestClient
 from os import environ
 
+DATABASE_URL = environ.get("DATABASE_URL",
+                              "postgresql://carolynlee@localhost/vamonos")
 
 eb_token = environ['EB_PERSONAL_OAUTH']
 tw_token = environ['TW_AUTH_TOKEN']
@@ -526,7 +528,7 @@ def connect_to_db(app):
     """Connects the database to our Flask app."""
 
     # Configure to use our SQLite database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///travelapp.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
     # app.config['SQLALCHEMY_ECHO'] = True
     db.app = app
     db.init_app(app)

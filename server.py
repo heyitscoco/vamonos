@@ -6,8 +6,11 @@ import requests
 import random
 import pytz
 
+
 app = Flask(__name__)
-app.secret_key = "most_secret_key_EVER!!!!!!!"
+app.secret_key = environ.get("FLASK_SECRET_KEY", "ABCDEF")
+DEBUG = 'NO_DEBUG' not in environ
+PORT = environ.get('PORT', 5000)
 
 
 #############################################################
@@ -767,4 +770,4 @@ def _format_datetime(dt, format=None, trip_end=False):
 
 if __name__ == "__main__":
 	connect_to_db(app)
-	app.run(debug=True)
+	app.run(debug=DEBUG, port=PORT, host='0.0.0.0')
