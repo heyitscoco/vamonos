@@ -9,7 +9,12 @@ from reportlab.pdfgen import canvas
 from twilio.rest import TwilioRestClient
 from os import environ
 
+<<<<<<< HEAD
 PORT = environ.get('PORT', 5000)
+=======
+DATABASE_URL = environ.get("DATABASE_URL",
+                              "postgresql://carolynlee@localhost/vamonos")
+>>>>>>> postgres
 
 eb_token = environ['EB_PERSONAL_OAUTH']
 tw_token = environ['TW_AUTH_TOKEN']
@@ -525,8 +530,7 @@ def find_next_day(date):
 def connect_to_db(app):
     """Connects the database to our Flask app."""
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///travelapp.db'
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://carolynlee@localhost:{}/vamonos.db'.format(PORT)
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
     # app.config['SQLALCHEMY_ECHO'] = True
     db.app = app
     db.init_app(app)
