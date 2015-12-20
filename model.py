@@ -9,12 +9,9 @@ from reportlab.pdfgen import canvas
 from twilio.rest import TwilioRestClient
 from os import environ
 
-<<<<<<< HEAD
 PORT = environ.get('PORT', 5000)
-=======
 DATABASE_URL = environ.get("DATABASE_URL",
                               "postgresql://carolynlee@localhost/vamonos")
->>>>>>> postgres
 
 eb_token = environ['EB_PERSONAL_OAUTH']
 tw_token = environ['TW_AUTH_TOKEN']
