@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/carolynjoneslee/vamonos.svg)](https://travis-ci.org/carolynjoneslee/vamonos)
+
 *¡Vámonos!*
 ===========
 Learn more about the developer: www.linkedin.com/in/carolynjoneslee/
